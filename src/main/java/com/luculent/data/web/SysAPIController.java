@@ -60,52 +60,11 @@ public class SysAPIController  extends BaseController{
 		return sysApiService.getMenuJSON(projectId);
     }
 	
-	@RequestMapping("/project-login")
-	public ModelAndView autoLoginPage(ModelAndView modelAndView,String projectId){
-		modelAndView.setViewName("api/auto-login");
-		modelAndView.addObject("projectId", projectId);
-		List<SysApi> list =sysApiMapper.selectList(new EntityWrapper<SysApi>().eq("project_id", projectId).eq("api_type", CODE_TYPE));
-		if(list !=null && list.size() !=0){
-			modelAndView.addObject("msg", "success");
-			String uuid =HttpClientUtil.getImageDownLoad(list.get(0).getUrl());
-			modelAndView.addObject("uuid", uuid);
-		}else{
-			modelAndView.addObject("msg", "fail");
-		}
-	    
-		return modelAndView;
-	}
 	
 	@ResponseBody
 	@RequestMapping("/auto-login")
-	public String autoLogin(String code,String projectId) {
-		List<SysApi> list =sysApiMapper.selectList(new EntityWrapper<SysApi>().eq("project_id", projectId).eq("api_type", LOGIN_TYPE));
-		if(list !=null && list.size() !=0){
-			SysApi sysApi = list.get(0);
-			List<SysParam> params = sysParamMapper.selectList(new EntityWrapper<SysParam>().eq("api_id", sysApi.getId()));
-			 StringBuffer loginUrl = new StringBuffer(sysApi.getUrl());
-		     if(params !=null && params.size()!=0){
-		        	for(SysParam param:params){
-		        		loginUrl.append("&").append(param.getName()).append("=");
-		        		if(CODE_NAME.equals(param.getDetail())){
-		        			loginUrl.append(code);
-		        		}else{
-		        			loginUrl.append(param.getDefaultValue());
-		        		}
-		        	}
-		    }
-		    System.err.println(loginUrl.toString());
-		    String res= HttpClientUtil.getContent(loginUrl.toString());
-		    if(StringUtils.isNotEmpty(res)){
-		    	String result = JSONObject.parseObject(res).getJSONObject("head").getString("rtnCode");
-		    	if(result.equals("000000")){
-		    		return "登陆成功";
-		    	}
-		    	return "登陆失败";
-		    }
-			//String res =HttpClientUtil.getImageDownLoad();
-		}
-		return "登陆失败";
+	public String autoLogin(String projectId) {
+		return sysApiService.autoLoginByProjectId(projectId);
 	}
 	
 	
@@ -121,7 +80,7 @@ public class SysAPIController  extends BaseController{
 		}else{
 			res = HttpClientUtil.getContent(url);
 		}
-		
+		System.out.println(res);
 		return res;
     }
 }

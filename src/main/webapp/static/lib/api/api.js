@@ -47,41 +47,30 @@ layui.use(['element','code','layer','form'], function(){
 				  if(apitype == 2){
 					  $("#test-img").attr("src","/temp/"+data+".gif");
 				  }else{
-					  var jsonObj = JSON.parse(data);
-					  if(jsonObj.head.rtnCode != "000000"){
-						  
-					  }
-					  $(".layui-textarea").val(data);
+					  try {
+						  var jsonObj = JSON.parse(data);
+						  if(jsonObj.head.rtnCode != "000000"){
+							  
+						  }
+						  $(".layui-textarea").val(data);
+					  }catch(e) {
+						  $(".layui-textarea").val(data);
+				      }
 				  }
 				 
 			  }
 		});
 	});
 	$(".test-fail a").on('click',function(){
-		layer.open({
-		  type: 2,
-		  title:'一键登陆',
-		  area: ['400px', '250px'],
-		  fixed: false, //不固定
-		  maxmin: false,
-		  content: '/api/project-login.htm?projectId='+$("#test-projectId").val()
-		  ,btn: ['登陆']
-		  ,yes: function(index, layero){
-		    //按钮【按钮一】的回调
-			  var body = layer.getChildFrame('body', index);
-			  var code = body.find('#code').val();
-			  var projectId = body.find('#projectId').val();
-			  $.ajax({
-				  url: "/api/auto-login.htm",
-				  data:{code:code,projectId:projectId},
-				  type:"post",
-				  dataType: "json",
-				  success: function(data){
-					  layer.alert(data, {icon: 6});
-					  layer.close(index);
-				  }
-			});
-		  }
+		  var projectId = $('#test-projectId').val();
+		  $.ajax({
+			  url: "/api/auto-login.htm",
+			  data:{projectId:projectId},
+			  type:"post",
+			  dataType: "json",
+			  success: function(data){
+				  layer.alert(data, {icon: 6});
+			  }
 		});
 	});
   //…

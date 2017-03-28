@@ -1,4 +1,5 @@
 package com.luculent.data.utils.util;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.imageio.ImageIO;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -31,6 +34,9 @@ import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
+
 public class HttpClientUtil {
 
 
@@ -38,10 +44,97 @@ public class HttpClientUtil {
 	
 	private final static int CONNECTION_TIMEOUT = 100;
 	
+	/**ocr地址*/
+	private final static String OCR_PATH =System.getProperty("user.dir") +"\\src\\main\\resources\\";;
+	/**图片输出地址*/
 	private final static String TEMP_PATH =System.getProperty("user.dir") +"\\src\\main\\webapp\\temp\\";
-	
+	/**图片扩展名 */
 	private final static String IMG_TYPE =".gif";
+	/**请求类型 返回数据 */
+	private final static String ASK_TYPE_DATA="DATA";
+	/**请求类型 返回图片 */
+	private final static String ASK_TYPE_IMG="IMG";
+	/**请求类型 返回验证码 */
+	private final static String ASK_TYPE_CODE="CODE";
 	
+	/**
+	 * 以get方式获取返回值
+	 * @param url
+	 * @return
+	 */
+	public static String getContent(String url){
+		if(logger.isDebugEnabled()) {
+			logger.debug("开始获取网页：" + url);
+		}
+		return getContent(url, null,null, CONNECTION_TIMEOUT,ASK_TYPE_DATA);
+	}
+	
+	/**
+	 * 以get方式获取图片 返回图片uuid文件名
+	 * @param url
+	 * @return
+	 */
+	public static String getImageDownLoad(String url){
+		if(logger.isDebugEnabled()) {
+			logger.debug("开始获取图片：" + url);
+		}
+		return getContent(url, null,null, CONNECTION_TIMEOUT,ASK_TYPE_IMG);
+	}
+	
+	/**
+	 * 以get方式获取验证码返回值
+	 * @param url
+	 * @return
+	 */
+	public static String getCodeResult(String url){
+		if(logger.isDebugEnabled()) {
+			logger.debug("开始获取图片：" + url);
+		}
+		return getContent(url, null,null, CONNECTION_TIMEOUT,ASK_TYPE_CODE);
+	}
+	
+	
+	/**
+	 * 以get方式获取返回值
+	 * @param url
+	 * @param params 字符串
+	 * @return
+	 */
+	public static String getContent(String url,String... params){
+		if(logger.isDebugEnabled()) {
+			logger.debug("开始获取网页：" + url);
+		}
+		return getContent(url,ConventionUtils.toMap(params));
+	}
+	
+	
+	/**
+	 * 以get方式获取返回值
+	 * @param url
+	 * @param params 参数Map
+	 * @return
+	 */
+	public static String getContent(String url,Map<String,String> params){
+		if(logger.isDebugEnabled()) {
+			logger.debug("开始获取网页：" + url);
+		}
+		return getContent(url, null,params, CONNECTION_TIMEOUT,ASK_TYPE_DATA);
+	} 
+	/**
+	 * 
+	* @Title. getContent
+	* @Description. 以get方式获取网页内容
+	* @param url
+	* @param params
+	* @return String
+	* @exception.
+	 */
+	public static String getContent(String url,Map<String,String> headers,Map<String,String> params){
+		if(logger.isDebugEnabled()) {
+			logger.debug("开始获取网页：" + url);
+		}
+		return getContent(url, headers,params, CONNECTION_TIMEOUT,ASK_TYPE_DATA);
+	}
 	
 	/**
 	 * 
@@ -93,42 +186,6 @@ public class HttpClientUtil {
 			logger.debug("开始抓取网页：" + url);
 		}
 		return postContent(url,headers, null,jsonStr, timeout);
-	}
-	
-	public static String getImageDownLoad(String url){
-		if(logger.isDebugEnabled()) {
-			logger.debug("开始获取图片：" + url);
-		}
-		return getContent(url, null,null, CONNECTION_TIMEOUT,"IMG");
-	}
-	
-	public static String getContent(String url){
-		if(logger.isDebugEnabled()) {
-			logger.debug("开始获取网页：" + url);
-		}
-		return getContent(url, null,null, CONNECTION_TIMEOUT,null);
-	}
-	
-	public static String getContent(String url,Map<String,String> params){
-		if(logger.isDebugEnabled()) {
-			logger.debug("开始获取网页：" + url);
-		}
-		return getContent(url, null,params, CONNECTION_TIMEOUT,null);
-	} 
-	/**
-	 * 
-	* @Title. getContent
-	* @Description. 以get方式获取网页内容
-	* @param url
-	* @param params
-	* @return String
-	* @exception.
-	 */
-	public static String getContent(String url,Map<String,String> headers,Map<String,String> params){
-		if(logger.isDebugEnabled()) {
-			logger.debug("开始获取网页：" + url);
-		}
-		return getContent(url, headers,params, CONNECTION_TIMEOUT,null);
 	}
 	
 	
@@ -236,6 +293,7 @@ public class HttpClientUtil {
 			//这句话是得到响应的内容，内容里面有很多信息
 			String result = EntityUtils.toString(response.getEntity());
 			EntityUtils.consume(response.getEntity());
+			logger.info("获取网页"+ post.getURI() +"成功");
 			return result;
 		} catch (Exception e) {
 			post.abort();
@@ -287,10 +345,18 @@ public class HttpClientUtil {
 		
 		get.setConfig(requestConfig);
 		setGetParameters(get, params);
-		if("IMG".equals(getType)){
-			return getImageDownLoad(client, get);
+		switch (getType) {
+		case ASK_TYPE_DATA:
+			return getContent(client, get); 
+		case ASK_TYPE_IMG:
+			return getImageDownLoad(client, get); 
+		case ASK_TYPE_CODE:
+			return getCodeCheckedStr(client, get); 
+		default:
+			return getContent(client, get); 
 		}
-		return getContent(client, get);
+		
+		
 	}
 	
 	
@@ -342,6 +408,7 @@ public class HttpClientUtil {
             String result =EntityUtils.toString(response.getEntity());
             //释放资源
             EntityUtils.consume(response.getEntity());
+            logger.info("获取网页"+ get.getURI() +"成功");
             return result;
         } catch (Exception e) {
 			get.abort();
@@ -378,6 +445,7 @@ public class HttpClientUtil {
 			}
             //释放资源
             EntityUtils.consume(entity);
+            logger.info("获取网页"+ get.getURI() +"成功");
             return uuid;
         } catch (Exception e) {
 			get.abort();
@@ -394,8 +462,48 @@ public class HttpClientUtil {
         }  
 	}
 	
+	private static String getCodeCheckedStr(CloseableHttpClient  client, HttpGet get){
+		CloseableHttpResponse  response = null;
+		BufferedImage bi = null;
+		String res ="";
+		try {  
+            // 执行get请求.    
+            response = client.execute(get);  
+            if(response.getStatusLine().getStatusCode()!= 200){
+            	get.abort();
+				logger.error("获取图片【"+ get.getURI() +"】内容错误：" + response.getStatusLine().getStatusCode());
+            }
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+            	
+				InputStream input = entity.getContent();
+				bi = ImageIO.read(input);
+				EntityUtils.consume(entity);
+	            Tesseract tessreact = new Tesseract();  
+	    		tessreact.setDatapath(OCR_PATH); 
+	    		tessreact.setLanguage("eng");
+	    		res = tessreact.doOCR(bi).replace("\n", ""); 
+				
+			}
+            logger.info("获取验证码图片【"+ get.getURI() +"】相应的字符串为："+res);
+    		return res; 
+        } catch (Exception e) {
+			get.abort();
+			logger.error("获取图片【"+ get.getURI() +"】出错", e);
+			return null;
+		}  finally {  
+            // 关闭连接,释放资源    
+            try {  
+            	response.close();  
+            	client.close();
+            } catch (Exception e) {  
+                e.printStackTrace();  
+            }  
+        }  
+	}
+	
 	public static void main(String[] args) {
-		getImageDownLoad("http://106.39.199.78/cpad/getInputImage?clientUniqueID=3c2a3a936a24257ccb72b81ff578231f5602ac8758706154af3d4f1ff29e6e7e");
+		getCodeResult("http://106.39.199.78/cpad/getInputImage?clientUniqueID=3c2a3a936a24257ccb72b81ff578231f5602ac8758706154af3d4f1ff29e6e7e");
 	}
 
 }
