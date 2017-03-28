@@ -2,6 +2,13 @@ package com.luculent.data.model;
 
 import java.util.List;
 
+/**
+ * 
+* @ClassName: SysMenu 
+* @Description: 系统用菜单 非数据库表 
+* @author zhangy
+* @date 2017年3月28日 下午3:13:15
+ */
 public class SysMenu {
 	
 	private String title;

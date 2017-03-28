@@ -1,5 +1,12 @@
 package com.luculent.data.model;
 
+/**
+ * 
+* @ClassName: SysMenuChild 
+* @Description: 下拉菜单
+* @author zhangy
+* @date 2017年3月28日 下午3:13:59
+ */
 public class SysMenuChild {
 
 	private String title;
