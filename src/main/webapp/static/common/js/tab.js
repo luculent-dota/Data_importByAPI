@@ -242,6 +242,18 @@ layui.define(['element', 'common'], function(exports) {
 			});
 		}
 	};
+	
+	Tab.prototype.removeAll = function(){
+		if(!$.isEmptyObject(ELEM)){
+			ELEM.titleBox.children('li').each(function() {
+				var $t = $(this);
+				if($t.index() !== 0) {
+					element.tabDelete(ELEM.tabFilter, $t.attr('lay-id'));
+				}
+			});
+		}
+	};
+	
 	Tab.prototype.on = function(events, callback) {
 
 	}

@@ -40,7 +40,7 @@ layui.use(['layer', 'laytpl','form'], function(){
 		
 		form.on('submit(go1)', function(res) {
 			$.ajax({
-				  url: "/menu/project-save.htm",
+				  url: contextPath+"/menu/project-save.htm",
 				  data: res.field,
 				  type:"post",
 				  dataType: "json",
@@ -89,7 +89,7 @@ layui.use(['layer', 'laytpl','form'], function(){
 			}
 			res.field.paramList = paramList;
 			$.ajax({
-				  url: "/menu/api-save.htm",
+				  url: contextPath+"/menu/api-save.htm",
 				  data: JSON.stringify(res.field),
 				  type:"post",
 				  dataType: "json",
@@ -128,14 +128,14 @@ layui.use(['layer', 'laytpl','form'], function(){
 });  
 
 function initMenuTree(form,laytpl){
-	 $.get("/menu/tree.htm",  function(trees){
+	 $.get(contextPath+"/menu/tree.htm",  function(trees){
 		 ZtreeUtil.initTree("ztree",trees,{
 				onClick:function(event, treeId, treeNode){
 					if(treeNode.type == "project"){
 						$(".project-div fieldset legend").text("编辑项目");
 						$(".project-div input[name='id']").val(treeNode.id);
 						AppUtils.clearForm($(".project-div .layui-form"));
-						$.ajax({url: "/menu/project-get.htm",data:{id:treeNode.id},type:"post",dataType: "json",async:false,
+						$.ajax({url: contextPath+"/menu/project-get.htm",data:{id:treeNode.id},type:"post",dataType: "json",async:false,
 							  success: function(data){
 								  AppUtils.setForm($(".project-div .layui-form"),data);
 								  form.render('radio');
@@ -150,7 +150,7 @@ function initMenuTree(form,laytpl){
 						$(".api-div input[name='projectId']").val("");
 						$(".api-div input[name='projectId']").val(treeNode.id);
 						AppUtils.clearForm($(".api-div .layui-form"));
-						$.ajax({url: "/menu/api-get.htm",data:{id:treeNode.id},type:"post",dataType: "json",async:false,
+						$.ajax({url: contextPath+"/menu/api-get.htm",data:{id:treeNode.id},type:"post",dataType: "json",async:false,
 							  success: function(data){
 								  console.log(data);
 								  AppUtils.setForm($(".api-div .layui-form"),data);
@@ -249,7 +249,7 @@ function initMenuTree(form,laytpl){
 	                		message ="该项目存在接口<br>"
 	                	}
 	                	layer.confirm(message+'确认删除项目【'+NODE.text+'】吗？', {icon: 3},function(index){
-	                		$.get("/menu/project-del.htm", {id:NODE.id}, function(data){
+	                		$.get(contextPath+"/menu/project-del.htm", {id:NODE.id}, function(data){
 		                		if(data.status =='500'){
 		  						  layer.msg(data.msg, {icon: 5});
 			  					  }else{
@@ -272,7 +272,7 @@ function initMenuTree(form,laytpl){
 	                action: function(NODE, TREE_OBJ){
 	                	
 	                	layer.confirm('确认删除接口【'+NODE.text+'】吗？', {icon: 3},function(index){
-	                		$.get("/menu/api-del.htm", {id:NODE.id}, function(data){
+	                		$.get(contextPath+"/menu/api-del.htm", {id:NODE.id}, function(data){
 		                		if(data.status =='500'){
 		  						  layer.msg(data.msg, {icon: 5});
 			  					  }else{

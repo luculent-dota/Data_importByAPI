@@ -80,7 +80,6 @@ public class SysAPIController  extends BaseController{
 		}else{
 			res = HttpClientUtil.getContent(url);
 		}
-		System.out.println(res);
 		return res;
     }
 }

@@ -39,7 +39,7 @@ layui.use(['element','code','layer','form'], function(){
 	$(".test-run").on('click',function(){
 		var apitype = $("#test-apiType").val();
 		$.ajax({
-			  url: "/api/test-run.htm",
+			  url: contextPath+"/api/test-run.htm",
 			  data:{url:$("#urlStr").val(),apiType:apitype},
 			  type:"post",
 			  dataType: "json",
@@ -64,7 +64,7 @@ layui.use(['element','code','layer','form'], function(){
 	$(".test-fail a").on('click',function(){
 		  var projectId = $('#test-projectId').val();
 		  $.ajax({
-			  url: "/api/auto-login.htm",
+			  url: contextPath+"/api/auto-login.htm",
 			  data:{projectId:projectId},
 			  type:"post",
 			  dataType: "json",

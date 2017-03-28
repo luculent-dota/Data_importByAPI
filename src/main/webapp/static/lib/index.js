@@ -75,8 +75,9 @@ layui.config({
 	});
 	
 	$('#project_list dd').on('click',function(){
+		tab.removeAll();
 		var projectId = $(this).find("a").attr("key");
-		$.get("/api/menu-json.htm", {"projectId":projectId},function(config){
+		$.get(contextPath+"/api/menu-json.htm", {"projectId":projectId},function(config){
 			//设置navbar
 			navbar.set({
 				spreadOne: true,
@@ -90,15 +91,17 @@ layui.config({
 			navbar.render();
 			//监听点击事件
 			navbar.on('click(side)', function(data) {
-				
+				console.log(data.field);
 				tab.tabAdd(data.field);
 			});
+			$("#admin-navbar-side dl dd").eq(0).click();
 		},"json");
 		
 	});
 	$('#project_list dd:first').click();
 	
 	$('#setupPage').on('click', function() {
+		tab.removeAll();
 		//设置navbar
 		navbar.set({
 			spreadOne: true,
@@ -115,6 +118,7 @@ layui.config({
 			
 			tab.tabAdd(data.field);
 		});
+		$("#admin-navbar-side dl dd").eq(0).click();
 	});
 		
 });

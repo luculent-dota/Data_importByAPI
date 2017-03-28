@@ -5,7 +5,7 @@ layui.use(['layer', 'form'], function(){
   
   form.on('submit(go)', function(res) {
 		$.ajax({
-			  url: "/config/save.htm",
+			  url: contextPath+"/config/save.htm",
 			  data: res.field,
 			  type:"post",
 			  dataType: "json",
