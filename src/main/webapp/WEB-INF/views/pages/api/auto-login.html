@@ -1,0 +1,16 @@
+#parse('/layout/header.html')
+<input type="hidden"  id="projectId" name="projectId"  value="$!{projectId}"/>
+ <img  id="login-img">
+ <input type="text" name="code" id="code" placeholder="请输入" autocomplete="off" class="layui-input">
+ <script>
+ var uuid = "$!{uuid}";
+ layui.use(['layer','form'], function(){
+	 var layer = layui.layer, 
+	 $ = layui.jquery,
+	form = layui.form();
+	 if(uuid !=''){
+		 $("#login-img").attr("src","/temp/"+uuid+".gif");
+	 }
+ });
+ </script>
+#parse('/layout/footer.html')

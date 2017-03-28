@@ -1,0 +1,63 @@
+<style type="text/css">
+	.table-params{
+		width: 99%;
+		margin-left: 20px;
+	}
+	.table-params td input{
+		width:97%;
+		border:none;
+		border-bottom: 1px solid #e6e6e6;
+	}
+	.layui-checkbox-disbaled[lay-skin="primary"] i {
+    background-color: #e2e2e2 !important;
+    border-color: #d2d2d2;
+	}
+</style>
+<form class="layui-form layui-form-pane" >
+		<input type="hidden" id="test-apiType"  name ="test-apiType"  value="$!{sysApiBean.apiType}" />
+		<input type="hidden" id="test-projectId"  name ="test-projectId"  value="$!{sysApiBean.projectId}" />
+		<blockquote class="layui-elem-quote test-fail">检测到您尚未登陆到该项目，是否 <a class="layui-btn layui-btn-danger">一键登录</a> ？</blockquote>
+ 
+		<div class="layui-form-item">
+			<label class="layui-form-label">#if($!{sysApiBean.askType} == 1)GET#elseif($!{sysApiBean.askType} == 2)POST#end</label>
+			<div class="layui-input-inline" style="width:78%;margin-right:0px;">
+				<input name="title" id="urlStr" autocomplete="off" value="$!{sysApiBean.url}$!{paramStr}" class="layui-input" type="text" disabled="disabled" style="background:#FAFAFA">
+			</div>
+			#if($!{sysApiBean.apiType} != 2)
+			<a class="layui-btn layui-btn-primary params-button" >Params</a>
+			#end
+			<a class="layui-btn layui-btn-normal test-run">SEND</a>
+		</div>
+		<table class="table-params">
+		#if($!params && $!params.size() !=0)
+			#foreach($!param in $!params)
+			<tr>
+				<td> <input name="param_name" lay-verify="title" value="$!{param.name}" class="layui-input" type="text" disabled></td>
+				<td> <input name="param_value"  lay-verify="title" value="$!{param.defaultValue}" autocomplete="off" placeholder="value" class="layui-input" type="text"></td>
+				<td><input type="checkbox" name="$!{param.id}" lay-skin="primary"  lay-filter="param_check" #if($!{param.required} == 1)disabled#end checked></td>
+			</tr>
+			#end
+			
+		#end
+		</table>
+		
+		<div class="layui-form-item layui-form-text" style="margin-top:20px;">
+	    
+	    
+	   		 #if($!{sysApiBean.apiType} != 2)
+	   		 <label class="layui-form-label">返回值</label>
+	   		 <div class="layui-input-block">
+	      <textarea placeholder="" class="layui-textarea" style="height:300px;"></textarea>
+	       </div>
+	        #elseif($!{sysApiBean.apiType} ==2)
+	        <label class="layui-form-label">返回图片</label>
+	        <img  id="test-img">
+	      #end
+	   
+	  </div>
+	
+	  	
+  	
+  	
+  	
+	</form>

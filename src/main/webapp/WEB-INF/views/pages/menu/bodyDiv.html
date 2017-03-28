@@ -1,0 +1,187 @@
+<style>
+.layui-table td i {
+	cursor:pointer;
+}
+.table-params{
+	display:none;
+}
+.table-params td input{
+		width:97%;
+		border:none;
+		border-bottom: 1px solid #e6e6e6;
+}
+</style>
+<script id="paramList" type="text/html">
+{{#  layui.each(d.paramList, function(index, item){ }}
+<tr>
+	 <td><input name="params_name" lay-verify="title" value="{{ item.name }}" autocomplete="off" placeholder="参数名称" class="layui-input" type="text"></td>
+	 <td><input name="params_detail" lay-verify="title" autocomplete="off" value="{{ item.detail }}" placeholder="参数说明" class="layui-input" type="text"></td>
+	 <td><input type="checkbox" name="params_required" lay-skin="primary" {{#  if(item.required === 1){ }} checked {{#  } }} ></td>
+	 <td><input name="params_defaultValue" lay-verify="title" autocomplete="off" value="{{ item.defaultValue }}" placeholder="默认值" class="layui-input" type="text"></td>
+	 <td><input name="params_remarks" lay-verify="title" autocomplete="off"  value="{{ item.remarks }}" placeholder="备注" class="layui-input" type="text"></td>
+	 <td>
+	<div class="layui-btn-group">
+		{{#  if(index !== 0){ }}
+		<a class="layui-btn layui-btn-primary layui-btn-small del_tr">
+			<i class="layui-icon">&#xe640;</i>
+		</a>
+		{{#  } }}
+		<a class="layui-btn layui-btn-primary layui-btn-small add_tr">
+			<i class="layui-icon">&#xe654;</i>
+		</a>
+	</div>
+	</td>
+</tr>
+{{#  }); }}
+</script>
+<div class="project-div" style="display: none;">
+	<fieldset class="layui-elem-field layui-field-title">
+		<legend>新增项目</legend>
+	</fieldset>
+	<form class="layui-form" action="">
+		<input type="hidden" name="id" value=""/>
+		<div class="layui-form-item">
+			<label class="layui-form-label">项目名称</label>
+			<div class="layui-input-block">
+				<input name="name" lay-verify="required" autocomplete="off"  class="layui-input" type="text">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">项目路径</label>
+			<div class="layui-input-block">
+				<input name="baseUrl" lay-verify="required"  autocomplete="off" class="layui-input" type="text">
+			</div>
+		</div>
+		
+		
+	
+		<div class="layui-form-item">
+			<label class="layui-form-label">需要登陆</label>
+			<div class="layui-input-block">
+				<input name="needLogin" value="1" title="是" checked="" type="radio">
+				<input name="needLogin" value="0" title="否" type="radio"> 
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<div class="layui-inline">
+				<label class="layui-form-label">用户名</label>
+				<div class="layui-input-inline">
+					<input name="username"  autocomplete="off" class="layui-input" type="text">
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label">密码</label>
+				<div class="layui-input-inline">
+					<input name="password"  autocomplete="off" class="layui-input" type="text">
+				</div>
+			</div>
+			
+			<div class="layui-inline">
+				<label class="layui-form-label">daasKey</label>
+				<div class="layui-input-inline">
+					<input name="iwApikey"   autocomplete="off" class="layui-input" type="text">
+				</div>
+			</div>
+		</div>
+
+
+		<div class="layui-form-item">
+			<div class="layui-inline">
+				<label class="layui-form-label">排序</label>
+				<div class="layui-input-inline">
+					<input name="sort" lay-verify="required" autocomplete="off"   class="layui-input"   type="text">
+				</div>
+			</div>
+		</div>
+		
+		<div class="layui-form-item">
+			<div class="layui-input-block">
+				<button class="layui-btn" lay-submit="" lay-filter="go1">保存</button>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="api-div" style="display: none;">
+	<fieldset class="layui-elem-field layui-field-title">
+		<legend>新增接口</legend>
+	</fieldset>
+	<form class="layui-form" action="">
+		<input type="hidden" name="id"  value=""/>
+		<input type="hidden" name="projectId"  value=""/>
+		<div class="layui-form-item">
+			<label class="layui-form-label">接口名称</label>
+			<div class="layui-input-block">
+				<input name="name" lay-verify="required" autocomplete="off"  class="layui-input" type="text">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">接口别名</label>
+			<div class="layui-input-block">
+				<input name="alias" lay-verify="required"  autocomplete="off" class="layui-input" type="text">
+			</div>
+		</div>
+		
+		
+	
+		<div class="layui-form-item" id="askType_div">
+			<label class="layui-form-label">请求方式</label>
+			<div class="layui-input-block">
+				<input name="askType" value="1" title="GET" type="radio" checked>
+				<input name="askType" value="2" title="POST" type="radio"> 
+			</div>
+		</div>
+		
+		<div class="layui-form-item" id="apiType_div">
+			<label class="layui-form-label" >接口类型</label>
+			<div class="layui-input-block">
+				<input name="apiType" lay-filter="apiType" value="1" title="登陆"  type="radio">
+				<input name="apiType" lay-filter="apiType" value="2" title="验证码" type="radio"> 
+				<input name="apiType" lay-filter="apiType" value="0" title="其他"  type="radio" checked> 
+			</div>
+		</div>
+
+
+
+		<div class="layui-form-item">
+			<div class="layui-inline">
+				<label class="layui-form-label">排序</label>
+				<div class="layui-input-inline">
+					<input name="sort" lay-verify="required" autocomplete="off"   class="layui-input"   type="text">
+				</div>
+			</div>
+		</div>
+		
+		<table class="layui-table table-params" lay-skin="line">
+		  <colgroup>
+		    <col width="250">
+		    <col width="250">
+		    <col width="80">
+		    <col width="250">
+		    <col width="250">
+		     <col width="100">
+		    <col>
+		  </colgroup>
+		  <thead>
+		    <tr>
+		      <th>参数名称</th>
+		      <th>参数说明</th>
+		      <th>是否必填</th>
+		      <th>默认值</th>
+		      <th>备注</th>
+		      <th></th>
+		    </tr> 
+		  </thead>
+		  <tbody>
+		    
+		  </tbody>
+		</table> 
+		 
+		
+		<div class="layui-form-item">
+			<div class="layui-input-block">
+				<button class="layui-btn" lay-submit="" lay-filter="go2">保存</button>
+			</div>
+		</div>
+	</form>
+</div>

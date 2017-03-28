@@ -1,0 +1,100 @@
+<fieldset class="layui-elem-field layui-field-title ">
+	<legend>API名称</legend>
+	<div class="layui-field-box">$!{sysApiBean.alias}</div>
+</fieldset>
+
+<fieldset class="layui-elem-field layui-field-title ">
+	<legend>API地址</legend>
+	<div class="layui-field-box">$!{sysApiBean.url}</div>
+</fieldset>
+
+<fieldset class="layui-elem-field layui-field-title ">
+	<legend>请求方式</legend>
+	<div class="layui-field-box">#if($!{sysApiBean.askType} == 1)GET#elseif($!{sysApiBean.askType} == 2)POST#end</div>
+</fieldset>
+
+#if($!params && $!params.size() !=0)
+<fieldset class="layui-elem-field layui-field-title ">
+	<legend>请求参数</legend>
+<table class="layui-table" lay-even="" lay-skin="row">
+	<colgroup>
+		<col width="150">
+		<col width="150">
+		<col width="200">
+		<col>
+	</colgroup>
+	<thead>
+		<tr>
+			<th>参数名</th>
+			<th>参数说明</th>
+			<th>是否必填</th>
+			<th>默认值</th>
+			<th>备注</th>
+		</tr>
+	</thead>
+	<tbody>
+		#foreach($!param in $!params)
+			<tr>
+			<td>$!{param.name}</td>
+			<td>$!{param.detail}</td>
+			<td>#if($!{param.required} == 1)是 #elseif($!{param.required} ==0)否#end</td>
+			<td>$!{param.defaultValue}</td>
+			<td>$!{param.remarks}</td>
+		</tr>
+		#end
+	</tbody>
+</table>
+</fieldset>
+#end
+<fieldset class="layui-elem-field layui-field-title ">
+	<legend>返回字段说明</legend>
+<table class="layui-table" lay-even="" lay-skin="row">
+	<colgroup>
+		<col width="150">
+		<col width="150">
+		<col width="200">
+		<col>
+	</colgroup>
+	<thead>
+		<tr>
+			<th>返回值字段</th>
+			<th>类型及范围</th>
+			<th>说明</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>rtnCode</td>
+			<td>000000</td>
+			<td>rtnMsg：请求成功</td>
+			
+		</tr>
+		<tr>
+			<td>rtnCode</td>
+			<td>999999</td>
+			<td>rtnMsg：请求发生未知异常</td>
+			
+		</tr>
+		<tr>
+			<td>rtnCode</td>
+			<td>900003</td>
+			<td>rtnMsg：未登录或登录超时,请重新登录</td>
+		</tr>
+		<tr>
+			<td>rtnCode</td>
+			<td>900005</td>
+			<td>rtnMsg：没有当前查询信息</td>
+			
+		</tr>
+	</tbody>
+</table>
+</fieldset>
+<!-- <fieldset class="layui-elem-field layui-field-title ">
+	<legend>返回结果</legend>
+<pre class="layui-code">//在里面存放任意的代码
+				Lay.fn.event = function(modName, events, params){
+				var that = this, result = null, filter = events.match(/\(.*\)$/)||[];
+				var set = (events = modName + '.'+ events).replace(filter, ''); 
+			};
+		</pre>
+</fieldset> -->

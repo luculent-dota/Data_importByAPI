@@ -1,0 +1,22 @@
+#parse('/layout/header.html')
+<style>
+*{padding:0px;margin:0px;font-size:12px;list-style:none;}
+body{background:#f0f0f0;}
+.error_bg{width:705px;height:291px;margin:0 auto;margin-top:200px;position:relative;}
+.error-container{margin-bottom: 4em;margin-top: 4em;text-align: center;}
+.error-container h1 {font-size: 120px;line-height: 1em;margin-bottom: 0.5em;}
+.error-container h2 {font-size: 28px;margin-bottom: 0.75em;}
+.error-container .error-details {font-size: 16px;margin-bottom: 1.5em;}
+.error-container .error-details span{margin-top:5px;display:block;}
+.error-container .error-actions a {margin: 0 0.5em;}
+</style>
+	<div class="error_bg">
+			<div class="error-container">
+				<h1>访问失败!</h1>
+				<h2>404 页面没有找到</h2>
+				<div class="error-details">
+					请联系管理员，解决此问题。
+				</div> <!-- /error-details -->
+			</div> <!-- /error-container -->
+	</div>
+#parse('/layout/footer.html') 

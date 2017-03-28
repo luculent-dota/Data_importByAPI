@@ -1,0 +1,19 @@
+#parse('/layout/header.html')
+<input type="hidden" id="apiId" name="apiId" value="$!{apiId}" />
+<div class="layui-tab">
+	<ul class="layui-tab-title">
+		<li class="layui-this">接口说明</li>
+		<li>接口测试</li>
+		<li>数据库</li>
+
+	</ul>
+	<div class="layui-tab-content">
+		<div class="layui-tab-item layui-show">#parse('/pages/api/api-info.html')</div>
+		<div class="layui-tab-item">#parse('/pages/api/api-test.html')</div>
+		<div class="layui-tab-item">内容2</div>
+
+	</div>
+</div>
+<script type="text/javascript"
+	src="#springUrl('/static/lib/api/api.js')"></script>
+#parse('/layout/footer.html')
