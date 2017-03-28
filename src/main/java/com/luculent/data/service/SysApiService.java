@@ -28,6 +28,11 @@ public class SysApiService {
 	
 	private String MenuHref ="/api/index.htm?apiId=";
 
+	/**
+	 * 获取菜单json
+	 * @param projectId
+	 * @return
+	 */
 	public Object getMenuJSON(String projectId){
 		SysProject sysProject  = sysProjectMapper.selectById(projectId);
 		List<SysApi> apiList =  sysApiMapper.selectList(new EntityWrapper<SysApi>().eq("project_id", projectId).orderBy("sort,scrq", true));

@@ -27,7 +27,10 @@ public class SysMenuService {
 	private final String VirtualBaseTree ="VirtualBaseTree";
 	
 	
-	
+	/**
+	 * 构建菜单树
+	 * @return
+	 */
 	public TreeNode getMenuTree(){
 		List<BaseStaticTreeNode> nodeList = new ArrayList<BaseStaticTreeNode>();
 		
