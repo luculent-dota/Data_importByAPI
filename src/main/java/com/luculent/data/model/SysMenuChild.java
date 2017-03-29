@@ -9,20 +9,34 @@ package com.luculent.data.model;
  */
 public class SysMenuChild {
 
+	private String id;
+
 	private String title;
 	
 	private String icon="&#xe641;";
 	
 	private String href;
 	
+	
 	public SysMenuChild() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public SysMenuChild(String title,String href) {
+	public SysMenuChild(String id,String title,String href) {
 		// TODO Auto-generated constructor stub
+		this.id = id;
 		this.title = title;
 		this.href = href;
+	}
+	
+	
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getTitle() {

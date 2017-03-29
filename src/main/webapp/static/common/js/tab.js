@@ -6,7 +6,6 @@ layui.define(['element', 'common'], function(exports) {
 		$ = layui.jquery,
 		element = layui.element(),
 		commo = layui.common,
-		globalTabIdIndex = 0,
 		Tab = function() {
 			this.config = {
 				elem: undefined,
@@ -113,8 +112,7 @@ layui.define(['element', 'common'], function(exports) {
 					}
 				}
 			}
-			globalTabIdIndex++;
-			var content = '<iframe src="' + data.href + '" data-id="' + globalTabIdIndex + '"></iframe>';
+			var content = '<iframe src="' + data.href + '" data-id="' + data.id + '"></iframe>';
 			var title = '';
 			if(data.icon !== undefined) {
 				if(data.icon.indexOf('fa-') !== -1) {
@@ -125,7 +123,7 @@ layui.define(['element', 'common'], function(exports) {
 			}
 			title += '<cite>' + data.title + '</cite>';
 			if(_config.closed) {
-				title += '<i class="layui-icon layui-unselect layui-tab-close" data-id="' + globalTabIdIndex + '">&#x1006;</i>';
+				title += '<i class="layui-icon layui-unselect layui-tab-close" data-id="' + data.id + '">&#x1006;</i>';
 			}
 			//添加tab
 			element.tabAdd(ELEM.tabFilter, {
@@ -134,12 +132,12 @@ layui.define(['element', 'common'], function(exports) {
 				id:new Date().getTime()
 			});
 			//iframe 自适应
-			ELEM.contentBox.find('iframe[data-id=' + globalTabIdIndex + ']').each(function() {
+			ELEM.contentBox.find('iframe[data-id=' + data.id + ']').each(function() {
 				$(this).height(ELEM.contentBox.height());
 			});
 			if(_config.closed) {
 				//监听关闭事件
-				ELEM.titleBox.find('li').children('i.layui-tab-close[data-id=' + globalTabIdIndex + ']').on('click', function() {
+				ELEM.titleBox.find('li').children('i.layui-tab-close[data-id=' + data.id + ']').on('click', function() {
 					element.tabDelete(ELEM.tabFilter, $(this).parent('li').attr('lay-id')).init();
 					if(_config.contextMenu) {
 						$(document).find('div.uiba-contextmenu').remove(); //移除右键菜单dom
@@ -158,6 +156,11 @@ layui.define(['element', 'common'], function(exports) {
 		if(_config.contextMenu) {
 			element.on('tab(' + ELEM.tabFilter + ')', function(data) {
 				$(document).find('div.admin-contextmenu').remove();
+				var layId = $(data.elem.context).attr("lay-id");
+				if(layId !== undefined){
+					var tabId = $("li[lay-id='"+layId+"'] i").eq(1).data("id");
+					$("#admin-navbar-side dl dd[data-id='"+tabId+"']").addClass("layui-this").siblings("dd").removeClass("layui-this");
+				}
 			});
 			ELEM.titleBox.find('li').on('contextmenu', function(e) {
 				var $that = $(e.target);

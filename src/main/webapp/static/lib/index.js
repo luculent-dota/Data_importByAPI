@@ -91,7 +91,6 @@ layui.config({
 			navbar.render();
 			//监听点击事件
 			navbar.on('click(side)', function(data) {
-				console.log(data.field);
 				tab.tabAdd(data.field);
 			});
 			$("#admin-navbar-side dl dd").eq(0).click();

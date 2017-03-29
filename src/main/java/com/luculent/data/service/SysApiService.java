@@ -53,7 +53,7 @@ public class SysApiService {
 		
 		if(apiList !=null && apiList.size()!=0){
 			for(SysApi apiBean:apiList){
-				children.add(new SysMenuChild(apiBean.getName(),MenuHref+apiBean.getId()));
+				children.add(new SysMenuChild(apiBean.getId(),apiBean.getName(),MenuHref+apiBean.getId()));
 			}
 		}
 		

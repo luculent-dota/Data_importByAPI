@@ -106,7 +106,6 @@ layui.use(['layer', 'laytpl','form'], function(){
 			});
 			return false;
 	  });
-	  	//console.log($("#ztree").length);
 	form.on('radio(apiType)', function(data){
 		if($(data.elem).attr("title") == "验证码"){
 			$(".table-params tbody").empty();
@@ -152,7 +151,6 @@ function initMenuTree(form,laytpl){
 						AppUtils.clearForm($(".api-div .layui-form"));
 						$.ajax({url: contextPath+"/menu/api-get.htm",data:{id:treeNode.id},type:"post",dataType: "json",async:false,
 							  success: function(data){
-								  console.log(data);
 								  AppUtils.setForm($(".api-div .layui-form"),data);
 								  if(data.apiType == 2){
 									  $(".table-params tbody").empty();

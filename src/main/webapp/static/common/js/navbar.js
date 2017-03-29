@@ -142,6 +142,7 @@ layui.define(['element', 'common'], function(exports) {
 					if($this.find('dl').length > 0) {
 						var $dd = $this.find('dd').each(function() {
 							$(this).on('click', function() {
+								var id = $(this).data('id');
 								var $a = $(this).children('a');
 								var href = $a.data('url');
 								var icon = $a.children('i:first').data('icon');
@@ -149,6 +150,7 @@ layui.define(['element', 'common'], function(exports) {
 								var data = {
 									elem: $a,
 									field: {
+										id:id,
 										href: href,
 										icon: icon,
 										title: title
@@ -159,6 +161,7 @@ layui.define(['element', 'common'], function(exports) {
 						});
 					} else {
 						$this.on('click', function() {
+							var id = $(this).data('id');
 							var $a = $this.children('a');
 							var href = $a.data('url');
 							var icon = $a.children('i:first').data('icon');
@@ -166,6 +169,7 @@ layui.define(['element', 'common'], function(exports) {
 							var data = {
 								elem: $a,
 								field: {
+									id:id,
 									href: href,
 									icon: icon,
 									title: title
@@ -209,7 +213,7 @@ layui.define(['element', 'common'], function(exports) {
 				ulHtml += '</a>';
 				ulHtml += '<dl class="layui-nav-child">'
 				for(var j = 0; j < data[i].children.length; j++) {
-					ulHtml += '<dd title="'+data[i].children[j].title+'">';
+					ulHtml += '<dd title="'+data[i].children[j].title+'" data-id="'+data[i].children[j].id+'">';
 					ulHtml += '<a href="javascript:;" data-url="' + data[i].children[j].href + '">';
 					if(data[i].children[j].icon !== undefined && data[i].children[j].icon !== '') {
 						if(data[i].children[j].icon.indexOf('fa-') !== -1) {
