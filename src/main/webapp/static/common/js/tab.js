@@ -59,12 +59,12 @@ layui.define(['element', 'common'], function(exports) {
 	 * 查询tab是否存在，如果存在则返回索引值，不存在返回-1
 	 * @param {String} 标题
 	 */
-	Tab.prototype.exists = function(title) {
+	Tab.prototype.exists = function(id) {
 		var that = ELEM.titleBox === undefined ? this.init() : this,
 			tabIndex = -1;
 		ELEM.titleBox.find('li').each(function(i, e) {
-			var $cite = $(this).children('cite');
-			if($cite.text() === title) {
+			var dataId = $(this).find("i").eq(1).data("id");
+			if(dataId === id) {
 				tabIndex = i;
 			};
 		});
@@ -92,7 +92,7 @@ layui.define(['element', 'common'], function(exports) {
 	Tab.prototype.tabAdd = function(data) {
 		var that = this;
 		var _config = that.config;
-		var tabIndex = that.exists(data.title);
+		var tabIndex = that.exists(data.id);
 		if(tabIndex === -1) {
 			//设置只能同时打开多少个tab选项卡
 			if(_config.maxSetting !== 'undefined') {

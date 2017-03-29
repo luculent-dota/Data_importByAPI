@@ -18,7 +18,7 @@
 					        <option value="">搜索接口</option>
 					        #if($!apiList && $!apiList.size() !=0)
 					        	#foreach($!apiBean in $!apiList)
-					        		<option value="/api/index.htm?apiId=$!{apiBean.id}">$!{apiBean.name}</option>
+					        		<option value="$!{apiBean.projectId}-$!{apiBean.id}" >$!{apiBean.name}</option>
 					        	#end
 					        #end
 					      </select>

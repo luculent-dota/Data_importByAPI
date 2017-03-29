@@ -11,12 +11,7 @@ layui.config({
 		layer = layui.layer,
 		navbar = layui.navbar();
 		tab = layui.tab({
-			elem: '.admin-nav-card' //设置选项卡容器
-				,
-			//maxSetting: {
-			//	max: 5,
-			//	tipMsg: '只能开5个哇，不能再开了。真的。'
-			//},
+			elem: '.admin-nav-card', //设置选项卡容器
 			contextMenu:true
 		});
 	//iframe自适应
@@ -27,8 +22,33 @@ layui.config({
 			$(this).height($content.height());
 		});
 	}).resize();
-
 	
+	form.on('select(component)', function(data){
+		  if(data.value){
+			  tab.removeAll();
+			  var projectId = data.value.split("-")[0];
+			  var apiId = data.value.split("-")[1];
+			  $("#project_list dl dd a[key='"+projectId+"']").parent().addClass("layui-this").siblings("dd").removeClass("layui-this");
+			  $.get(contextPath+"/api/menu-json.htm", {"projectId":projectId},function(config){
+					//设置navbar
+					navbar.set({
+						spreadOne: true,
+						elem: '#admin-navbar-side',
+						cached: true,
+						data: config
+						/*cached:true,
+						url: 'datas/nav.json'*/
+					});
+					//渲染navbar
+					navbar.render();
+					//监听点击事件
+					navbar.on('click(side)', function(data) {
+						tab.tabAdd(data.field);
+					});
+					$("#admin-navbar-side dl dd[data-id='"+apiId+"']").click();
+				},"json");
+		  }
+	});
 	$('.admin-side-toggle').on('click', function() {
 		var sideWidth = $('#admin-side').width();
 		if(sideWidth === 200) {
