@@ -82,8 +82,16 @@
 			<artifactId>log4j-core</artifactId>
 			<version>2.7</version>
 		</dependency>
-		
-
+		<dependency>  
+		    <groupId>org.apache.logging.log4j</groupId>  
+		    <artifactId>log4j-1.2-api</artifactId>  
+		    <version>2.7</version>  
+		</dependency>  
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>2.7</version>
+		</dependency>
 		<!--web工程需要包含log4j-web，非web工程不需要 -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -91,17 +99,43 @@
 			<version>2.7</version>
 			<scope>runtime</scope>
 		</dependency>
-			<dependency>
-		    <groupId>net.sourceforge.tess4j</groupId>
-		    <artifactId>tess4j</artifactId>
-		    <version>3.3.1</version>
-		</dependency>
-
 		<!--需要使用log4j2的AsyncLogger需要包含disruptor -->
 		<dependency>
 			<groupId>com.lmax</groupId>
 			<artifactId>disruptor</artifactId>
 			<version>3.3.6</version>
+		</dependency>
+		
+	    <!-- logback ignore -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+            <version>1.7.25</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>1.7.25</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+            <version>1.7.25</version>
+            <scope>provided</scope>
+        </dependency>
+		<!-- logback ignore -->
+		<dependency>
+		    <groupId>net.sourceforge.tess4j</groupId>
+		    <artifactId>tess4j</artifactId>
+		    <version>3.3.1</version>
 		</dependency>
 
 		<!-- Spring -->
