@@ -31,12 +31,16 @@ var param_tr = "<tr>"+
 			"</div>"+
 		 "</td>"+
 	    "</tr>";
-layui.use(['layer', 'laytpl','form'], function(){
+layui.config({
+	base: contextPath+'/static/common/js/',
+	version:new Date().getTime()
+}).use(['layer', 'laytpl','form','utils'], function(){
 		var $ = layui.jquery,
 		layer = layui.layer,
 		 laytpl = layui.laytpl,
-		form = layui.form();
-		initMenuTree(form,laytpl);
+		form = layui.form(),
+		utils = layui.utils;
+		initMenuTree(form,laytpl,utils);
 		
 		form.on('submit(go1)', function(res) {
 			$.ajax({
@@ -49,7 +53,7 @@ layui.use(['layer', 'laytpl','form'], function(){
 						  layer.msg(data.msg, {icon: 5});
 					  }else{
 						  layer.msg(data.msg, {icon: 1});
-						  initMenuTree(form,laytpl);
+						  initMenuTree(form,laytpl,utils);
 					  }
 					 
 				  }
@@ -99,7 +103,7 @@ layui.use(['layer', 'laytpl','form'], function(){
 						  layer.msg(data.msg, {icon: 5});
 					  }else{
 						  layer.msg(data.msg, {icon: 1});
-						  initMenuTree(form,laytpl);
+						  initMenuTree(form,laytpl,utils);
 					  }
 					 
 				  }
@@ -126,17 +130,17 @@ layui.use(['layer', 'laytpl','form'], function(){
 	 });
 });  
 
-function initMenuTree(form,laytpl){
+function initMenuTree(form,laytpl,utils){
 	 $.get(contextPath+"/menu/tree.htm",  function(trees){
 		 ZtreeUtil.initTree("ztree",trees,{
 				onClick:function(event, treeId, treeNode){
 					if(treeNode.type == "project"){
 						$(".project-div fieldset legend").text("编辑项目");
 						$(".project-div input[name='id']").val(treeNode.id);
-						AppUtils.clearForm($(".project-div .layui-form"));
+						utils.clearForm($(".project-div .layui-form"));
 						$.ajax({url: contextPath+"/menu/project-get.htm",data:{id:treeNode.id},type:"post",dataType: "json",async:false,
 							  success: function(data){
-								  AppUtils.setForm($(".project-div .layui-form"),data);
+								  utils.setForm($(".project-div .layui-form"),data);
 								  form.render('radio');
 							  }
 						});
@@ -148,10 +152,10 @@ function initMenuTree(form,laytpl){
 						$(".api-div fieldset legend").text("编辑接口");
 						$(".api-div input[name='projectId']").val("");
 						$(".api-div input[name='projectId']").val(treeNode.id);
-						AppUtils.clearForm($(".api-div .layui-form"));
+						utils.clearForm($(".api-div .layui-form"));
 						$.ajax({url: contextPath+"/menu/api-get.htm",data:{id:treeNode.id},type:"post",dataType: "json",async:false,
 							  success: function(data){
-								  AppUtils.setForm($(".api-div .layui-form"),data);
+								  utils.setForm($(".api-div .layui-form"),data);
 								  if(data.apiType == 2){
 									  $(".table-params tbody").empty();
 									  $(".table-params").hide();
@@ -200,7 +204,7 @@ function initMenuTree(form,laytpl){
 	                },
 	                action: function(NODE, TREE_OBJ){
 	                	$(".project-div fieldset legend").text("新增项目");
-	                	AppUtils.clearForm($(".project-div .layui-form"));
+	                	utils.clearForm($(".project-div .layui-form"));
 	                	$(".project-div").show();
 	                	$(".api-div").hide();
 	                	form.render('radio');
@@ -218,7 +222,7 @@ function initMenuTree(form,laytpl){
 	                action: function(NODE, TREE_OBJ){
 	                	$(".project-div").hide();
 	                	$(".api-div fieldset legend").text("新增接口");
-	                	AppUtils.clearForm($(".api-div .layui-form"));
+	                	utils.clearForm($(".api-div .layui-form"));
 	                	$("#askType_div input").eq(0).prop('checked', true);
 	                	$("#apiType_div input").eq(2).prop('checked', true);
 	                	form.render('radio');
@@ -252,7 +256,7 @@ function initMenuTree(form,laytpl){
 		  						  layer.msg(data.msg, {icon: 5});
 			  					  }else{
 			  						  layer.msg(data.msg, {icon: 1});
-			  						initMenuTree(form,laytpl);
+			  						initMenuTree(form,laytpl,utils);
 			  					  }
 		                	},"json");
 	                	});
@@ -275,7 +279,7 @@ function initMenuTree(form,laytpl){
 		  						  layer.msg(data.msg, {icon: 5});
 			  					  }else{
 			  						  layer.msg(data.msg, {icon: 1});
-			  						initMenuTree(form,laytpl);
+			  						initMenuTree(form,laytpl,utils);
 			  					  }
 		                	},"json");
 	                	});
