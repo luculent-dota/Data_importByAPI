@@ -22,8 +22,6 @@ public class SysParam extends BaseModel{
 	private String id;
 	/** 参数名称. */
 	private String name;
-	/** 参数类型 默认为1 string. */
-	private Integer paramType;
 	/** 参数 默认值. */
 	private String defaultValue;
 	/** 是否必填 1必填 0选填. */
@@ -73,25 +71,6 @@ public class SysParam extends BaseModel{
 	 */
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	/**
-	 * Gets the 参数类型 默认为1 string.
-	 *
-	 * @return the 参数类型 默认为1 string
-	 */
-	public Integer getParamType() {
-		return paramType;
-	}
-
-	/**
-	 * Sets the 参数类型 默认为1 string.
-	 *
-	 * @param paramType
-	 *            the new 参数类型 默认为1 string
-	 */
-	public void setParamType(Integer paramType) {
-		this.paramType = paramType;
 	}
 
 	/**
