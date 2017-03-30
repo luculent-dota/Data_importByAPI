@@ -50,7 +50,6 @@ layui.config({
 			  dataType: "json",
 			  success: function(data){
 				  msg.close(layIndex);
-				  debugger;
 					  if(apitype == 2){
 						  if(data.length ===32){
 							  $("#test-img").attr("src","/temp/"+data+".gif");
@@ -84,8 +83,10 @@ layui.config({
 			  type:"post",
 			  dataType: "json",
 			  success: function(data){
-				  $(".test-fail").hide();
 				  msg.close(layIndex);
+				  if(data.success){
+					  $(".test-fail").hide();
+				  }
 				  msg.alertData(data);
 			  }
 		});

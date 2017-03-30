@@ -486,7 +486,7 @@ public class HttpClientUtil {
 				
 			}
             logger.info("获取验证码图片【"+ get.getURI() +"】相应的字符串为："+res);
-    		return res; 
+    		return res.trim(); 
         } catch (Exception e) {
 			get.abort();
 			logger.error("获取图片【"+ get.getURI() +"】出错", e);
