@@ -4,13 +4,16 @@
 	<ul class="layui-tab-title">
 		<li class="layui-this">接口说明</li>
 		<li>接口测试</li>
-		<li>数据库</li>
-
+		#if($!{sysApiBean.apiType} == 0)
+		<li>数据处理</li>
+		#end
 	</ul>
 	<div class="layui-tab-content">
 		<div class="layui-tab-item layui-show">#parse('/pages/api/api-info.html')</div>
 		<div class="layui-tab-item">#parse('/pages/api/api-test.html')</div>
-		<div class="layui-tab-item">内容2</div>
+		#if($!{sysApiBean.apiType} == 0)
+		<div class="layui-tab-item">#parse('/pages/api/data-handle.html')</div>
+		#end
 
 	</div>
 </div>
