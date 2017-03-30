@@ -51,6 +51,7 @@
         <!-- Root Logger -->  
         <root level="DEBUG">  
             <appender-ref ref="Console" />  
+            <AppenderRef ref="RunLog" />
         </root>
         <!-- pattern layout actually uses location, so we need to include it  异步-->
 		<AsyncLogger name="run_long" level="DEBUG" includeLocation="true">
