@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.luculent.data.DataConstant;
 import com.luculent.data.mapper.SysApiMapper;
 import com.luculent.data.mapper.SysParamMapper;
 import com.luculent.data.mapper.SysProjectMapper;
@@ -35,11 +36,9 @@ public class SysApiService {
 	@Autowired
 	private SysParamMapper sysParamMapper;
 	
-	private String MenuHref ="/api/index.htm?apiId=";
 	
-	private final String CODE_NAME="验证码";
-	private final Integer CODE_TYPE =2;
-	private final Integer LOGIN_TYPE =1;
+	
+	
 
 	/**
 	 * 获取菜单json
@@ -53,7 +52,7 @@ public class SysApiService {
 		
 		if(apiList !=null && apiList.size()!=0){
 			for(SysApi apiBean:apiList){
-				children.add(new SysMenuChild(apiBean.getId(),apiBean.getName(),MenuHref+apiBean.getId()));
+				children.add(new SysMenuChild(apiBean.getId(),apiBean.getName(),DataConstant.MENU_HREF+apiBean.getId()));
 			}
 		}
 		
@@ -64,44 +63,47 @@ public class SysApiService {
 		
 	}
 	
-	public String autoLoginByProjectId(String projectId){
+	public String getJoinUrl(SysApi sysApi,String code){
+		List<SysParam> params = sysParamMapper.selectList(new EntityWrapper<SysParam>().eq("api_id", sysApi.getId()));
+		 StringBuffer joinUrl = new StringBuffer(sysApi.getUrl());
+	     if(params !=null && params.size()!=0){
+	        	for(SysParam param:params){
+	        		joinUrl.append(DataConstant.URL_AND).append(param.getName()).append(DataConstant.URL_EQUAL);
+	        		if(StringUtils.isNotEmpty(code)&&DataConstant.CODE_NAME.equals(param.getDetail())){
+	        			joinUrl.append(code);
+	        		}else{
+	        			joinUrl.append(param.getDefaultValue());
+	        		}
+	        	}
+	    }
+	    return joinUrl.toString();
+	}
+	
+	public boolean autoLoginByProjectId(String projectId){
 		SysProject sysProject = sysProjectMapper.selectById(projectId);
 		logger.info("项目【"+sysProject.getName()+"】自动登陆开始...");
 		//验证码
-		List<SysApi> codeList =sysApiMapper.selectList(new EntityWrapper<SysApi>().eq("project_id", projectId).eq("api_type", CODE_TYPE));
+		List<SysApi> codeList =sysApiMapper.selectList(new EntityWrapper<SysApi>().eq("project_id", projectId).eq("api_type", DataConstant.API_TYPE_CODE));
 		if(codeList !=null && codeList.size() !=0){
 			String code =HttpClientUtil.getCodeResult(codeList.get(0).getUrl());
-			List<SysApi> loginList =sysApiMapper.selectList(new EntityWrapper<SysApi>().eq("project_id", projectId).eq("api_type", LOGIN_TYPE));
+			List<SysApi> loginList =sysApiMapper.selectList(new EntityWrapper<SysApi>().eq("project_id", projectId).eq("api_type", DataConstant.API_TYPE_LOGIN));
 			if(loginList !=null && loginList.size() !=0){
 				SysApi sysApi = loginList.get(0);
-				List<SysParam> params = sysParamMapper.selectList(new EntityWrapper<SysParam>().eq("api_id", sysApi.getId()));
-				 StringBuffer loginUrl = new StringBuffer(sysApi.getUrl());
-			     if(params !=null && params.size()!=0){
-			        	for(SysParam param:params){
-			        		loginUrl.append("&").append(param.getName()).append("=");
-			        		if(CODE_NAME.equals(param.getDetail())){
-			        			loginUrl.append(code);
-			        		}else{
-			        			loginUrl.append(param.getDefaultValue());
-			        		}
-			        	}
-			    }
-			    String res= HttpClientUtil.getContent(loginUrl.toString());
+			    String res= HttpClientUtil.getContent(getJoinUrl(sysApi,code));
 			    if(StringUtils.isNotEmpty(res)){
 			    	String result = JSONObject.parseObject(res).getJSONObject("head").getString("rtnCode");
-			    	if(result.equals("000000")){
+			    	if(DataConstant.RES_CODE_SUCCESS.equals(result)){
 			    		logger.info("项目【"+sysProject.getName()+"】自动登陆成功...");
-			    		return "登陆成功";
+			    		return true;
 			    	}
 			    	logger.info("项目【"+sysProject.getName()+"】自动登陆失败...");
-			    	return "登陆失败";
+			    	return false;
 			    }
-				//String res =HttpClientUtil.getImageDownLoad();
 			}
 		
 		}
 		logger.info("项目【"+sysProject.getName()+"】下无验证码api,登陆失败...");
-		return "登陆失败";
+		return false;
 	}
 
 	

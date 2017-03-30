@@ -34,11 +34,11 @@ var param_tr = "<tr>"+
 layui.config({
 	base: contextPath+'/static/common/js/',
 	version:new Date().getTime()
-}).use(['layer', 'laytpl','form','utils'], function(){
+}).use(['laytpl','form','utils','msg'], function(){
 		var $ = layui.jquery,
-		layer = layui.layer,
 		 laytpl = layui.laytpl,
 		form = layui.form(),
+		msg = layui.msg,
 		utils = layui.utils;
 		initMenuTree(form,laytpl,utils);
 		
@@ -49,13 +49,7 @@ layui.config({
 				  type:"post",
 				  dataType: "json",
 				  success: function(data){
-					  if(data.status =='500'){
-						  layer.msg(data.msg, {icon: 5});
-					  }else{
-						  layer.msg(data.msg, {icon: 1});
-						  initMenuTree(form,laytpl,utils);
-					  }
-					 
+					  msg.result(data,initMenuTree(form,laytpl,utils,msg));
 				  }
 			});
 			return false;
@@ -99,13 +93,7 @@ layui.config({
 				  dataType: "json",
 				  contentType:"application/json",
 				  success: function(data){
-					  if(data.status =='500'){
-						  layer.msg(data.msg, {icon: 5});
-					  }else{
-						  layer.msg(data.msg, {icon: 1});
-						  initMenuTree(form,laytpl,utils);
-					  }
-					 
+					  msg.result(data,initMenuTree(form,laytpl,utils,msg));
 				  }
 			});
 			return false;
@@ -130,7 +118,7 @@ layui.config({
 	 });
 });  
 
-function initMenuTree(form,laytpl,utils){
+function initMenuTree(form,laytpl,utils,msg){
 	 $.get(contextPath+"/menu/tree.htm",  function(trees){
 		 ZtreeUtil.initTree("ztree",trees,{
 				onClick:function(event, treeId, treeNode){
@@ -244,20 +232,13 @@ function initMenuTree(form,laytpl,utils){
 	                	}
 	                },
 	                action: function(NODE, TREE_OBJ){
-	                	
-//	                	layer.confirm(msg, {icon: 3});
 	                	var message = "";
 	                	if(NODE.isParent){
 	                		message ="该项目存在接口<br>"
 	                	}
-	                	layer.confirm(message+'确认删除项目【'+NODE.text+'】吗？', {icon: 3},function(index){
+	                	msg.confirm(message+'确认删除项目【'+NODE.text+'】吗？',function(index){
 	                		$.get(contextPath+"/menu/project-del.htm", {id:NODE.id}, function(data){
-		                		if(data.status =='500'){
-		  						  layer.msg(data.msg, {icon: 5});
-			  					  }else{
-			  						  layer.msg(data.msg, {icon: 1});
-			  						initMenuTree(form,laytpl,utils);
-			  					  }
+	                			msg.result(data,initMenuTree(form,laytpl,utils,msg));
 		                	},"json");
 	                	});
 	                }
@@ -272,15 +253,9 @@ function initMenuTree(form,laytpl,utils){
 	                	}
 	                },
 	                action: function(NODE, TREE_OBJ){
-	                	
-	                	layer.confirm('确认删除接口【'+NODE.text+'】吗？', {icon: 3},function(index){
+	                	msg.confirm('确认删除接口【'+NODE.text+'】吗？',function(index){
 	                		$.get(contextPath+"/menu/api-del.htm", {id:NODE.id}, function(data){
-		                		if(data.status =='500'){
-		  						  layer.msg(data.msg, {icon: 5});
-			  					  }else{
-			  						  layer.msg(data.msg, {icon: 1});
-			  						initMenuTree(form,laytpl,utils);
-			  					  }
+	                			msg.result(data,initMenuTree(form,laytpl,utils,msg));
 		                	},"json");
 	                	});
 	                }

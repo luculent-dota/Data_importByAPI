@@ -4,6 +4,17 @@ layui.define(['layer'], function(exports) {
 	var $ = layui.jquery,
 		layer = layui.layer;
 	var msg={
+			//msg信息 对应 JsonResult msg不为空
+			result:function(data,callback){
+				if(data.success && data.status === "200"){
+					layer.msg(data.msg, {icon: 1});
+					if(typeof callback == 'function'){
+						callback;
+					}
+				}else{
+					layer.msg(data.msg, {icon: 2}); 
+				}
+			},
 			//提示成功信息
 			success:function(msg){
 				layer.msg(msg, {icon: 1}); 
@@ -41,15 +52,14 @@ layui.define(['layer'], function(exports) {
 				}
 				
 			},
+			alertData:function(data){
+				layer.alert(data.msg);
+			},
 			//alert信息
 			alert:function(msg){
 				layer.alert(msg);
-			},
-			//msg信息
-			msg:function(msg,timeout){
-				timeout = (typeof timeout == 'undefined')? 3000 : timeout*1000;
-				layer.msg(msg,{time: timeout}); 
 			}
+			
 	};
 	
 	exports('msg', msg);

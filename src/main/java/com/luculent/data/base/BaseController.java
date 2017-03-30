@@ -55,8 +55,9 @@ public class BaseController {
      * @param obj 需要返回的对象
      * @return result
      */
-    protected JsonResult renderSuccess(Object obj) {
+    protected JsonResult renderSuccess(Object obj,String msg) {
         JsonResult result = renderSuccess();
+        result.setMsg(msg);
         result.setObj(obj);
         return result;
     }

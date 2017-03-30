@@ -1,7 +1,11 @@
-layui.use(['element','code','layer','form'], function(){
+layui.config({
+	base: contextPath+'/static/common/js/',
+	version:new Date().getTime()
+}).use(['element','code','layer','form','msg'], function(){
 	var  element = layui.element(),
 	$ = layui.jquery,
 	layer = layui.layer,
+	msg = layui.msg,
 	form = layui.form();
 	layui.code();
 	
@@ -37,6 +41,7 @@ layui.use(['element','code','layer','form'], function(){
 		$(".table-params").toggle();
 	});
 	$(".test-run").on('click',function(){
+		var layIndex =msg.load();
 		var apitype = $("#test-apiType").val();
 		$.ajax({
 			  url: contextPath+"/api/test-run.htm",
@@ -44,13 +49,14 @@ layui.use(['element','code','layer','form'], function(){
 			  type:"post",
 			  dataType: "json",
 			  success: function(data){
+				  msg.close(layIndex);
 				  if(apitype == 2){
 					  $("#test-img").attr("src","/temp/"+data+".gif");
 				  }else{
 					  try {
 						  var jsonObj = JSON.parse(data);
-						  if(jsonObj.head.rtnCode != "000000"){
-							  
+						  if(jsonObj.head.rtnCode === "900003" && $(".test-fail").length !=0){
+							  $(".test-fail").show();
 						  }
 						  $(".layui-textarea").val(data);
 					  }catch(e) {
@@ -63,13 +69,16 @@ layui.use(['element','code','layer','form'], function(){
 	});
 	$(".test-fail a").on('click',function(){
 		  var projectId = $('#test-projectId').val();
+		  var layIndex =msg.loading();
 		  $.ajax({
 			  url: contextPath+"/api/auto-login.htm",
 			  data:{projectId:projectId},
 			  type:"post",
 			  dataType: "json",
 			  success: function(data){
-				  layer.alert(data, {icon: 6});
+				  $(".test-fail").hide();
+				  msg.close(layIndex);
+				  msg.alertData(data);
 			  }
 		});
 	});

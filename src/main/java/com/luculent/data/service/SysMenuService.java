@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.luculent.data.DataConstant;
 import com.luculent.data.mapper.SysApiMapper;
 import com.luculent.data.mapper.SysProjectMapper;
 import com.luculent.data.model.SysApi;
@@ -24,7 +25,7 @@ public class SysMenuService {
 	@Autowired
 	private SysApiMapper sysApiMapper;
 	
-	private final String VirtualBaseTree ="VirtualBaseTree";
+	
 	
 	
 	/**
@@ -34,18 +35,18 @@ public class SysMenuService {
 	public TreeNode getMenuTree(){
 		List<BaseStaticTreeNode> nodeList = new ArrayList<BaseStaticTreeNode>();
 		
-		nodeList.add(new BaseStaticTreeNode(VirtualBaseTree, "菜单树", null, "base"));
+		nodeList.add(new BaseStaticTreeNode(DataConstant.VirtualBaseTree, "菜单树", null, "base"));
 		List<SysProject> projectList = sysProjectMapper.selectList(new EntityWrapper<SysProject>().orderBy("sort,scrq", true));
 		List<SysApi> apiList =  sysApiMapper.selectList(new EntityWrapper<SysApi>().orderBy("sort,scrq", true)); 
 		for(SysProject projectBean:projectList){
-			BaseStaticTreeNode treeNode = new BaseStaticTreeNode(projectBean.getId(), projectBean.getName(),VirtualBaseTree , "project");
+			BaseStaticTreeNode treeNode = new BaseStaticTreeNode(projectBean.getId(), projectBean.getName(),DataConstant.VirtualBaseTree , "project");
 			nodeList.add(treeNode);
 		}
 		for(SysApi apiBean:apiList){
 			BaseStaticTreeNode treeNode = new BaseStaticTreeNode(apiBean.getId(), apiBean.getName(),apiBean.getProjectId() , "api");
 			nodeList.add(treeNode);
 		}
-		StaticTree tree = new StaticTree(nodeList.toArray(new BaseStaticTreeNode[0]),VirtualBaseTree);
+		StaticTree tree = new StaticTree(nodeList.toArray(new BaseStaticTreeNode[0]),DataConstant.VirtualBaseTree);
 		tree.render();
 		return tree.getRootNode();
 		

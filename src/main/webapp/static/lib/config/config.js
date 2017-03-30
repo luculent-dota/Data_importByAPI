@@ -1,6 +1,10 @@
-layui.use(['layer', 'form'], function(){
+layui.config({
+	base: contextPath+'/static/common/js/',
+	version:new Date().getTime()
+}).use(['layer', 'form','msg'], function(){
   var form = layui.form(),
   $ = layui.jquery,
+  msg = layui.msg,
   layer = layui.layer;
   
   form.on('submit(go)', function(res) {
@@ -10,12 +14,7 @@ layui.use(['layer', 'form'], function(){
 			  type:"post",
 			  dataType: "json",
 			  success: function(data){
-				  if(data.status =='500'){
-					  layer.msg(data.msg, {icon: 5});
-				  }else{
-					  layer.msg(data.msg, {icon: 1});
-				  }
-				 
+				  msg.result(data);
 			  }
 		});
 		return false;

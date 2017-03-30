@@ -9,13 +9,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.luculent.data.DataConstant;
 import com.luculent.data.base.BaseController;
 import com.luculent.data.mapper.SysApiMapper;
 import com.luculent.data.mapper.SysParamMapper;
+import com.luculent.data.mapper.SysProjectMapper;
 import com.luculent.data.model.SysApi;
 import com.luculent.data.model.SysParam;
+import com.luculent.data.model.SysProject;
 import com.luculent.data.service.SysApiService;
 import com.luculent.data.utils.util.HttpClientUtil;
 
@@ -29,10 +31,9 @@ public class SysAPIController  extends BaseController{
 	private SysApiMapper sysApiMapper;
 	@Autowired
 	private SysParamMapper sysParamMapper;
+	@Autowired
+	private SysProjectMapper sysProjectMapper;
 	
-	private final String CODE_NAME="验证码";
-	private final Integer CODE_TYPE =2;
-	private final Integer LOGIN_TYPE =1;
 
 	
 	@RequestMapping("/index")
@@ -41,13 +42,15 @@ public class SysAPIController  extends BaseController{
         SysApi sysApi =  sysApiMapper.selectById(apiId);
         modelAndView.addObject("sysApiBean", sysApi);
         modelAndView.addObject("apiId",apiId);
+        SysProject sysProject=sysProjectMapper.selectById(sysApi.getProjectId());
+        modelAndView.addObject("projectBean", sysProject);
         List<SysParam> params = sysParamMapper.selectList(new EntityWrapper<SysParam>().eq("api_id", sysApi.getId()).orderBy("scrq"));
         modelAndView.addObject("params", params);
         StringBuffer paramBuf = new StringBuffer();
         if(params !=null && params.size()!=0){
         	
         	for(SysParam param:params){
-        		paramBuf.append("&").append(param.getName()).append("=").append(param.getDefaultValue());
+        		paramBuf.append(DataConstant.URL_AND).append(param.getName()).append(DataConstant.URL_EQUAL).append(param.getDefaultValue());
         	}
         }
         modelAndView.addObject("paramStr", paramBuf.toString());
@@ -63,8 +66,15 @@ public class SysAPIController  extends BaseController{
 	
 	@ResponseBody
 	@RequestMapping("/auto-login")
-	public String autoLogin(String projectId) {
-		return sysApiService.autoLoginByProjectId(projectId);
+	public Object autoLogin(String projectId) {
+		boolean loginIn = false;
+		for(int i=0;i<3;i++){
+			if(sysApiService.autoLoginByProjectId(projectId)){
+				loginIn = true;
+				break;
+			}
+		}
+		return loginIn?renderSuccess("登陆成功"):renderError("登陆失败");
 	}
 	
 	
@@ -75,7 +85,7 @@ public class SysAPIController  extends BaseController{
 			return null;
 		}
 		String res = null;
-		if(apiType == CODE_TYPE){
+		if(apiType == DataConstant.API_TYPE_CODE){
 			res =HttpClientUtil.getImageDownLoad(url);
 		}else{
 			res = HttpClientUtil.getContent(url);
