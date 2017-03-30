@@ -15,7 +15,23 @@
 	.test-fail{
 		display:none;
 	}
+	div.well {
+    min-height: 20px;
+    padding: 19px;
+    background-color: #f5f5f5;
+    border: 1px solid #eee;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+	}
 </style>
+<script src="#springUrl('/static/common/js/c.js')" type="text/javascript"></script>
+<link href="#springUrl('/static/common/css/s.css')"  type="text/css" rel="stylesheet"></link>
+
 <form class="layui-form layui-form-pane" >
 		<input type="hidden" id="test-apiType"  name ="test-apiType"  value="$!{sysApiBean.apiType}" />
 		<input type="hidden" id="test-projectId"  name ="test-projectId"  value="$!{sysApiBean.projectId}" />
@@ -25,7 +41,7 @@
  
 		<div class="layui-form-item">
 			<label class="layui-form-label">#if($!{sysApiBean.askType} == 1)GET#elseif($!{sysApiBean.askType} == 2)POST#end</label>
-			<div class="layui-input-inline" style="width:78%;margin-right:0px;">
+			<div class="layui-input-inline" style="width:74%;margin-right:0px;">
 				<input name="title" id="urlStr" autocomplete="off" value="$!{sysApiBean.url}$!{paramStr}" class="layui-input" type="text" disabled="disabled" style="background:#FAFAFA">
 			</div>
 			#if($!{sysApiBean.apiType} != 2)
@@ -47,22 +63,14 @@
 		</table>
 		
 		<div class="layui-form-item layui-form-text" style="margin-top:20px;">
+	    	<label class="layui-form-label">返回值</label>
+	    	 <div class="layui-input-block">
+	    	 	<div id="Canvas" class="Canvas well runtext">
+	    	 		#if($!{sysApiBean.apiType} == 2)
+	    	 		<img  id="test-img">
+	    	 		#end
+	    	 	</div>
+	    	 </div>
 	    
-	    
-	   		 #if($!{sysApiBean.apiType} != 2)
-	   		 <label class="layui-form-label">返回值</label>
-	   		 <div class="layui-input-block">
-	      <textarea placeholder="" class="layui-textarea" style="height:300px;"></textarea>
-	       </div>
-	        #elseif($!{sysApiBean.apiType} ==2)
-	        <label class="layui-form-label">返回图片</label>
-	        <img  id="test-img">
-	      #end
-	   
-	  </div>
-	
-	  	
-  	
-  	
-  	
-	</form>
+	  	</div>
+</form>

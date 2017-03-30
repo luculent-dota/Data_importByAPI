@@ -41,7 +41,7 @@ public class SysApi extends BaseModel{
 	/** 返回值. */
 	private String res;
 	
-	/** 接口类型 1登陆 2验证码 3其他. */
+	/** 接口类型 1登陆 2验证码 0其他. */
 	private Integer apiType;
 	
 	/** 排序. */

@@ -50,19 +50,27 @@ layui.config({
 			  dataType: "json",
 			  success: function(data){
 				  msg.close(layIndex);
-				  if(apitype == 2){
-					  $("#test-img").attr("src","/temp/"+data+".gif");
-				  }else{
-					  try {
-						  var jsonObj = JSON.parse(data);
-						  if(jsonObj.head.rtnCode === "900003" && $(".test-fail").length !=0){
-							  $(".test-fail").show();
+				  debugger;
+					  if(apitype == 2){
+						  if(data.length ===32){
+							  $("#test-img").attr("src","/temp/"+data+".gif");
+						  }else{
+							  $(".runtext").text(data);
 						  }
-						  $(".layui-textarea").val(data);
-					  }catch(e) {
-						  $(".layui-textarea").val(data);
-				      }
+					  }else{
+						  try {
+							  var jsonObj = JSON.parse(data);
+							  if(jsonObj.head.rtnCode === "900003" && $(".test-fail").length !=0){
+								  $(".test-fail").show();
+							  }
+							  Process(data);
+						  
+						  }
+						  catch(e) {
+							  $(".runtext").text(data);
+					      }
 				  }
+				  
 				 
 			  }
 		});

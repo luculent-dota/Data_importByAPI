@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.luculent.data.DataConstant;
 import com.luculent.data.base.BaseController;
@@ -84,7 +86,7 @@ public class SysAPIController  extends BaseController{
 		if(StringUtils.isEmpty(url)){
 			return null;
 		}
-		String res = null;
+		String res = "";
 		if(apiType == DataConstant.API_TYPE_CODE){
 			res =HttpClientUtil.getImageDownLoad(url);
 		}else{

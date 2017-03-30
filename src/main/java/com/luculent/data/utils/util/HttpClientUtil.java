@@ -450,7 +450,7 @@ public class HttpClientUtil {
         } catch (Exception e) {
 			get.abort();
 			logger.error("获取网页"+ get.getURI() +"出错", e);
-			return null;
+			return e.getMessage();
 		} finally {  
             // 关闭连接,释放资源    
             try {  

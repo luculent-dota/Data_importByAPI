@@ -86,20 +86,24 @@ public class SysApiService {
 		List<SysApi> codeList =sysApiMapper.selectList(new EntityWrapper<SysApi>().eq("project_id", projectId).eq("api_type", DataConstant.API_TYPE_CODE));
 		if(codeList !=null && codeList.size() !=0){
 			String code =HttpClientUtil.getCodeResult(codeList.get(0).getUrl());
-			List<SysApi> loginList =sysApiMapper.selectList(new EntityWrapper<SysApi>().eq("project_id", projectId).eq("api_type", DataConstant.API_TYPE_LOGIN));
-			if(loginList !=null && loginList.size() !=0){
-				SysApi sysApi = loginList.get(0);
-			    String res= HttpClientUtil.getContent(getJoinUrl(sysApi,code));
-			    if(StringUtils.isNotEmpty(res)){
-			    	String result = JSONObject.parseObject(res).getJSONObject("head").getString("rtnCode");
-			    	if(DataConstant.RES_CODE_SUCCESS.equals(result)){
-			    		logger.info("项目【"+sysProject.getName()+"】自动登陆成功...");
-			    		return true;
-			    	}
-			    	logger.info("项目【"+sysProject.getName()+"】自动登陆失败...");
-			    	return false;
-			    }
+			if(StringUtils.isNotEmpty(code)){
+				List<SysApi> loginList =sysApiMapper.selectList(new EntityWrapper<SysApi>().eq("project_id", projectId).eq("api_type", DataConstant.API_TYPE_LOGIN));
+				if(loginList !=null && loginList.size() !=0){
+					SysApi sysApi = loginList.get(0);
+				    String res= HttpClientUtil.getContent(getJoinUrl(sysApi,code));
+				    if(StringUtils.isNotEmpty(res)){
+				    	String result = JSONObject.parseObject(res).getJSONObject("head").getString("rtnCode");
+				    	if(DataConstant.RES_CODE_SUCCESS.equals(result)){
+				    		logger.info("项目【"+sysProject.getName()+"】自动登陆成功...");
+				    		return true;
+				    	}
+				    	logger.info("项目【"+sysProject.getName()+"】自动登陆失败...");
+				    	return false;
+				    }
+				}
 			}
+			logger.info("项目【"+sysProject.getName()+"】获取验证码失败...");
+	    	return false;
 		
 		}
 		logger.info("项目【"+sysProject.getName()+"】下无验证码api,登陆失败...");
