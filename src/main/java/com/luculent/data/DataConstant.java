@@ -3,7 +3,15 @@ package com.luculent.data;
 /**
  * 系统常量
  */
-public abstract class DataConstant {
+public class DataConstant {
+	
+	/**
+	 * 防止类被实例化
+	 */
+	private DataConstant() {
+		// TODO Auto-generated constructor stub
+		throw new AssertionError();
+	}
 
 	/** 菜单树根节点. */
 	public static final String VirtualBaseTree ="VirtualBaseTree";
