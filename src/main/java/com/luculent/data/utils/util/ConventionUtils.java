@@ -7,6 +7,13 @@ import java.util.Map;
 
 public class ConventionUtils {
 
+	/**
+	 * 防止类被实例化
+	 */
+	private ConventionUtils() {
+		// TODO Auto-generated constructor stub
+		throw new AssertionError();
+	}
 	
 	/**
 	 * 

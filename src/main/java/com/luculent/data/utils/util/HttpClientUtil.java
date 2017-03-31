@@ -39,6 +39,13 @@ import net.sourceforge.tess4j.TesseractException;
 
 public class HttpClientUtil {
 
+	/**
+	 * 防止类被实例化
+	 */
+	private HttpClientUtil() {
+		// TODO Auto-generated constructor stub
+		throw new AssertionError();
+	}
 
 	private final static  Logger logger = LogManager.getLogger(HttpClientUtil.class);
 	
