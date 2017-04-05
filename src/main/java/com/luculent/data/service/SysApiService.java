@@ -65,7 +65,7 @@ public class SysApiService {
 	
 	public String getJoinUrl(SysApi sysApi,String code){
 		List<SysParam> params = sysParamMapper.selectList(new EntityWrapper<SysParam>().eq("api_id", sysApi.getId()));
-		 StringBuffer joinUrl = new StringBuffer(sysApi.getUrl());
+		StringBuilder joinUrl = new StringBuilder(sysApi.getUrl());
 	     if(params !=null && params.size()!=0){
 	        	for(SysParam param:params){
 	        		joinUrl.append(DataConstant.URL_AND).append(param.getName()).append(DataConstant.URL_EQUAL);

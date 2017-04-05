@@ -48,7 +48,7 @@ public class SysAPIController  extends BaseController{
         modelAndView.addObject("projectBean", sysProject);
         List<SysParam> params = sysParamMapper.selectList(new EntityWrapper<SysParam>().eq("api_id", sysApi.getId()).orderBy("scrq"));
         modelAndView.addObject("params", params);
-        StringBuffer paramBuf = new StringBuffer();
+        StringBuilder paramBuf = new StringBuilder();
         if(params !=null && params.size()!=0){
         	
         	for(SysParam param:params){
