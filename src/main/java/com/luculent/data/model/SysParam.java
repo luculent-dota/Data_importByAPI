@@ -28,6 +28,8 @@ public class SysParam extends BaseModel{
 	private Integer required;
 	/** 说明. */
 	private String detail;
+	/** 数据来源. */
+	private String dataSource;
 	/** 备注. */
 	private String remarks;
 	/** 所属接口. */
@@ -128,6 +130,27 @@ public class SysParam extends BaseModel{
 	 */
 	public void setDetail(String detail) {
 		this.detail = detail;
+	}
+	
+	
+
+	/**
+	 * Gets the 数据来源.
+	 *
+	 * @return the 数据来源
+	 */
+	public String getDataSource() {
+	    return dataSource;
+	}
+
+	/**
+	 * Sets the 数据来源.
+	 *
+	 * @param dataSource
+	 *            the new 数据来源
+	 */
+	public void setDataSource(String dataSource) {
+	    this.dataSource = dataSource;
 	}
 
 	/**

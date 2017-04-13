@@ -29,6 +29,7 @@
 			<th>参数说明</th>
 			<th>是否必填</th>
 			<th>默认值</th>
+			<th>数据来源</th>
 			<th>备注</th>
 		</tr>
 	</thead>
@@ -39,6 +40,7 @@
 			<td>$!{param.detail}</td>
 			<td>#if($!{param.required} == 1)是 #elseif($!{param.required} ==0)否#end</td>
 			<td>$!{param.defaultValue}</td>
+			<td>$!{param.dataSource}</td>
 			<td>$!{param.remarks}</td>
 		</tr>
 		#end

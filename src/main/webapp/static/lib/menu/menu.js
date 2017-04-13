@@ -5,6 +5,7 @@ var param_tr_one = "<tr>"+
 		"<td><input name='params_detail' lay-verify='title' autocomplete='off' placeholder='参数说明' class='layui-input' type='text'></td>"+
 		"<td><input type='checkbox' name='params_required' lay-skin='primary'  checked></td>"+
 		"<td><input name='params_defaultValue' lay-verify='title' autocomplete='off' placeholder='默认值' class='layui-input' type='text'></td>"+
+		"<td><input name='params_dataSource' lay-verify='title' autocomplete='off' placeholder='数据来源' class='layui-input' type='text'></td>"+
 		"<td><input name='params_remarks' lay-verify='title' autocomplete='off' placeholder='备注' class='layui-input' type='text'></td>"+
 		"<td>"+
 		    "<div class='layui-btn-group'>"+
@@ -19,6 +20,7 @@ var param_tr = "<tr>"+
 	      "<td><input name='params_detail' lay-verify='title' autocomplete='off' placeholder='参数说明' class='layui-input' type='text'></td>"+
 	      "<td><input type='checkbox' name='params_required' lay-skin='primary'  checked></td>"+
 	      "<td><input name='params_defaultValue' lay-verify='title' autocomplete='off' placeholder='默认值' class='layui-input' type='text'></td>"+
+	      "<td><input name='params_dataSource' lay-verify='title' autocomplete='off' placeholder='数据来源' class='layui-input' type='text'></td>"+
 	      "<td><input name='params_remarks' lay-verify='title' autocomplete='off' placeholder='备注' class='layui-input' type='text'></td>"+
 	      "<td>"+
 		      "<div class='layui-btn-group'>"+
@@ -78,6 +80,9 @@ layui.config({
 						case 'params_defaultValue':
 							paramObj.defaultValue = $(element).val();
 							break;
+						case 'params_dataSource':
+							paramObj.dataSource = $(element).val();
+							break;
 						case 'params_remarks':
 							paramObj.remarks = $(element).val();
 							paramList.push(paramObj);
@@ -85,6 +90,7 @@ layui.config({
 					};
 				});
 			}
+			console.log(paramList);
 			res.field.paramList = paramList;
 			$.ajax({
 				  url: contextPath+"/menu/api-save.htm",
