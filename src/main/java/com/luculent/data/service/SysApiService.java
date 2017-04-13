@@ -17,6 +17,7 @@ import com.luculent.data.DataConstant;
 import com.luculent.data.mapper.SysApiMapper;
 import com.luculent.data.mapper.SysParamMapper;
 import com.luculent.data.mapper.SysProjectMapper;
+import com.luculent.data.model.ApiType;
 import com.luculent.data.model.SysApi;
 import com.luculent.data.model.SysMenu;
 import com.luculent.data.model.SysMenuChild;
@@ -83,11 +84,11 @@ public class SysApiService {
 		SysProject sysProject = sysProjectMapper.selectById(projectId);
 		logger.info("项目【"+sysProject.getName()+"】自动登陆开始...");
 		//验证码
-		List<SysApi> codeList =sysApiMapper.selectList(new EntityWrapper<SysApi>().eq("project_id", projectId).eq("api_type", DataConstant.API_TYPE_CODE));
+		List<SysApi> codeList =sysApiMapper.selectList(new EntityWrapper<SysApi>().eq("project_id", projectId).eq("api_type",ApiType.CODE.getVal()));
 		if(codeList !=null && codeList.size() !=0){
 			String code =HttpClientUtil.getCodeResult(codeList.get(0).getUrl());
 			if(StringUtils.isNotEmpty(code)){
-				List<SysApi> loginList =sysApiMapper.selectList(new EntityWrapper<SysApi>().eq("project_id", projectId).eq("api_type", DataConstant.API_TYPE_LOGIN));
+				List<SysApi> loginList =sysApiMapper.selectList(new EntityWrapper<SysApi>().eq("project_id", projectId).eq("api_type", ApiType.LOGIN.getVal()));
 				if(loginList !=null && loginList.size() !=0){
 					SysApi sysApi = loginList.get(0);
 				    String res= HttpClientUtil.getContent(getJoinUrl(sysApi,code));

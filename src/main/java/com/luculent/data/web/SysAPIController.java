@@ -17,6 +17,7 @@ import com.luculent.data.base.BaseController;
 import com.luculent.data.mapper.SysApiMapper;
 import com.luculent.data.mapper.SysParamMapper;
 import com.luculent.data.mapper.SysProjectMapper;
+import com.luculent.data.model.ApiType;
 import com.luculent.data.model.SysApi;
 import com.luculent.data.model.SysParam;
 import com.luculent.data.model.SysProject;
@@ -87,7 +88,7 @@ public class SysAPIController  extends BaseController{
 			return null;
 		}
 		String res = "";
-		if(apiType == DataConstant.API_TYPE_CODE){
+		if(apiType == ApiType.CODE.getVal()){
 			res =HttpClientUtil.getImageDownLoad(url);
 		}else{
 			res = HttpClientUtil.getContent(url);
