@@ -111,7 +111,7 @@ layui.define(['element', 'common'], function(exports) {
 					}
 				}
 			}
-			var content = '<iframe src="' + data.href + '" data-id="' + data.id + '"></iframe>';
+			var content = '<iframe src="'+ contextPath + data.href + '" data-id="' + data.id + '"></iframe>';
 			var title = '';
 			if(data.icon !== undefined) {
 				if(data.icon.indexOf('fa-') !== -1) {
