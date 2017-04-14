@@ -34,6 +34,8 @@ import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.luculent.data.DataConstant;
+
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 
@@ -49,20 +51,7 @@ public class HttpClientUtil {
 
 	private final static  Logger logger = LogManager.getLogger(HttpClientUtil.class);
 	
-	private final static int CONNECTION_TIMEOUT = 100;
 	
-	/**ocr地址*/
-	private final static String OCR_PATH =System.getProperty("user.dir") +"\\src\\main\\resources\\";;
-	/**图片输出地址*/
-	private final static String TEMP_PATH =System.getProperty("user.dir") +"\\src\\main\\webapp\\temp\\";
-	/**图片扩展名 */
-	private final static String IMG_TYPE =".gif";
-	/**请求类型 返回数据 */
-	private final static String ASK_TYPE_DATA="DATA";
-	/**请求类型 返回图片 */
-	private final static String ASK_TYPE_IMG="IMG";
-	/**请求类型 返回验证码 */
-	private final static String ASK_TYPE_CODE="CODE";
 	
 	/**
 	 * 以get方式获取返回值
@@ -73,7 +62,7 @@ public class HttpClientUtil {
 		if(logger.isDebugEnabled()) {
 			logger.debug("开始获取网页：" + url);
 		}
-		return getContent(url, null,null, CONNECTION_TIMEOUT,ASK_TYPE_DATA);
+		return getContent(url, null,null, DataConstant.CONNECTION_TIMEOUT,DataConstant.ASK_TYPE_DATA);
 	}
 	
 	/**
@@ -85,7 +74,7 @@ public class HttpClientUtil {
 		if(logger.isDebugEnabled()) {
 			logger.debug("开始获取图片：" + url);
 		}
-		return getContent(url, null,null, CONNECTION_TIMEOUT,ASK_TYPE_IMG);
+		return getContent(url, null,null, DataConstant.CONNECTION_TIMEOUT,DataConstant.ASK_TYPE_IMG);
 	}
 	
 	/**
@@ -97,7 +86,7 @@ public class HttpClientUtil {
 		if(logger.isDebugEnabled()) {
 			logger.debug("开始获取图片：" + url);
 		}
-		return getContent(url, null,null, CONNECTION_TIMEOUT,ASK_TYPE_CODE);
+		return getContent(url, null,null, DataConstant.CONNECTION_TIMEOUT,DataConstant.ASK_TYPE_CODE);
 	}
 	
 	
@@ -125,7 +114,7 @@ public class HttpClientUtil {
 		if(logger.isDebugEnabled()) {
 			logger.debug("开始获取网页：" + url);
 		}
-		return getContent(url, null,params, CONNECTION_TIMEOUT,ASK_TYPE_DATA);
+		return getContent(url, null,params, DataConstant.CONNECTION_TIMEOUT,DataConstant.ASK_TYPE_DATA);
 	} 
 	/**
 	 * 
@@ -140,7 +129,7 @@ public class HttpClientUtil {
 		if(logger.isDebugEnabled()) {
 			logger.debug("开始获取网页：" + url);
 		}
-		return getContent(url, headers,params, CONNECTION_TIMEOUT,ASK_TYPE_DATA);
+		return getContent(url, headers,params, DataConstant.CONNECTION_TIMEOUT,DataConstant.ASK_TYPE_DATA);
 	}
 	
 	/**
@@ -156,7 +145,7 @@ public class HttpClientUtil {
 		if(logger.isDebugEnabled()) {
 			logger.debug("开始抓取网页：" + url);
 		}
-		return postContent(url,headers, params,null, CONNECTION_TIMEOUT);
+		return postContent(url,headers, params,null, DataConstant.CONNECTION_TIMEOUT);
 	}
 	
 	/**
@@ -173,7 +162,7 @@ public class HttpClientUtil {
 		if(logger.isDebugEnabled()) {
 			logger.debug("开始抓取网页：" + url);
 		}
-		return postContent(url,headers, null,jsonStr, CONNECTION_TIMEOUT);
+		return postContent(url,headers, null,jsonStr, DataConstant.CONNECTION_TIMEOUT);
 	}
 	
 
@@ -353,11 +342,11 @@ public class HttpClientUtil {
 		get.setConfig(requestConfig);
 		setGetParameters(get, params);
 		switch (getType) {
-		case ASK_TYPE_DATA:
+		case DataConstant.ASK_TYPE_DATA:
 			return getContent(client, get); 
-		case ASK_TYPE_IMG:
+		case DataConstant.ASK_TYPE_IMG:
 			return getImageDownLoad(client, get); 
-		case ASK_TYPE_CODE:
+		case DataConstant.ASK_TYPE_CODE:
 			return getCodeCheckedStr(client, get); 
 		default:
 			return getContent(client, get); 
@@ -446,7 +435,7 @@ public class HttpClientUtil {
             if (entity != null) {
             	
 				InputStream input = entity.getContent();
-				OutputStream output = new FileOutputStream(new File(TEMP_PATH+uuid+IMG_TYPE));
+				OutputStream output = new FileOutputStream(new File(DataConstant.TEMP_PATH+uuid+DataConstant.IMG_TYPE));
 				IOUtils.copy(input, output);
 				output.flush();
 			}
@@ -487,7 +476,7 @@ public class HttpClientUtil {
 				bi = ImageIO.read(input);
 				EntityUtils.consume(entity);
 	            Tesseract tessreact = new Tesseract();  
-	    		tessreact.setDatapath(OCR_PATH); 
+	    		tessreact.setDatapath(DataConstant.OCR_PATH); 
 	    		tessreact.setLanguage("eng");
 	    		res = tessreact.doOCR(bi).replace("\n", ""); 
 				

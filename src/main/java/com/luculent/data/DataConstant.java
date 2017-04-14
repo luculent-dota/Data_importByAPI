@@ -29,5 +29,24 @@ public class DataConstant {
 	public static final String URL_AND ="&";
 	
 	public static final String URL_EQUAL ="=";
+	
+	public static final int CONNECTION_TIMEOUT = 100;
+	
+	public static final String PATH = System.getProperty("user.dir") +"\\src\\main";
+	
+	public static final String SCHEDULER_PATH = DataConstant.PATH+"\\java\\com\\luculent\\data\\scheduler\\";
+	
+	/**ocr地址*/
+	public static final String OCR_PATH =PATH+"\\resources\\";
+	/**图片输出地址*/
+	public static final String TEMP_PATH =PATH+"\\webapp\\temp\\";
+	/**图片扩展名 */
+	public static final String IMG_TYPE =".gif";
+	/**请求类型 返回数据 */
+	public static final String ASK_TYPE_DATA="DATA";
+	/**请求类型 返回图片 */
+	public static final String ASK_TYPE_IMG="IMG";
+	/**请求类型 返回验证码 */
+	public static final String ASK_TYPE_CODE="CODE";
 
 }
