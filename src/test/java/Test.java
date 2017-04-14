@@ -6,13 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 public class Test {
 
 	public static void main(String[] args) {
-		Address add = new Address("12055","就哦打飞机的");
-		Address add1 = new Address("122055","就哦打飞机的");
-		List<Address> list = new ArrayList<Address>();
-		list.add(add);
-		list.add(add1);
-		System.out.println(JSONObject.toJSON(list).toString());
-		
+//		HttpClientUtil.getCodeResult("http://106.39.199.78/cpad/getInputImage?clientUniqueID=3c2a3a936a24257ccb72b81ff578231f5602ac8758706154af3d4f1ff29e6e7e");
 		
 	}
 }

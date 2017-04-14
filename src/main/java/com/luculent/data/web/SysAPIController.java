@@ -22,7 +22,7 @@ import com.luculent.data.model.SysApi;
 import com.luculent.data.model.SysParam;
 import com.luculent.data.model.SysProject;
 import com.luculent.data.service.SysApiService;
-import com.luculent.data.utils.util.HttpClientUtil;
+import com.luculent.data.utils.util.OkHttpUtil;
 
 @Controller
 @RequestMapping("/api")
@@ -89,9 +89,9 @@ public class SysAPIController  extends BaseController{
 		}
 		String res = "";
 		if(apiType == ApiType.CODE.getVal()){
-			res =HttpClientUtil.getImageDownLoad(url);
+			res =OkHttpUtil.getImageDownLoad(url);
 		}else{
-			res = HttpClientUtil.getContent(url);
+			res = OkHttpUtil.getContent(url);
 		}
 		return res;
     }

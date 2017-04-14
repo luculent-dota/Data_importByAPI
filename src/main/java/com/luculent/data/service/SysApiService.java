@@ -23,7 +23,7 @@ import com.luculent.data.model.SysMenu;
 import com.luculent.data.model.SysMenuChild;
 import com.luculent.data.model.SysParam;
 import com.luculent.data.model.SysProject;
-import com.luculent.data.utils.util.HttpClientUtil;
+import com.luculent.data.utils.util.OkHttpUtil;
 
 @Service
 @Transactional
@@ -86,12 +86,12 @@ public class SysApiService {
 		//验证码
 		List<SysApi> codeList =sysApiMapper.selectList(new EntityWrapper<SysApi>().eq("project_id", projectId).eq("api_type",ApiType.CODE.getVal()));
 		if(codeList !=null && codeList.size() !=0){
-			String code =HttpClientUtil.getCodeResult(codeList.get(0).getUrl());
+			String code =OkHttpUtil.getCodeResult(codeList.get(0).getUrl());
 			if(StringUtils.isNotEmpty(code)){
 				List<SysApi> loginList =sysApiMapper.selectList(new EntityWrapper<SysApi>().eq("project_id", projectId).eq("api_type", ApiType.LOGIN.getVal()));
 				if(loginList !=null && loginList.size() !=0){
 					SysApi sysApi = loginList.get(0);
-				    String res= HttpClientUtil.getContent(getJoinUrl(sysApi,code));
+				    String res= OkHttpUtil.getContent(getJoinUrl(sysApi,code));
 				    if(StringUtils.isNotEmpty(res)){
 				    	String result = JSONObject.parseObject(res).getJSONObject("head").getString("rtnCode");
 				    	if(DataConstant.RES_CODE_SUCCESS.equals(result)){
