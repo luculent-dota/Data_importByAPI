@@ -18,7 +18,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import com.alibaba.fastjson.JSON;
-import com.luculent.data.DataConstant;
+import com.luculent.data.constant.DataConstant;
 
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;

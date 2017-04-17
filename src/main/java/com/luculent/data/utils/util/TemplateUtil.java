@@ -9,7 +9,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
-import com.luculent.data.DataConstant;
+import com.luculent.data.constant.DataConstant;
 
 /**
  * 

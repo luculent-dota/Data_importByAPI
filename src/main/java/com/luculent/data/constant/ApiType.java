@@ -1,4 +1,4 @@
-package com.luculent.data.model;
+package com.luculent.data.constant;
 
 import com.luculent.data.base.IntegerEnum;
 

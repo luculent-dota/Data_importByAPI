@@ -1,4 +1,4 @@
-package com.luculent.data;
+package com.luculent.data.constant;
 
 /**
  * 系统常量
