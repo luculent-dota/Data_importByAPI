@@ -18,6 +18,15 @@
 	 <td><input name="params_detail" lay-verify="title" autocomplete="off" value="{{ item.detail }}" placeholder="参数说明" class="layui-input" type="text"></td>
 	 <td><input type="checkbox" name="params_required" lay-skin="primary" {{#  if(item.required === 1){ }} checked {{#  } }} ></td>
 	 <td><input name="params_defaultValue" lay-verify="title" autocomplete="off" value="{{ item.defaultValue }}" placeholder="默认值" class="layui-input" type="text"></td>
+	 <td> 
+		<select name="params_paramType">
+          <option value="">选择类型</option>
+            <option value="CONSTANT">定值</option>
+            <option value="INTERVAL">区间</option>
+            <option value="BASIS">基础值</option>
+            <option value="PAGE">页码</option>
+        </select>
+     </td>
      <td><input name="params_dataSource" lay-verify="title" autocomplete="off" value="{{ item.dataSource }}" placeholder="数据来源" class="layui-input" type="text"></td>
 	 <td><input name="params_remarks" lay-verify="title" autocomplete="off"  value="{{ item.remarks }}" placeholder="备注" class="layui-input" type="text"></td>
 	 <td>
@@ -146,12 +155,13 @@
 		<table class="layui-table table-params" lay-skin="line">
 		  <colgroup>
 		    <col width="150">
+		    <col width="120">
+		    <col width="60">
 		    <col width="150">
-		    <col width="80">
-		    <col width="250">
-		    <col width="200">
+		    <col width="100">
 		    <col width="150">
-		     <col width="150">
+		    <col width="150">
+		    <col width="150">
 		    <col>
 		  </colgroup>
 		  <thead>
@@ -160,6 +170,7 @@
 		      <th>参数说明</th>
 		      <th>是否必填</th>
 		      <th>默认值</th>
+		      <th>参数类型</th>
 		      <th>数据来源</th>
 		      <th>备注</th>
 		      <th></th>

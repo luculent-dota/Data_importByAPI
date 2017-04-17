@@ -5,6 +5,8 @@ var param_tr_one = "<tr>"+
 		"<td><input name='params_detail' lay-verify='title' autocomplete='off' placeholder='参数说明' class='layui-input' type='text'></td>"+
 		"<td><input type='checkbox' name='params_required' lay-skin='primary'  checked></td>"+
 		"<td><input name='params_defaultValue' lay-verify='title' autocomplete='off' placeholder='默认值' class='layui-input' type='text'></td>"+
+		"<td><select name='params_paramType'><option value=''>选择类型</option><option value='CONSTANT'>定值</option><option value='INTERVAL'>区间</option>"+
+         "<option value='BASIS'>基础值</option><option value='PAGE'>页码</option></select></td>"+
 		"<td><input name='params_dataSource' lay-verify='title' autocomplete='off' placeholder='数据来源' class='layui-input' type='text'></td>"+
 		"<td><input name='params_remarks' lay-verify='title' autocomplete='off' placeholder='备注' class='layui-input' type='text'></td>"+
 		"<td>"+
@@ -20,6 +22,8 @@ var param_tr = "<tr>"+
 	      "<td><input name='params_detail' lay-verify='title' autocomplete='off' placeholder='参数说明' class='layui-input' type='text'></td>"+
 	      "<td><input type='checkbox' name='params_required' lay-skin='primary'  checked></td>"+
 	      "<td><input name='params_defaultValue' lay-verify='title' autocomplete='off' placeholder='默认值' class='layui-input' type='text'></td>"+
+	      "<td><select name='params_paramType'><option value=''>选择类型</option><option value='CONSTANT'>定值</option><option value='INTERVAL'>区间</option>"+
+	         "<option value='BASIS'>基础值</option><option value='PAGE'>页码</option></select></td>"+
 	      "<td><input name='params_dataSource' lay-verify='title' autocomplete='off' placeholder='数据来源' class='layui-input' type='text'></td>"+
 	      "<td><input name='params_remarks' lay-verify='title' autocomplete='off' placeholder='备注' class='layui-input' type='text'></td>"+
 	      "<td>"+
@@ -61,36 +65,39 @@ layui.config({
 			var paramList =new Array();
 			if($(".table-params").is(':visible')){
 				var paramObj = new Object();
-				$('.table-params input').each(function(index,element){
-					switch($(element).attr("name")){
+				$('.table-params td').each(function(index,element){
+					console.log($(element).children().attr("name"));
+					switch($(element).children().attr("name")){
 						case 'params_name':
 							paramObj = new Object();
-							paramObj.name = $(element).val();
+							paramObj.name = $(element).children().val();
 						break;
 						case 'params_detail':
-							paramObj.detail = $(element).val();
+							paramObj.detail = $(element).children().val();
 							break;
 						case 'params_required':
-							if($(element).next().hasClass("layui-form-checked")){
+							if($(element).children().next().hasClass("layui-form-checked")){
 								paramObj.required = 1;
 							}else{
 								paramObj.required = 0;
 							}
 							break;
 						case 'params_defaultValue':
-							paramObj.defaultValue = $(element).val();
+							paramObj.defaultValue = $(element).children().val();
+							break;
+						case 'params_paramType':
+							paramObj.paramType = $(element).children().val();
 							break;
 						case 'params_dataSource':
-							paramObj.dataSource = $(element).val();
+							paramObj.dataSource = $(element).children().val();
 							break;
 						case 'params_remarks':
-							paramObj.remarks = $(element).val();
+							paramObj.remarks = $(element).children().val();
 							paramList.push(paramObj);
 							break;
 					};
 				});
 			}
-			console.log(paramList);
 			res.field.paramList = paramList;
 			$.ajax({
 				  url: contextPath+"/menu/api-save.htm",
@@ -110,7 +117,7 @@ layui.config({
 			$(".table-params").hide();
 		}else{
 			$(".table-params tbody").empty().append(param_tr_one);
-			form.render('checkbox');
+			form.render();
 			$(".table-params").show();
 	}
 			
@@ -120,7 +127,7 @@ layui.config({
 	 });
 	 $(".add_tr").live("click",function(){
 		 $(".table-params tbody").append(param_tr);
-		 form.render('checkbox');
+		 form.render();
 	 });
 });  
 
@@ -159,7 +166,11 @@ function initMenuTree(form,laytpl,utils,msg){
 										  laytpl(getTpl).render(data, function(html){
 										      $(".table-params tbody").empty().append(html);
 										      $(".table-params").show();
-										     form.render('checkbox');
+										      $.each(data.paramList,function(i,e){
+										    	  $(".table-params tbody tr td select[name='params_paramType']").eq(i).val(e.paramType);
+										      });
+										      
+										     form.render();
 										  });
 									  }
 								  }
@@ -222,7 +233,7 @@ function initMenuTree(form,laytpl,utils,msg){
 	                	form.render('radio');
 	                	$(".table-params tbody").empty().append(param_tr_one);
 	                	$(".table-params").show();
-	        			form.render('checkbox');
+	        			form.render();
 	                	$(".api-div input[name='projectId']").val(NODE.id);
 	                	$(".api-div").show();
 	                	

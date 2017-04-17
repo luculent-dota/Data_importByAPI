@@ -98,7 +98,7 @@ public class SysApiService {
 				    		logger.info("项目【"+sysProject.getName()+"】自动登陆成功...");
 				    		return true;
 				    	}
-				    	logger.info("项目【"+sysProject.getName()+"】自动登陆失败...");
+				    	logger.info("项目【"+sysProject.getName()+"】自动登陆失败..."+"错误代码:"+result);
 				    	return false;
 				    }
 				}
