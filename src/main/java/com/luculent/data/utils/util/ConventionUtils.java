@@ -5,6 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.luculent.data.constant.JsonKey;
+import com.luculent.data.model.BackBean;
+
 public class ConventionUtils {
 
 	/**
@@ -13,6 +20,21 @@ public class ConventionUtils {
 	private ConventionUtils() {
 		// TODO Auto-generated constructor stub
 		throw new AssertionError();
+	}
+	
+	public static BackBean jsonToBackBean(String json){
+	    if(StringUtils.isEmpty(json)){
+		return null;
+	    }
+	    JSONObject obj = JSON.parseObject(json);
+	    JSONObject head = obj.getJSONObject(JsonKey.head.name());
+	    JSONObject body = obj.getJSONObject(JsonKey.body.name());
+	    return new BackBean.Builder(head.getString(JsonKey.rtnCode.name()),head.getString(JsonKey.rtnMsg.name()))
+		.sql(body.getString(JsonKey.sql.name()))
+		.total(body.getString(JsonKey.total.name()))
+		.page(body.getString(JsonKey.page.name()))
+		.list(body.getString(JsonKey.list.name()))
+		.build();
 	}
 	
 	/**

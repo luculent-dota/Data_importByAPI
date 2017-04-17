@@ -18,6 +18,7 @@ import com.luculent.data.constant.DataConstant;
 import com.luculent.data.mapper.SysApiMapper;
 import com.luculent.data.mapper.SysParamMapper;
 import com.luculent.data.mapper.SysProjectMapper;
+import com.luculent.data.model.BackBean;
 import com.luculent.data.model.SysApi;
 import com.luculent.data.model.SysMenu;
 import com.luculent.data.model.SysMenuChild;
@@ -91,23 +92,22 @@ public class SysApiService {
 				List<SysApi> loginList =sysApiMapper.selectList(new EntityWrapper<SysApi>().eq("project_id", projectId).eq("api_type", ApiType.LOGIN.getVal()));
 				if(loginList !=null && loginList.size() !=0){
 					SysApi sysApi = loginList.get(0);
-				    String res= OkHttpUtil.getContent(getJoinUrl(sysApi,code));
-				    if(StringUtils.isNotEmpty(res)){
-				    	String result = JSONObject.parseObject(res).getJSONObject("head").getString("rtnCode");
-				    	if(DataConstant.RES_CODE_SUCCESS.equals(result)){
+				    BackBean res= OkHttpUtil.getBeanContent(getJoinUrl(sysApi,code));
+				    if(res != null){
+				    	if(DataConstant.RES_CODE_SUCCESS.equals(res.getRtnCode())){
 				    		logger.info("项目【"+sysProject.getName()+"】自动登陆成功...");
 				    		return true;
 				    	}
-				    	logger.info("项目【"+sysProject.getName()+"】自动登陆失败..."+"错误代码:"+result);
+				    	logger.error("项目【"+sysProject.getName()+"】自动登陆失败..."+"失败原因:"+res.getRtnMsg()+",错误代码:"+res.getRtnCode());
 				    	return false;
 				    }
 				}
 			}
-			logger.info("项目【"+sysProject.getName()+"】获取验证码失败...");
+			logger.error("项目【"+sysProject.getName()+"】获取验证码失败...");
 	    	return false;
 		
 		}
-		logger.info("项目【"+sysProject.getName()+"】下无验证码api,登陆失败...");
+		logger.error("项目【"+sysProject.getName()+"】下无验证码api,登陆失败...");
 		return false;
 	}
 

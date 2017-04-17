@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 
 import com.alibaba.fastjson.JSON;
 import com.luculent.data.constant.DataConstant;
+import com.luculent.data.model.BackBean;
 
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
@@ -62,6 +63,27 @@ public class OkHttpUtil {
 			return chain.proceed(request);
 		    }
 		}).build();
+    }
+    
+    /**
+     * 以get方式获取返回值
+     * 
+     * @param url
+     * @return BackBean
+     */
+    public static BackBean getBeanContent(String url){
+	return ConventionUtils.jsonToBackBean(getContent(url));
+    }
+    
+    /**
+     * 以get方式获取返回值
+     * 
+     * @param url
+     * @param params 参数值
+     * @return BackBean
+     */
+    public static BackBean getBeanContent(String url,String... params){
+	return ConventionUtils.jsonToBackBean(getContent(url,params));
     }
 
     /**
@@ -131,6 +153,7 @@ public class OkHttpUtil {
 		response.close();
 		return null;
 	    }
+	    logger.info("获取URL：" + url+" 成功");
 	    return response.body().string();
 	} catch (IOException e) {
 	    // TODO Auto-generated catch block
@@ -158,6 +181,7 @@ public class OkHttpUtil {
 		response.close();
 		return null;
 	    }
+	    logger.info("获取URL：" + url+" 成功");
 	    InputStream input = response.body().byteStream();
 	    OutputStream output = new FileOutputStream(new File(DataConstant.TEMP_PATH + uuid + DataConstant.IMG_TYPE));
 	    IOUtils.copy(input, output);
@@ -189,6 +213,7 @@ public class OkHttpUtil {
 		response.close();
 		return null;
 	    }
+	    logger.info("获取URL：" + url+" 成功");
 	    InputStream input = response.body().byteStream();
 	    bi = ImageIO.read(input);
 	    Tesseract tessreact = new Tesseract();

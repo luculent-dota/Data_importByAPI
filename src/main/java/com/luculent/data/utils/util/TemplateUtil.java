@@ -18,6 +18,11 @@ import com.luculent.data.constant.DataConstant;
  *@Since:2017年4月14日上午11:14:06
  */
 public class TemplateUtil {
+    
+    private TemplateUtil(){
+	// TODO Auto-generated constructor stub
+	throw new AssertionError();
+    }
 
     public static void createClass(String name) {
 	VelocityEngine ve = new VelocityEngine();
