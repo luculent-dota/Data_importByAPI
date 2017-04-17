@@ -132,7 +132,6 @@ layui.config({
 });  
 
 function initMenuTree(form,laytpl,utils,msg){
-	console.log(msg);
 	 $.get(contextPath+"/menu/tree.htm",  function(trees){
 		 ZtreeUtil.initTree("ztree",trees,{
 				onClick:function(event, treeId, treeNode){
