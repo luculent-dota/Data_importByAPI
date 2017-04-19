@@ -1,35 +1,24 @@
 package com.luculent.data.utils.util;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
-
-import javax.imageio.ImageIO;
-
+import com.alibaba.fastjson.JSON;
+import com.luculent.data.DataConstant;
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
+import okhttp3.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import com.alibaba.fastjson.JSON;
-import com.luculent.data.DataConstant;
-
-import net.sourceforge.tess4j.Tesseract;
-import net.sourceforge.tess4j.TesseractException;
-import okhttp3.FormBody;
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
 /**
- * 
+ *
  * @Description:http连接工具（okHttp3）
  * @Author:zhangy
  * @Since:2017年4月14日下午4:49:16
@@ -66,7 +55,7 @@ public class OkHttpUtil {
 
     /**
      * 以get方式获取返回值
-     * 
+     *
      * @param url
      * @return
      */
@@ -79,7 +68,7 @@ public class OkHttpUtil {
 
     /**
      * 以get方式获取返回值
-     * 
+     *
      * @param url
      * @param params
      *            字符串
@@ -94,7 +83,7 @@ public class OkHttpUtil {
 
     /**
      * 以get方式获取图片 返回图片uuid文件名
-     * 
+     *
      * @param url
      * @return
      */
@@ -107,7 +96,7 @@ public class OkHttpUtil {
 
     /**
      * 以get方式获取验证码返回值
-     * 
+     *
      * @param url
      * @return
      */
@@ -212,7 +201,7 @@ public class OkHttpUtil {
 		e.printStackTrace();
 	    }
 	}
-	
+
     }
 
     private static Request getRequest(String url, Map<String, String> headers) {

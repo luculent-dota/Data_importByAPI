@@ -1,0 +1,13 @@
+package com.luculent.data.scheduler;
+
+import java.util.Date;
+
+public class $!{className} implements BaseEntingy{
+
+    @Override
+    public void outUserName() {
+	// TODO Auto-generated method stub
+	System.out.println(new Date().getTime());
+    }
+
+}

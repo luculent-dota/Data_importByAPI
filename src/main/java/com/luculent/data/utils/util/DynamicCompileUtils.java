@@ -1,12 +1,11 @@
 package com.luculent.data.utils.util;
 
+import com.luculent.data.DataConstant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.luculent.data.DataConstant;
 
 /**
  * 
@@ -16,7 +15,7 @@ import com.luculent.data.DataConstant;
  */
 public class DynamicCompileUtils {
     
-    private final static  Logger logger = LogManager.getLogger(DynamicCompileUtils.class);
+    private final static Logger logger = LoggerFactory.getLogger(DynamicCompileUtils.class);
     
     private DynamicCompileUtils() {
 	// TODO Auto-generated constructor stub

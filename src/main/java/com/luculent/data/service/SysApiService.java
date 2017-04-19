@@ -1,15 +1,5 @@
 package com.luculent.data.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -17,18 +7,23 @@ import com.luculent.data.DataConstant;
 import com.luculent.data.mapper.SysApiMapper;
 import com.luculent.data.mapper.SysParamMapper;
 import com.luculent.data.mapper.SysProjectMapper;
-import com.luculent.data.model.ApiType;
-import com.luculent.data.model.SysApi;
-import com.luculent.data.model.SysMenu;
-import com.luculent.data.model.SysMenuChild;
-import com.luculent.data.model.SysParam;
-import com.luculent.data.model.SysProject;
+import com.luculent.data.model.*;
 import com.luculent.data.utils.util.OkHttpUtil;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
 public class SysApiService {
-	private final static  Logger logger = LogManager.getLogger(SysApiService.class);
+
+	private final static Logger logger = LoggerFactory.getLogger(SysApiService.class);
 	
 	@Autowired
 	private SysProjectMapper sysProjectMapper;

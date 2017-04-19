@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!-- status=debug 可以查看log4j的装配过程 -->  
+<configuration status="off" monitorInterval="1800">  
+    <properties>  
+        <property name="LOG_HOME">logs</property>  
+        <property name="SERVER_NAME">Data_importByAPI</property>  
+    </properties>  
+    <appenders>  
+        <!-- 定义控制台输出 -->
+        <!--Console 为控制台输出  -->  
+        <!--name    提供给Logger指定不同的输出方式名    target  指定输出方法-->
+        <Console name="Console" target="SYSTEM_OUT" follow="true">  
+            <!--PatternLayout可以灵活地指定布局模式 -->
+            <!--格式说明pattern中的参数都以%开始，后面不同的参数代表不同的格式化信息（参数按字母表顺序列出）：  -->
+			<!--%c 输出所属类的全名，可在修改为 %d{Num} ,Num类名输出的维（如："org.apache.elathen.ClassName",%C{2}将输出elathen.ClassName） --> 
+			<!--%d 输出日志时间其格式为 %d{yyyy-MM-dd HH:mm:ss,SSS}，可指定格式 如 %d{HH:mm:ss}  -->
+			<!--%l 输出日志事件发生位置，包括类目名、发生线程，在代码中的行数  -->
+			<!--%n 换行符  -->
+			<!--%m 输出代码指定信息，如info(“message”),输出message  -->
+			<!--%p 输出优先级，即 FATAL ,ERROR 等  -->
+			<!--%r 输出从启动到显示该log信息所耗费的毫秒数  -->
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%thread] %-5level [%file:%line] - %msg%n" />  
+        </Console>  
+        <!-- 程序员调试日志 -->
+        <!-- RollingFile 输出结果到指定文件 -->
+        <!-- RollingRandomAccessFile 同样输出结果到文件，区别是用一个buffer，因此速度会快点。 -->
+        <!--  filePattern当log文件超出SizeBasedTriggeringPolicy size的范围时 就将其压缩进D:/logs/年-用/log-月-日-年-序列号.log.gz压缩包中-->  
+        <RollingRandomAccessFile name="RunLog" fileName="${LOG_HOME}/${SERVER_NAME}.log"  
+            filePattern="${LOG_HOME}/${SERVER_NAME}.%d{yyyy-MM-dd-HH}.log.gz">  
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%file:%line] - %msg%n" />
+            <!-- Policies：策略，表示日志什么时候应该产生新日志，  可以有时间策略和大小策略等，上面使用的是时间策略，每隔24小时产生新的日志文件 -->
+            <!--  SizeBasedTriggeringPolicy 因为日志文件有大量的重复信息所以压缩后的大小会变得很小方便存储-->
+            <Policies>  
+                <TimeBasedTriggeringPolicy interval="24" modulate="true" />
+                <SizeBasedTriggeringPolicy size="250 MB" />
+            </Policies>  
+        </RollingRandomAccessFile>
+    </appenders>  
+    <loggers>  
+        <logger name="org.apache" level="info">
+    	</logger>
+    	<logger name="org.quartz.core.QuartzSchedulerThread" level="info">
+    	</logger>  
+    	 <logger name="org.springframework" level="info">
+	    </logger>
+    	<!-- level是日志记录的优先级，分为OFF、FATAL、ERROR、WARN、INFO、DEBUG、TRACE、 ALL等或者自己定义的级别。 -->
+		<!-- ALL：是最低等级的，用于打开所有日志记录 -->
+		<!-- OFF：是最高等级的，用于关闭所有日志记录 -->
+		<!-- FATAL：指出每个严重的错误事件将会导致应用程序的退出 -->
+		<!-- Log4j建议只使用四个级别，优先级从高到低分别是ERROR、WARN、INFO、DEBUG -->
+        <!-- Root Logger -->  
+        <root level="DEBUG">  
+            <appender-ref ref="Console" />  
+            <AppenderRef ref="RunLog" />
+        </root>
+        <!-- pattern layout actually uses location, so we need to include it  异步-->
+		<AsyncLogger name="run_long" level="DEBUG" includeLocation="true">
+			<AppenderRef ref="RunLog" />
+		</AsyncLogger>  
+    </loggers>  
+</configuration>
