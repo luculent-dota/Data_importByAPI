@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mapper.BaseKeyMapper" >
+<select id="queryXZ" resultType="string">
+	select id from FPB_ADDRESS t where levels = 1     
+</select>
+
+<select id="queryXian" resultType="string">
+	select id from FPB_ADDRESS t where levels = 2     
+</select>
+
+<select id="queryCun" resultType="string">
+	select id from FPB_ADDRESS t where levels = 3     
+</select>
+
+</mapper>
