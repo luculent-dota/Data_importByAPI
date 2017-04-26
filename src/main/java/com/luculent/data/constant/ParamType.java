@@ -7,10 +7,10 @@ package com.luculent.data.constant;
  *@Since:2017年4月17日上午9:11:15
  */
 public enum ParamType {
-    //定值
+    //定值 
     CONSTANT,
-    //区间
-    INTERVAL,
+    //数据库
+    DATABASE,
     //基础值
     BASIS,
     //页码

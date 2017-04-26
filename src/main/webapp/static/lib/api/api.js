@@ -9,6 +9,7 @@ layui.config({
 	form = layui.form();
 	layui.code();
 	
+	//参数选择
 	form.on('checkbox(param_check)', function(data){
 		var name =$(data.elem).parent().prev().prev().find("input").val();
 		var value = $(data.elem).parent().prev().find("input").val();
@@ -21,7 +22,7 @@ layui.config({
 			$("#urlStr").val(urlStr+paramStr);
 		}
 	});
-	
+	//参数设置
 	$('input[name="param_value"]').bind('input propertychange', function() { 
 		 //进行相关操作 
 		var name =$(this).parent().prev().find("input").val();
@@ -37,9 +38,11 @@ layui.config({
 		urlStr = urlStr.replace(ss, paramStr);
 		$("#urlStr").val(urlStr);
 	});
+	//参数显示隐藏
 	$(".params-button").on('click',function(){
 		$(".table-params").toggle();
 	});
+	//接口测试
 	$(".test-run").on('click',function(){
 		var layIndex =msg.load();
 		var apitype = $("#test-apiType").val();
@@ -74,6 +77,7 @@ layui.config({
 			  }
 		});
 	});
+	//一键登陆
 	$(".test-fail a").on('click',function(){
 		  var projectId = $('#test-projectId').val();
 		  var layIndex =msg.loading();
@@ -90,6 +94,21 @@ layui.config({
 				  msg.alertData(data);
 			  }
 		});
+	});
+	
+	form.on('submit(nowRun)', function(res) {
+		console.log(res.field);
+		$.ajax({
+			  url: contextPath+"/api/real-run.htm",
+			  data: JSON.stringify(res.field),
+			  type:"post",
+			  dataType: "json",
+			  contentType:"application/json",
+			  success: function(data){
+				  msg.result(data);
+			  }
+		});
+		return false;
 	});
   //…
 });

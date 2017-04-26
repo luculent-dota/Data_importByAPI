@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.luculent.data.mapper.SysProjectMapper;
 
 @Service
-@Transactional
+@Transactional(value="datain")
 public class SysProjectService {
 	@Autowired
 	private SysProjectMapper sysProjectMapper;

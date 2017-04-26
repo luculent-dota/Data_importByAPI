@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -22,6 +23,39 @@ public class ConventionUtils {
 		throw new AssertionError();
 	}
 	
+	private static List<Map<String,String>> params;
+	
+	
+	private final static String STR_SEPARATOR="=";
+	
+	
+	/**
+	 * 
+	 *@Description: 转化参数列表
+	 *@Author: zhangy
+	 *@Since: 2017年4月25日下午4:32:02
+	 *@param map
+	 *@return
+	 */
+	public static List<Map<String,String>> toParamsMap(Map<String,List<String>> map){
+		Set<String> keys = map.keySet();
+		List<String> keyList = new ArrayList<String>();
+		keyList.addAll(keys);
+		List<String> temp = new ArrayList<String>();
+		params = new ArrayList<Map<String,String>>();
+		solutionList(keyList,map,0,temp);
+		return params;
+	    }
+	
+	
+	/**
+	 * 
+	 *@Description: 将返回的json串转化为BackBean
+	 *@Author: zhangy
+	 *@Since: 2017年4月25日下午4:25:35
+	 *@param json
+	 *@return
+	 */
 	public static BackBean jsonToBackBean(String json){
 	    if(StringUtils.isEmpty(json)){
 		return null;
@@ -71,5 +105,29 @@ public class ConventionUtils {
 			result.add(objs[i]);
 		}
 		return result;
+	}
+	
+	
+	private static Map<String,String> toMapByList(List<String> list){
+		Map<String,String> pams = new HashMap<String,String>();
+		for(String str:list){
+		    String [] arr =StringUtils.split(str, STR_SEPARATOR);
+		    pams.put(arr[0], arr[1]);
+		}
+		return pams;
+	    }
+	
+	private static void solutionList(List<String> key,Map<String,List<String>> cc,int num,List<String> stt){
+	    String keystr = key.get(num);
+	    List<String> aa = cc.get(keystr);
+	    for(String ca:aa){
+		stt.add(String.format("%s"+STR_SEPARATOR+"%s", keystr,ca));
+		if(num+1 <key.size()){
+		    solutionList(key,cc,num+1,stt);
+		}else{
+		    params.add(toMapByList(stt));
+		}
+		stt.remove(stt.size()-1);
+	    }
 	}
 }

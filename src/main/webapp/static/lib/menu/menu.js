@@ -5,7 +5,7 @@ var param_tr_one = "<tr>"+
 		"<td><input name='params_detail' lay-verify='title' autocomplete='off' placeholder='参数说明' class='layui-input' type='text'></td>"+
 		"<td><input type='checkbox' name='params_required' lay-skin='primary'  checked></td>"+
 		"<td><input name='params_defaultValue' lay-verify='title' autocomplete='off' placeholder='默认值' class='layui-input' type='text'></td>"+
-		"<td><select name='params_paramType'><option value=''>选择类型</option><option value='CONSTANT'>定值</option><option value='INTERVAL'>区间</option>"+
+		"<td><select name='params_paramType'><option value=''>选择类型</option><option value='CONSTANT'>定值</option><option value='DATABASE'>数据库</option>"+
          "<option value='BASIS'>基础值</option><option value='PAGE'>页码</option></select></td>"+
 		"<td><input name='params_dataSource' lay-verify='title' autocomplete='off' placeholder='数据来源' class='layui-input' type='text'></td>"+
 		"<td><input name='params_remarks' lay-verify='title' autocomplete='off' placeholder='备注' class='layui-input' type='text'></td>"+
@@ -22,7 +22,7 @@ var param_tr = "<tr>"+
 	      "<td><input name='params_detail' lay-verify='title' autocomplete='off' placeholder='参数说明' class='layui-input' type='text'></td>"+
 	      "<td><input type='checkbox' name='params_required' lay-skin='primary'  checked></td>"+
 	      "<td><input name='params_defaultValue' lay-verify='title' autocomplete='off' placeholder='默认值' class='layui-input' type='text'></td>"+
-	      "<td><select name='params_paramType'><option value=''>选择类型</option><option value='CONSTANT'>定值</option><option value='INTERVAL'>区间</option>"+
+	      "<td><select name='params_paramType'><option value=''>选择类型</option><option value='CONSTANT'>定值</option><option value='DATABASE'>数据库</option>"+
 	         "<option value='BASIS'>基础值</option><option value='PAGE'>页码</option></select></td>"+
 	      "<td><input name='params_dataSource' lay-verify='title' autocomplete='off' placeholder='数据来源' class='layui-input' type='text'></td>"+
 	      "<td><input name='params_remarks' lay-verify='title' autocomplete='off' placeholder='备注' class='layui-input' type='text'></td>"+

@@ -1,5 +1,7 @@
 package com.luculent.data.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,7 @@ import com.luculent.data.exception.BasisKeyNotFoundException;
 
 
 @Service
-@Transactional
+@Transactional(value="datain")
 public class BasisKeyService {
     @Autowired
     private RedisTemplate<String, String> redisTempalte;
@@ -24,7 +26,7 @@ public class BasisKeyService {
    	return set.members(key);
     }
     
-    public Set<String> getCacheBykey(String key){
+    public List<String> getCacheBykey(String key){
 	BasisKey keystr = null;
 	try{
 	    keystr = BasisKey.valueOf(key.toUpperCase());
@@ -32,7 +34,10 @@ public class BasisKeyService {
 	}catch(IllegalArgumentException e){
 	    throw new BasisKeyNotFoundException();
 	}
-	return getCacheSet(keystr.name());
+	Set<String> set = getCacheSet(keystr.name());
+	List<String> tolist = new ArrayList<String> (set.size()); 
+	tolist.addAll(set);
+	return tolist;
 	
     }
 }

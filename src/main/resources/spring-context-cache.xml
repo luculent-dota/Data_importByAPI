@@ -7,7 +7,7 @@
        ">
        <!-- 连接池配置. -->
        
-    <context:property-placeholder location="classpath:config.properties"/>
+    
 	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
 		<!-- 连接池中最大空闲的连接数. -->
 		<property name="maxIdle" value="${jedisPool.maxIdle}" />

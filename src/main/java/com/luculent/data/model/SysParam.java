@@ -30,7 +30,7 @@ public class SysParam extends BaseModel{
 	private String detail;
 	/** 数据来源. */
 	private String dataSource;
-	/** 验证码类型 定值CONSTANT，区间INTERVAL，基础值 BASIS，页码PAGE. */
+	/** 验证码类型 定值CONSTANT，数据库DATABASE，基础值 BASIS，页码PAGE. */
 	private String paramType;
 	/** 备注. */
 	private String remarks;

@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.luculent.data.mapper.SysConfigMapper;
 
 @Service
-@Transactional
+@Transactional(value="datain")
 public class SysConfigService{
 	@Autowired
 	private SysConfigMapper sysConfigMapper;
