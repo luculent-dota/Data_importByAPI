@@ -7,12 +7,15 @@ import net.sourceforge.tess4j.TesseractException;
 import okhttp3.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
@@ -26,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 public class OkHttpUtil {
 
     private final static Logger logger = LogManager.getLogger(OkHttpUtil.class);
-
+	private static final String CHARSET_NAME = "UTF-8";
     private OkHttpUtil() {
 	// TODO Auto-generated constructor stub
 	throw new AssertionError();
@@ -78,7 +81,7 @@ public class OkHttpUtil {
 	if (logger.isDebugEnabled()) {
 	    logger.debug("开始获取URL：" + url);
 	}
-	return getStrContent(url, ConventionUtils.toMap(params));
+	return getStrContent(url, com.luculent.data.utils.util.ConventionUtils.toMap(params));
     }
 
     /**
@@ -139,7 +142,7 @@ public class OkHttpUtil {
     private static String getImageDownLoadContent(String url) {
 	Request request = getRequest(url, null);
 	Response response = null;
-	String uuid = UUIDBuilder.getUUID();
+	String uuid = com.luculent.data.utils.util.UUIDBuilder.getUUID();
 	try {
 	    response = client.newCall(request).execute();
 	    if (!response.isSuccessful()) {
@@ -165,7 +168,18 @@ public class OkHttpUtil {
 	    }
 	}
     }
-
+	public static String formatParams(List<BasicNameValuePair> params){
+		return URLEncodedUtils.format(params, CHARSET_NAME);
+	}
+	/**
+	 * 为HttpGet 的 url 方便的添加多个name value 参数。
+	 * @param url
+	 * @param params
+	 * @return
+	 */
+	public static String attachHttpGetParams(String url, List<BasicNameValuePair> params){
+		return url + "&" + formatParams(params);
+	}
     private static String getCodeCheckedStr(String url) {
 	Request request = getRequest(url, null);
 	BufferedImage bi = null;
