@@ -34,9 +34,13 @@ layui.config({
 		if(twoSearch === -1){
 			twoSearch = urlStr.length;
 		}
-		var ss =urlStr.substring(oneSearch,twoSearch);
-		urlStr = urlStr.replace(ss, paramStr);
-		$("#urlStr").val(urlStr);
+		if(oneSearch !=-1){
+			var ss =urlStr.substring(oneSearch,twoSearch);
+			console.log(ss);
+			urlStr = urlStr.replace(ss, paramStr);
+			console.log(urlStr);
+			$("#urlStr").val(urlStr);
+		}
 	});
 	//参数显示隐藏
 	$(".params-button").on('click',function(){
@@ -97,7 +101,6 @@ layui.config({
 	});
 	
 	form.on('submit(nowRun)', function(res) {
-		console.log(res.field);
 		$.ajax({
 			  url: contextPath+"/api/real-run.htm",
 			  data: JSON.stringify(res.field),

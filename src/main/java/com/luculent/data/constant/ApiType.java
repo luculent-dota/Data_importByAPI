@@ -9,7 +9,8 @@ import com.luculent.data.base.IntegerEnum;
  *@Since:2017年4月13日上午11:03:00
  */
 public enum ApiType implements IntegerEnum{
-    LOGIN(1),CODE(2),OTHER(0);
+    LOGIN(1),CODE(2),OTHER(0),
+    ISREQUIRED(1),NOREQUIRED(0);
     
     private Integer val;
     

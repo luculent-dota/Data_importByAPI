@@ -17,6 +17,40 @@
 		<script type="text/javascript" src="#springUrl('/static/layui/layui.js')"></script>
 		<script>
 	    var contextPath="${request.contextPath}";
+	    layui.config({
+	    	base: contextPath+'/static/common/js/',
+	    	version:new Date().getTime()
+	    }).use(['msg'], function(){
+	    	var $ = layui.jquery,
+	    	msg = layui.msg;
+	    	$.ajaxSetup({  
+	            type: "POST",  
+	            error: function(jqXHR, textStatus, errorThrown){
+	            	console.log(jqXHR);
+	            	console.log(textStatus);
+	            	console.log(errorThrown);
+	                switch (jqXHR.status){  
+	                    case(500):  
+	                        msg.error("服务器系统内部错误");  
+	                        break;  
+	                    case(401):  
+	                    	msg.error("未登录");  
+	                        break;  
+	                    case(403):  
+	                    	msg.error("无权限执行此操作");  
+	                        break;
+	                    case(404):  
+	                    	msg.error("路径没有找到");  
+	                        break;  
+	                    case(408):  
+	                    	msg.error("请求超时");  
+	                        break;  
+	                    default:  
+	                    	msg.error("未知错误");  
+	                }  
+	            }  
+	        });  	    	  
+	    });  
 	    
 	    </script>
 	</head>

@@ -54,8 +54,10 @@ public class SysAPIController extends BaseController {
 	if (params != null && params.size() != 0) {
 
 	    for (SysParam param : params) {
-		paramBuf.append(DataConstant.URL_AND).append(param.getName()).append(DataConstant.URL_EQUAL)
+		if(ApiType.ISREQUIRED.getVal()==param.getRequired()){
+		    paramBuf.append(DataConstant.URL_AND).append(param.getName()).append(DataConstant.URL_EQUAL)
 			.append(param.getDefaultValue());
+		}
 	    }
 	}
 	modelAndView.addObject("paramStr", paramBuf.toString());

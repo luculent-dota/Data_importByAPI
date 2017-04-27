@@ -140,7 +140,7 @@ public class SysApiService {
 			  String paramValue =jsonObj.getString(param.getName());
 			    if(StringUtils.isNotEmpty(paramValue)){
 				paramMap.put(param.getName(), Arrays.asList(StringUtils.split(paramValue, ",")));
-			    }else if(1==param.getRequired()){
+			    }else if(ApiType.ISREQUIRED.getVal()==param.getRequired()){
 				//基础值
 				if(ParamType.BASIS.name().equals(param.getParamType())){
 				    paramMap.put(param.getName(), basisKeyService.getCacheBykey(param.getDataSource()));
