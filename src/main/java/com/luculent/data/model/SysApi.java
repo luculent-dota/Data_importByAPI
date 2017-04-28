@@ -35,6 +35,9 @@ public class SysApi extends BaseModel{
 	/** 路径. */
 	private String url;
 	
+	/** 数据处理类名.*/
+	private String schedulerClass;
+	
 	/** 请求类型 1get 2post. */
 	private Integer askType;
 	
@@ -143,6 +146,26 @@ public class SysApi extends BaseModel{
 	 */
 	public void setUrl(String url) {
 		this.url = url;
+	}
+	
+	
+	/**
+	 * Gets the 数据处理类名.
+	 *
+	 * @return the 数据处理类名
+	 */
+	public String getSchedulerClass() {
+	    return schedulerClass;
+	}
+
+	/**
+	 * Sets the 数据处理类名.
+	 *
+	 * @param schedulerClass
+	 *            the new 数据处理类名
+	 */
+	public void setSchedulerClass(String schedulerClass) {
+	    this.schedulerClass = schedulerClass;
 	}
 
 	/**

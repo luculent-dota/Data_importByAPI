@@ -35,11 +35,11 @@ import okhttp3.Response;
  * @Author:zhangy
  * @Since:2017年4月14日下午4:49:16
  */
-public class OkHttpUtil {
+public class OkHttpUtils {
 
-    private final static Logger logger = LogManager.getLogger(OkHttpUtil.class);
+    private final static Logger logger = LogManager.getLogger(OkHttpUtils.class);
 
-    private OkHttpUtil() {
+    private OkHttpUtils() {
 	// TODO Auto-generated constructor stub
 	throw new AssertionError();
     }

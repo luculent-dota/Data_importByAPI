@@ -36,9 +36,7 @@ layui.config({
 		}
 		if(oneSearch !=-1){
 			var ss =urlStr.substring(oneSearch,twoSearch);
-			console.log(ss);
 			urlStr = urlStr.replace(ss, paramStr);
-			console.log(urlStr);
 			$("#urlStr").val(urlStr);
 		}
 	});

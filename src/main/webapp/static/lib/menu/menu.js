@@ -66,7 +66,6 @@ layui.config({
 			if($(".table-params").is(':visible')){
 				var paramObj = new Object();
 				$('.table-params td').each(function(index,element){
-					console.log($(element).children().attr("name"));
 					switch($(element).children().attr("name")){
 						case 'params_name':
 							paramObj = new Object();

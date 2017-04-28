@@ -73,6 +73,34 @@ public class ConventionUtils {
 	
 	/**
 	 * 
+	 *@Description:首字母大写
+	 *@Author: zhangy
+	 *@Since: 2017年4月27日下午1:55:30
+	 *@param src
+	 *@return
+	 */
+	public static String firstSpellToUp(String src){
+		char[] cs=src.toCharArray();
+	        cs[0]-=32;
+	        return String.valueOf(cs);
+	}
+	
+	/**
+	 * 
+	 *@Description:首字母小写
+	 *@Author: zhangy
+	 *@Since: 2017年4月27日下午1:55:30
+	 *@param src
+	 *@return
+	 */
+	public static String firstSpellToLow(String src){
+		char[] cs=src.toCharArray();
+	        cs[0]+=32;
+	        return String.valueOf(cs);
+	}
+	
+	/**
+	 * 
 	* <p>Description: map转换工具</p> 
 	* @param objs
 	* @return Map

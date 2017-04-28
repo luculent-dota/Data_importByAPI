@@ -34,7 +34,7 @@ import com.luculent.data.model.SysMenuChild;
 import com.luculent.data.model.SysParam;
 import com.luculent.data.model.SysProject;
 import com.luculent.data.utils.util.ConventionUtils;
-import com.luculent.data.utils.util.OkHttpUtil;
+import com.luculent.data.utils.util.OkHttpUtils;
 
 @Service
 @Transactional(value="datain")
@@ -102,12 +102,12 @@ public class SysApiService {
 		//验证码
 		List<SysApi> codeList =sysApiMapper.selectList(new EntityWrapper<SysApi>().eq("project_id", projectId).eq("api_type",ApiType.CODE.getVal()));
 		if(codeList !=null && codeList.size() !=0){
-			String code =OkHttpUtil.getCodeResult(codeList.get(0).getUrl());
+			String code =OkHttpUtils.getCodeResult(codeList.get(0).getUrl());
 			if(StringUtils.isNotEmpty(code)){
 				List<SysApi> loginList =sysApiMapper.selectList(new EntityWrapper<SysApi>().eq("project_id", projectId).eq("api_type", ApiType.LOGIN.getVal()));
 				if(loginList !=null && loginList.size() !=0){
 					SysApi sysApi = loginList.get(0);
-				    BackBean res= OkHttpUtil.getBeanContent(getJoinUrl(sysApi,code));
+				    BackBean res= OkHttpUtils.getBeanContent(getJoinUrl(sysApi,code));
 				    if(res != null){
 				    	if(DataConstant.RES_CODE_SUCCESS.equals(res.getRtnCode())){
 				    		logger.info("项目【"+sysProject.getName()+"】自动登陆成功...");

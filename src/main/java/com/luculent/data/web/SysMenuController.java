@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.luculent.data.base.BaseController;
+import com.luculent.data.constant.ApiType;
 import com.luculent.data.mapper.SysApiMapper;
 import com.luculent.data.mapper.SysParamMapper;
 import com.luculent.data.mapper.SysProjectMapper;
@@ -20,6 +21,8 @@ import com.luculent.data.model.SysApi;
 import com.luculent.data.model.SysParam;
 import com.luculent.data.model.SysProject;
 import com.luculent.data.service.SysMenuService;
+import com.luculent.data.utils.util.DynamicCompileUtils;
+import com.luculent.data.utils.util.TemplateUtils;
 
 @Controller
 @RequestMapping("/menu")
@@ -94,8 +97,14 @@ public class SysMenuController extends BaseController {
 		    sysApi.getAlias()));
 	}
 	if (StringUtils.isEmpty(sysApi.getId())) {
+	    if(ApiType.OTHER.getVal() == sysApi.getApiType()){
+		sysApi.setSchedulerClass(TemplateUtils.createClass(sysProject.getName(), sysApi.getName()));
+	    }
 	    sysApiMapper.insert(sysApi);
 	} else {
+//	    if(ApiType.OTHER.getVal() == sysApi.getApiType()){
+//		sysApi.setSchedulerClass(TemplateUtils.createClass(sysProject.getName(), sysApi.getName()));
+//	    }
 	    sysApiMapper.updateById(sysApi);
 	}
 	sysParamMapper.delete(new EntityWrapper<SysParam>().eq("api_id", sysApi.getId()));

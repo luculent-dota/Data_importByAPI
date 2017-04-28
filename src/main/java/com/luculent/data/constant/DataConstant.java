@@ -36,6 +36,7 @@ public class DataConstant {
 	
 	public static final String SCHEDULER_PATH = DataConstant.PATH+"\\java\\com\\luculent\\data\\scheduler\\";
 	
+	public static final String SCHEDULER_PACKAGE_PATH="com.luculent.data";
 	/**ocr地址*/
 	public static final String OCR_PATH =PATH+"\\resources\\";
 	/**图片输出地址*/

@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.luculent.data.base.BaseController;
+import com.luculent.data.base.ServiceLocator;
 import com.luculent.data.constant.ApiType;
 import com.luculent.data.constant.DataConstant;
 import com.luculent.data.mapper.SysApiMapper;
@@ -20,9 +22,11 @@ import com.luculent.data.mapper.SysProjectMapper;
 import com.luculent.data.model.SysApi;
 import com.luculent.data.model.SysParam;
 import com.luculent.data.model.SysProject;
-import com.luculent.data.scheduler.SysTestService;
+import com.luculent.data.scheduler.IBaseScheduler;
 import com.luculent.data.service.SysApiService;
-import com.luculent.data.utils.util.OkHttpUtil;
+import com.luculent.data.utils.util.ConventionUtils;
+import com.luculent.data.utils.util.OkHttpUtils;
+import com.sun.media.jfxmedia.logging.Logger;
 
 @Controller
 @RequestMapping("/api")
@@ -36,8 +40,6 @@ public class SysAPIController extends BaseController {
     private SysParamMapper sysParamMapper;
     @Autowired
     private SysProjectMapper sysProjectMapper;
-    @Autowired
-    private SysTestService sysTestService;
 
     @RequestMapping("/index")
     public ModelAndView index(ModelAndView modelAndView, String apiId) {
@@ -54,9 +56,9 @@ public class SysAPIController extends BaseController {
 	if (params != null && params.size() != 0) {
 
 	    for (SysParam param : params) {
-		if(ApiType.ISREQUIRED.getVal()==param.getRequired()){
+		if (ApiType.ISREQUIRED.getVal() == param.getRequired()) {
 		    paramBuf.append(DataConstant.URL_AND).append(param.getName()).append(DataConstant.URL_EQUAL)
-			.append(param.getDefaultValue());
+			    .append(param.getDefaultValue());
 		}
 	    }
 	}
@@ -91,17 +93,26 @@ public class SysAPIController extends BaseController {
 	}
 	String res = "";
 	if (apiType == ApiType.CODE.getVal()) {
-	    res = OkHttpUtil.getImageDownLoad(url);
+	    res = OkHttpUtils.getImageDownLoad(url);
 	} else {
-	    res = OkHttpUtil.getContent(url);
+	    res = OkHttpUtils.getContent(url);
 	}
 	return res;
     }
-    
+
     @ResponseBody
     @RequestMapping("/real-run")
     public Object realRun(@RequestBody String json) {
-	sysTestService.test(json);
-	return renderSuccess("启动成功"); 
+	JSONObject jsonObj = JSONObject.parseObject(json);
+	String apiId = jsonObj.getString("APIID");
+	SysApi sysApi = sysApiMapper.selectById(apiId);
+	String schedulerClass = ConventionUtils.firstSpellToLow(sysApi.getSchedulerClass());
+	if(!ServiceLocator.containsBean(schedulerClass)){
+	    return renderError("启动失败！任务类未加载,请重启服务器");
+	}
+	IBaseScheduler scheduler = (IBaseScheduler) ServiceLocator.getBean(schedulerClass);
+	System.out.println(sysApi.getSchedulerClass());
+	scheduler.test(json);
+	return renderSuccess("启动成功");
     }
 }

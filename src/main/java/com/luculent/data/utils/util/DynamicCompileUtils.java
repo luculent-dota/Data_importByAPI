@@ -5,15 +5,21 @@ import javax.tools.ToolProvider;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.support.GenericBeanDefinition;
 
+import com.luculent.data.base.ServiceLocator;
 import com.luculent.data.constant.DataConstant;
+import com.luculent.data.exception.ClassMakeNameException;
 
 /**
  * 
- *@Description:动态编译class文件
+ *@Description:动态编译class文件 需要web容器动态加载
  *@Author:zhangy
  *@Since:2017年4月14日上午11:14:27
  */
+@Deprecated
 public class DynamicCompileUtils {
     
     private final static  Logger logger = LogManager.getLogger(DynamicCompileUtils.class);
@@ -34,17 +40,26 @@ public class DynamicCompileUtils {
 	return 0==compilationResult?true:false;
     }
 
-    public static boolean createClassByClassName(String className){
-	TemplateUtil.createClass(className);
+    public static String createClassByClassName(String projectName,String apiName){
+	String className =TemplateUtils.createClass(projectName,apiName);
 	String classPath = DynamicCompileUtils.class.getClassLoader().getResource("").getFile();
 	String javaPath =DataConstant.SCHEDULER_PATH+className+".java";
 	boolean res =compileJavaFileByPath(classPath,javaPath);
-	String message = res?"成功":"失败";
-	logger.info("动态生成"+className+"类"+message+"!");
-	return res;
+	if(!res){
+	    logger.error("动态编译"+className+"任务类成功!");
+	    throw new ClassMakeNameException("动态编译"+className+"任务类失败!");
+	}
+	
+	logger.info("动态编译"+className+"任务类成功!");
+	BeanDefinition bean = new GenericBeanDefinition();
+	bean.setBeanClassName(DataConstant.SCHEDULER_PACKAGE_PATH+"."+className);
+	DefaultListableBeanFactory fty = (DefaultListableBeanFactory) ServiceLocator.context.getAutowireCapableBeanFactory();
+	fty.registerBeanDefinition(ConventionUtils.firstSpellToLow(className), bean);
+	logger.info("动态加入Spring上下文"+className+"任务类成功!");
+	return className;
     }
     public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-	boolean ss = createClassByClassName("Teamsss");
+	createClassByClassName("扶贫办","项目张洋");
 	
     }
 }

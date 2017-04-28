@@ -2,12 +2,36 @@ package com.luculent.data.scheduler;
 
 import java.util.Date;
 
-public class $!{className} implements BaseEntingy{
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-    @Override
-    public void outUserName() {
-	// TODO Auto-generated method stub
-	System.out.println(new Date().getTime());
-    }
+import com.luculent.data.service.SysApiService;
+
+/**
+ * 
+ *@Description:$!{projectName}-$!{apiName} $!{note}
+ *@Author:zhangy
+ */
+@Service
+@Transactional(value="datain")
+public class $!{className} implements IBaseScheduler{
+       private final static  Logger logger = LogManager.getLogger("run_long");
+	
+	@Autowired
+	private SysApiService sysApiService;
+	
+	@Override
+	public void test(String json){
+	    sysApiService.paramAnalysis(json);
+	}
+	
+	@Override
+	public void test1() {
+	    System.out.println(new Date().getTime());
+	    
+	}
 
 }
