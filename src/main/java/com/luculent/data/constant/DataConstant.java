@@ -26,6 +26,8 @@ public class DataConstant {
 	
 	public static final String RES_CODE_SUCCESS="000000";
 	
+	public static final String RES_CODE_NOTLOGIN="900003";
+	
 	public static final String URL_AND ="&";
 	
 	public static final String URL_EQUAL ="=";
@@ -43,5 +45,25 @@ public class DataConstant {
 	public static final String TEMP_PATH =PATH+"\\webapp\\temp\\";
 	/**图片扩展名 */
 	public static final String IMG_TYPE =".gif";
+	
+	public static final ThreadLocal<Integer> PAGENUM = new ThreadLocal<Integer>() {
+		@Override
+		protected Integer initialValue() {
+			return 1;
+		}
+	};
+	
+	/**出错线程等待.*/
+	public static final int WAIT_RUNTASK_NUM = 5;
+	
+	/**自动登陆重试次数(从1开始 值减1).*/
+	public static final int AUTO_LOGIN_NUM =4;
+	
+	public static final ThreadLocal<Integer> WAITNUM = new ThreadLocal<Integer>() {
+		@Override
+		protected Integer initialValue() {
+			return 0;
+		}
+	};
 
 }

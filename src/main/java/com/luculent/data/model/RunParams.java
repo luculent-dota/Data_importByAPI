@@ -2,8 +2,7 @@ package com.luculent.data.model;
 
 import java.util.List;
 import java.util.Map;
-
-import com.luculent.data.model.BackBean.Builder;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 
@@ -23,7 +22,7 @@ public class RunParams {
     private String url;
     
     /** 参数列表. */
-    private List<Map<String,String>> params;
+    private List<ConcurrentHashMap<String,String>> params;
     
     /** 是否需要页码. */
     private Boolean needPage;
@@ -56,7 +55,7 @@ public class RunParams {
 	private String recordId;
 	    
 	/** 参数列表. */
-	private List<Map<String,String>> params =null;
+	private List<ConcurrentHashMap<String,String>> params =null;
 	    
 	/** 是否需要页码. */
 	private Boolean needPage = false;
@@ -74,7 +73,7 @@ public class RunParams {
 	    this.recordId = recordId;
 	}
 	
-	public Builder params(List<Map<String,String>> val){
+	public Builder params(List<ConcurrentHashMap<String,String>> val){
 	    params = val;
 	    return this;
 	}
@@ -165,7 +164,7 @@ public class RunParams {
      *
      * @return the 参数列表
      */
-    public List<Map<String, String>> getParams() {
+    public List<ConcurrentHashMap<String, String>> getParams() {
         return params;
     }
 
@@ -175,7 +174,7 @@ public class RunParams {
      * @param params
      *            the new 参数列表
      */
-    public void setParams(List<Map<String, String>> params) {
+    public void setParams(List<ConcurrentHashMap<String, String>> params) {
         this.params = params;
     }
 

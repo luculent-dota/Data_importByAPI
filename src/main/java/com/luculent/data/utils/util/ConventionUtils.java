@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -23,7 +24,7 @@ public class ConventionUtils {
 		throw new AssertionError();
 	}
 	
-	private static List<Map<String,String>> params;
+	private static List<ConcurrentHashMap<String,String>> params;
 	
 	
 	private final static String STR_SEPARATOR="=";
@@ -37,12 +38,12 @@ public class ConventionUtils {
 	 *@param map
 	 *@return
 	 */
-	public static List<Map<String,String>> toParamsMap(Map<String,List<String>> map){
+	public static List<ConcurrentHashMap<String,String>> toParamsMap(Map<String,List<String>> map){
 		Set<String> keys = map.keySet();
 		List<String> keyList = new ArrayList<String>();
 		keyList.addAll(keys);
 		List<String> temp = new ArrayList<String>();
-		params = new ArrayList<Map<String,String>>();
+		params = new ArrayList<ConcurrentHashMap<String,String>>();
 		solutionList(keyList,map,0,temp);
 		return params;
 	    }
@@ -136,8 +137,8 @@ public class ConventionUtils {
 	}
 	
 	
-	private static Map<String,String> toMapByList(List<String> list){
-		Map<String,String> pams = new HashMap<String,String>();
+	private static ConcurrentHashMap<String,String> toMapByList(List<String> list){
+	    	ConcurrentHashMap<String,String> pams = new ConcurrentHashMap<String,String>();
 		for(String str:list){
 		    String [] arr =StringUtils.split(str, STR_SEPARATOR);
 		    pams.put(arr[0], arr[1]);

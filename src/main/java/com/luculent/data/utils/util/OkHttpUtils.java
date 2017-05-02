@@ -6,8 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.SocketException;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
@@ -37,7 +39,7 @@ import okhttp3.Response;
  */
 public class OkHttpUtils {
 
-    private final static Logger logger = LogManager.getLogger(OkHttpUtils.class);
+    private final static Logger logger = LogManager.getLogger("run_long");
 
     private OkHttpUtils() {
 	// TODO Auto-generated constructor stub
@@ -84,6 +86,17 @@ public class OkHttpUtils {
      */
     public static BackBean getBeanContent(String url,String... params){
 	return ConventionUtils.jsonToBackBean(getContent(url,params));
+    }
+    
+    /**
+     * 以get方式获取返回值
+     * 
+     * @param url
+     * @param params 线程安全map
+     * @return BackBean
+     */
+    public static BackBean getBeanContent(String url,ConcurrentHashMap<String,String> params){
+	return ConventionUtils.jsonToBackBean(getStrContent(url,params));
     }
 
     /**
@@ -158,13 +171,17 @@ public class OkHttpUtils {
 	} catch (IOException e) {
 	    // TODO Auto-generated catch block
 	    logger.error("开始获取URL：" + url+ "出错", e);
-	    return e.getMessage();
-	} finally {
+	    if(params == null){
+		 return e.getMessage();
+	    }
+	    return null;
+	   
+	}finally {
 	    try {
 		response.close();
 	    } catch (Exception e) {
 		// TODO Auto-generated catch block
-		e.printStackTrace();
+		//e.printStackTrace();
 	    }
 	}
 
@@ -191,7 +208,12 @@ public class OkHttpUtils {
 	    // TODO Auto-generated catch block
 	    logger.error("获取图片：" + url+ "出错",e );
 	    return e.getMessage();
-	} finally {
+	} catch (NullPointerException e) {
+	    // TODO Auto-generated catch block
+	    logger.error("获取图片：" + url+ "出错",e );
+	    return e.getMessage();
+	   
+	}finally {
 	    try {
 		response.close();
 	    } catch (Exception e) {
@@ -219,8 +241,8 @@ public class OkHttpUtils {
 	    Tesseract tessreact = new Tesseract();
 	    tessreact.setDatapath(DataConstant.OCR_PATH);
 	    tessreact.setLanguage("eng");
-	    res = tessreact.doOCR(bi).replace("\n", "");
-	    return res.trim();
+	    res = tessreact.doOCR(bi).replace("\n", "").replaceAll("\\s*", "");
+	    return res;
 	} catch (IOException e) {
 	    // TODO Auto-generated catch block
 	    logger.error("获取图片：" + url+ "出错",e );
@@ -229,7 +251,12 @@ public class OkHttpUtils {
 	    // TODO Auto-generated catch block
 	    logger.error("解析图片：" + url+ "出错",e );
 	    return null;
-	} finally {
+	} catch (NullPointerException e) {
+	    // TODO Auto-generated catch block
+	    logger.error("获取图片：" + url+ "出错",e );
+	    return null;
+	   
+	}finally {
 	    try {
 		response.close();
 	    } catch (Exception e) {
@@ -240,14 +267,19 @@ public class OkHttpUtils {
 	
     }
 
-    private static Request getRequest(String url, Map<String, String> headers) {
-	okhttp3.Request.Builder builder = new Request.Builder();
-	builder.url(url);
-	if (headers != null && headers.size() != 0) {
-	    for (Entry<String, String> param : headers.entrySet()) {
-		builder.addHeader(param.getKey(), param.getValue());
+    private static Request getRequest(String url, Map<String, String> params) {
+	StringBuffer urlStr = new StringBuffer(url);
+	if (params != null && params.size() != 0) {
+	    for (Entry<String, String> param : params.entrySet()) {
+		if(StringUtils.isNotEmpty(param.getValue())){
+		    urlStr.append(DataConstant.URL_AND).append(param.getKey()).append(DataConstant.URL_EQUAL)
+		    .append(param.getValue());
+		}
+		
 	    }
 	}
+	okhttp3.Request.Builder builder = new Request.Builder();
+	builder.url(urlStr.toString());
 	Request request = builder.build();
 	return request;
     }
@@ -301,7 +333,7 @@ public class OkHttpUtils {
     }
 
     public static void main(String[] args) throws IOException {
-	String res = getContent("https://www.baidu.com", null, null, null);
+	String res = getContent("http://219.159.44.169:32201/cf_fpb/?iw-apikey=123&iw-cmd=xiangmuxiangqing","XMBH","4301100648419650");
 
 	System.out.println(res);
 

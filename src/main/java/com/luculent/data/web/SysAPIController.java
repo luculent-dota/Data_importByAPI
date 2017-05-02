@@ -22,6 +22,7 @@ import com.luculent.data.mapper.SysProjectMapper;
 import com.luculent.data.model.SysApi;
 import com.luculent.data.model.SysParam;
 import com.luculent.data.model.SysProject;
+import com.luculent.data.scheduler.FpbXiangmxqService;
 import com.luculent.data.scheduler.IBaseScheduler;
 import com.luculent.data.service.SysApiService;
 import com.luculent.data.utils.util.ConventionUtils;
@@ -40,6 +41,8 @@ public class SysAPIController extends BaseController {
     private SysParamMapper sysParamMapper;
     @Autowired
     private SysProjectMapper sysProjectMapper;
+    @Autowired
+    private FpbXiangmxqService fpbXiangmxqService;
 
     @RequestMapping("/index")
     public ModelAndView index(ModelAndView modelAndView, String apiId) {
@@ -75,14 +78,7 @@ public class SysAPIController extends BaseController {
     @ResponseBody
     @RequestMapping("/auto-login")
     public Object autoLogin(String projectId) {
-	boolean loginIn = false;
-	for (int i = 0; i < 3; i++) {
-	    if (sysApiService.autoLoginByProjectId(projectId)) {
-		loginIn = true;
-		break;
-	    }
-	}
-	return loginIn ? renderSuccess("登陆成功") : renderError("登陆失败");
+	return sysApiService.autoLoginByProjectId(projectId) ? renderSuccess("登陆成功") : renderError("登陆失败");
     }
 
     @ResponseBody
@@ -106,13 +102,13 @@ public class SysAPIController extends BaseController {
 	JSONObject jsonObj = JSONObject.parseObject(json);
 	String apiId = jsonObj.getString("APIID");
 	SysApi sysApi = sysApiMapper.selectById(apiId);
-	String schedulerClass = ConventionUtils.firstSpellToLow(sysApi.getSchedulerClass());
-	if(!ServiceLocator.containsBean(schedulerClass)){
-	    return renderError("启动失败！任务类未加载,请重启服务器");
-	}
-	IBaseScheduler scheduler = (IBaseScheduler) ServiceLocator.getBean(schedulerClass);
+//	String schedulerClass = ConventionUtils.firstSpellToLow(sysApi.getSchedulerClass());
+//	if(!ServiceLocator.containsBean(schedulerClass)){
+//	    return renderError("启动失败！任务类未加载,请重启服务器");
+//	}
+//	IBaseScheduler scheduler = (IBaseScheduler) ServiceLocator.getBean(schedulerClass);
 	System.out.println(sysApi.getSchedulerClass());
-	scheduler.test(json);
+	fpbXiangmxqService.test(json);
 	return renderSuccess("启动成功");
     }
 }
