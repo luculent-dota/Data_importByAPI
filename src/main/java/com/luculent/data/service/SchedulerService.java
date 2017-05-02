@@ -104,8 +104,7 @@ public class SchedulerService {
 	    record = runRecordMapper.selectById(record.getId());
 	    logger.info("数据处理开始,纪录Id为【" + record.getId() + "】,开始时间为 :" + record.getScrq() + ",执行参数为:" + paramStr);
 
-	    RunParams.Builder builder = new RunParams.Builder(sysApi.getProjectId(), apiId, sysApi.getUrl(),
-		    record.getId());
+	    RunParams.Builder builder = new RunParams.Builder(sysApi.getProjectId(), sysApi.getUrl(),record.getId());
 	    if (paramList != null && paramList.size() != 0) {
 		builder.params(paramList);
 	    }
@@ -202,8 +201,6 @@ public class SchedulerService {
 		return res;
 	    }
 	    
-	    /** apiId. */
-	    private String apiId;
 	    
 	    /** projectId. */
 	    private String projectId;
@@ -230,7 +227,6 @@ public class SchedulerService {
 	    public SchedulerTaskRunnable(RunParams runParams) {
 		// TODO Auto-generated constructor stub
 		this.projectId = runParams.getProjectId();
-		this.apiId = runParams.getApiId();
 		this.url = runParams.getUrl();
 		this.needPage = runParams.getNeedPage();
 		this.pageName = runParams.getPageName();
@@ -241,7 +237,6 @@ public class SchedulerService {
 	    public SchedulerTaskRunnable(RunParams runParams,ConcurrentHashMap<String,String> param) {
 		// TODO Auto-generated constructor stub
 		this.projectId = runParams.getProjectId();
-		this.apiId = runParams.getApiId();
 		this.url = runParams.getUrl();
 		this.needPage = runParams.getNeedPage();
 		this.pageName = runParams.getPageName();

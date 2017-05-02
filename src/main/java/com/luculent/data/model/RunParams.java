@@ -12,8 +12,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class RunParams {
 
-    /** apiId. */
-    private String apiId;
     
     /** projectId. */
     private String projectId;
@@ -42,8 +40,6 @@ public class RunParams {
      */
     public static class Builder{
 	
-	/** apiId. */
-	private String apiId;
 	    
 	/** projectId. */
 	private String projectId;
@@ -65,10 +61,9 @@ public class RunParams {
 	    
 	
 	
-	public Builder(String projectId,String apiId,String url,String recordId) {
+	public Builder(String projectId,String url,String recordId) {
 	    // TODO Auto-generated constructor stub
 	    this.projectId = projectId;
-	    this.apiId = apiId;
 	    this.url = url;
 	    this.recordId = recordId;
 	}
@@ -93,7 +88,6 @@ public class RunParams {
     }
     
     private RunParams(Builder builder){
-	this.apiId = builder.apiId;
 	this.url = builder.url;
 	this.projectId = builder.projectId;
 	this.recordId = builder.recordId;
@@ -102,24 +96,6 @@ public class RunParams {
 	this.pageName = builder.pageName;
     }
 
-    /**
-     * Gets the apiId.
-     *
-     * @return the apiId
-     */
-    public String getApiId() {
-        return apiId;
-    }
-
-    /**
-     * Sets the apiId.
-     *
-     * @param apiId
-     *            the new apiId
-     */
-    public void setApiId(String apiId) {
-        this.apiId = apiId;
-    }
 
     /**
      * Gets the projectId.
