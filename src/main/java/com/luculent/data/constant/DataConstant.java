@@ -54,7 +54,7 @@ public class DataConstant {
 	};
 	
 	/**出错线程等待.*/
-	public static final int WAIT_RUNTASK_NUM = 5;
+	public static final int WAIT_RUNTASK_NUM = 10;
 	
 	/**自动登陆重试次数(从1开始 值减1).*/
 	public static final int AUTO_LOGIN_NUM =4;

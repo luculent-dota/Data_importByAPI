@@ -106,9 +106,6 @@ public class OkHttpUtils {
      * @return
      */
     public static String getContent(String url) {
-	if (logger.isDebugEnabled()) {
-	    logger.debug("开始获取URL：" + url);
-	}
 	return getStrContent(url, null);
     }
 
@@ -121,9 +118,6 @@ public class OkHttpUtils {
      * @return
      */
     public static String getContent(String url, String... params) {
-	if (logger.isDebugEnabled()) {
-	    logger.debug("开始获取URL：" + url);
-	}
 	return getStrContent(url, ConventionUtils.toMap(params));
     }
 
@@ -166,7 +160,7 @@ public class OkHttpUtils {
 		response.close();
 		return null;
 	    }
-	    logger.info("获取URL：" + url+" 成功");
+	    logger.debug("获取URL：" + url+" 成功");
 	    return response.body().string();
 	} catch (IOException e) {
 	    // TODO Auto-generated catch block
@@ -198,7 +192,7 @@ public class OkHttpUtils {
 		response.close();
 		return null;
 	    }
-	    logger.info("获取URL：" + url+" 成功");
+	    logger.debug("获取URL：" + url+" 成功");
 	    InputStream input = response.body().byteStream();
 	    OutputStream output = new FileOutputStream(new File(DataConstant.TEMP_PATH + uuid + DataConstant.IMG_TYPE));
 	    IOUtils.copy(input, output);
@@ -235,7 +229,7 @@ public class OkHttpUtils {
 		response.close();
 		return null;
 	    }
-	    logger.info("获取URL：" + url+" 成功");
+	    logger.debug("获取URL：" + url+" 成功");
 	    InputStream input = response.body().byteStream();
 	    bi = ImageIO.read(input);
 	    Tesseract tessreact = new Tesseract();

@@ -5,12 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,15 +55,28 @@ public class SchedulerService {
     private TaskExecutor threadPoolTaskExecutor;
     
     
+    @Async
     public void paramsHandler(String json){
 	RunParams runParams = this.paramAnalysis(json);
 	List<ConcurrentHashMap<String,String>> params = runParams.getParams();
+	CountDownLatch countDownLatch =null;
 	if(params.size() !=0){
+	    countDownLatch = new CountDownLatch(params.size());
 	    for(ConcurrentHashMap<String,String> param:params){
-		threadPoolTaskExecutor.execute(new SchedulerTaskRunnable(runParams,param));
+		threadPoolTaskExecutor.execute(new SchedulerTaskRunnable(countDownLatch,runParams,param));
 	    }
 	}else if(runParams.getNeedPage()){
-	    threadPoolTaskExecutor.execute(new SchedulerTaskRunnable(runParams));
+	    countDownLatch = new CountDownLatch(1);
+	    threadPoolTaskExecutor.execute(new SchedulerTaskRunnable(countDownLatch,runParams));
+	}else{
+	    return ;
+	}
+	try {
+	    countDownLatch.await();
+	    System.err.println("所有线程已完成");
+	} catch (InterruptedException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
 	}
     }
 
@@ -157,20 +172,33 @@ public class SchedulerService {
 		    BackBean back =OkHttpUtils.getBeanContent(this.url, params);
 		    handlerBackBean(back,params,projectId,recordId);
 		}
+		countDown.countDown();
 	    }
 	    
+	    /**
+	     * 
+	     *@Description: 处理请求返回值 如果请求为空或自动登陆失败满足WAIT_RUNTASK_NUM值则停止任务
+	     *@Author: zhangy
+	     *@Since: 2017年5月3日下午3:46:50
+	     *@param back
+	     *@param params
+	     *@param projectId
+	     *@param recordId
+	     *@return
+	     */
 	    private boolean handlerBackBean(BackBean back,ConcurrentHashMap<String,String> params,String projectId,String recordId){
 		
 		boolean res = false;
-		int num = DataConstant.WAITNUM.get();
-		if(back == null){
-		    if(DataConstant.WAIT_RUNTASK_NUM == num){
+		int waitNum = DataConstant.WAITNUM.get();
+		if(DataConstant.WAIT_RUNTASK_NUM == waitNum){
 			logger.error("Id为:【"+recordId+"】的任务，请求数据失败，请求的参数为:"+JSON.toJSONString(params)+",请求已超过最大等待次数，任务终止");
 			return false;
-		    }
+		}
+		if(back == null){
+		    
 		    logger.error("Id为:【"+recordId+"】的任务，请求数据失败，请求的参数为:"+JSON.toJSONString(params));
-		    num++;
-		    DataConstant.WAITNUM.set(num);
+		    waitNum++;
+		    DataConstant.WAITNUM.set(waitNum);
 		    return true;
 		    
 		}
@@ -178,8 +206,11 @@ public class SchedulerService {
 		//成功
 		case DataConstant.RES_CODE_SUCCESS:
 		    //
+//		    if(StringUtils.isNotEmpty(back.getSql())){
+//			  int ress =exportDataService.exportDataBySql(StringUtils.split(back.getSql(), ";"));
+//			  logger.debug("Id为:【"+recordId+"】的任务，请求数据成功！，请求的参数为:"+JSON.toJSONString(params)+"执行成功的条数为"+ress+"条");
+//		    }
 		    res = true;
-		    logger.debug("Id为:【"+recordId+"】的任务，请求数据成功！，请求的参数为:"+JSON.toJSONString(params));
 		    break;
 		//未登陆
 		case DataConstant.RES_CODE_NOTLOGIN:
@@ -190,6 +221,9 @@ public class SchedulerService {
 		    if(auto){
 			BackBean autoBack =OkHttpUtils.getBeanContent(this.url, params);
 			return handlerBackBean(autoBack,params,projectId,recordId);
+		    }else{
+			waitNum++;
+			DataConstant.WAITNUM.set(waitNum);
 		    }
 		    logger.error("Id为:【"+recordId+"】的任务，自动登陆失败，请求的参数为:"+JSON.toJSONString(params));
 		    break;
@@ -220,12 +254,15 @@ public class SchedulerService {
 	    /** recordId. */
 	    private String recordId;
 	    
+	    private CountDownLatch countDown;
+	    
 	    public SchedulerTaskRunnable() {
 		// TODO Auto-generated constructor stub
 	    }
 	    
-	    public SchedulerTaskRunnable(RunParams runParams) {
+	    public SchedulerTaskRunnable(CountDownLatch countDown,RunParams runParams) {
 		// TODO Auto-generated constructor stub
+		this.countDown =countDown;
 		this.projectId = runParams.getProjectId();
 		this.url = runParams.getUrl();
 		this.needPage = runParams.getNeedPage();
@@ -234,8 +271,9 @@ public class SchedulerService {
 		this.param = null;
 	    }
 	    
-	    public SchedulerTaskRunnable(RunParams runParams,ConcurrentHashMap<String,String> param) {
+	    public SchedulerTaskRunnable(CountDownLatch countDown,RunParams runParams,ConcurrentHashMap<String,String> param) {
 		// TODO Auto-generated constructor stub
+		this.countDown =countDown;
 		this.projectId = runParams.getProjectId();
 		this.url = runParams.getUrl();
 		this.needPage = runParams.getNeedPage();

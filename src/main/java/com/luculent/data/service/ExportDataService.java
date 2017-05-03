@@ -11,16 +11,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class ExportDataService {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    
-    @Transactional(value="dataout")
-    public List<String> exportColumnByKeys(String sql){
-	return jdbcTemplate.queryForList(sql, String.class);
+    private JdbcTemplate jdbcTemplateOut;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplateIn;
+
+    @Transactional(value = "dataout")
+    public List<String> exportColumnByKeys(String sql) {
+	return jdbcTemplateOut.queryForList(sql, String.class);
     }
-    
-    
-    public void exportDataBySql(String[] sql){
-	jdbcTemplate.batchUpdate(sql);
+
+    public int exportDataBySql(String[] sql) {
+	int[] rowsAffected = jdbcTemplateIn.batchUpdate(sql);
+	int sum =0;
+	for (int i = 0; i < rowsAffected.length; i++) {
+	    sum+=rowsAffected[i];
+	}
+	return sum;
     }
-    
+
 }

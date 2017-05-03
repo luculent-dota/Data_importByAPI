@@ -50,11 +50,13 @@
     
     
     
-    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-		<property name="dataSource" ref="dataOutSource" />
-	</bean>
+   	
 	
 	<context:component-scan base-package="com.luculent.data.export"/>
+	
+	<bean id="jdbcTemplateOut" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataOutSource" />
+	</bean>
 	
 	<!-- 配置事务管理 -->
     <bean name="transactionOutManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
