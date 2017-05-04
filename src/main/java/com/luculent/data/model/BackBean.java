@@ -89,7 +89,7 @@ public class BackBean {
 	this.rtnCode = builder.rtnCode;
 	this.rtnMsg = builder.rtnMsg;
 	this.sql = builder.sql;
-	this.total = builder.sql;
+	this.total = builder.total;
 	this.list = builder.list;
     }
     /**

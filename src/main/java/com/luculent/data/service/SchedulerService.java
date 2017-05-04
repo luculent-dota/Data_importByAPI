@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -54,12 +56,23 @@ public class SchedulerService {
     @Autowired
     private TaskExecutor threadPoolTaskExecutor;
     
+    private ConcurrentHashMap<String,AtomicLong> expectTotalMap =new ConcurrentHashMap<String,AtomicLong>();
+    
+    private ConcurrentHashMap<String,AtomicLong> actualTotalMap =new ConcurrentHashMap<String,AtomicLong>();
+    
+    private ConcurrentHashMap<String,StringBuffer> failParamsMap =new ConcurrentHashMap<String,StringBuffer>();
+    
+    
     
     @Async
     public void paramsHandler(String json){
 	RunParams runParams = this.paramAnalysis(json);
+	String recordId = runParams.getRecordId();
 	List<ConcurrentHashMap<String,String>> params = runParams.getParams();
 	CountDownLatch countDownLatch =null;
+	expectTotalMap.put(recordId, new AtomicLong(0l));
+	actualTotalMap.put(recordId, new AtomicLong(0l));
+	failParamsMap.put(recordId, new StringBuffer());
 	if(params.size() !=0){
 	    countDownLatch = new CountDownLatch(params.size());
 	    for(ConcurrentHashMap<String,String> param:params){
@@ -73,7 +86,19 @@ public class SchedulerService {
 	}
 	try {
 	    countDownLatch.await();
-	    System.err.println("所有线程已完成");
+	    //线程完成
+	    RunRecord record = runRecordMapper.selectById(runParams.getRecordId());
+	    //截至时间
+	    record.setExpectTotal(expectTotalMap.get(recordId).get());
+	    record.setActualTotal(actualTotalMap.get(recordId).get());
+	    record.setFailLog(failParamsMap.get(recordId).toString());
+	    
+	    runRecordMapper.updateById(record);
+	    
+	    expectTotalMap.remove(recordId);
+	    actualTotalMap.remove(record);
+	    failParamsMap.remove(recordId);
+	    
 	} catch (InterruptedException e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
@@ -195,7 +220,7 @@ public class SchedulerService {
 			return false;
 		}
 		if(back == null){
-		    
+		    failParamsMap.get(recordId).append(JSON.toJSONString(params));
 		    logger.error("Id为:【"+recordId+"】的任务，请求数据失败，请求的参数为:"+JSON.toJSONString(params));
 		    waitNum++;
 		    DataConstant.WAITNUM.set(waitNum);
@@ -206,10 +231,24 @@ public class SchedulerService {
 		//成功
 		case DataConstant.RES_CODE_SUCCESS:
 		    //
-//		    if(StringUtils.isNotEmpty(back.getSql())){
-//			  int ress =exportDataService.exportDataBySql(StringUtils.split(back.getSql(), ";"));
-//			  logger.debug("Id为:【"+recordId+"】的任务，请求数据成功！，请求的参数为:"+JSON.toJSONString(params)+"执行成功的条数为"+ress+"条");
-//		    }
+		    if(StringUtils.isNotEmpty(back.getSql())){
+			
+			 // int ress =exportDataService.exportDataBySql(StringUtils.split(back.getSql(), ";"));
+			int ress =StringUtils.split(back.getSql(), ";").length;
+			  logger.debug("Id为:【"+recordId+"】的任务，请求数据成功！，请求的参数为:"+JSON.toJSONString(params)+"执行成功的条数为"+ress+"条");
+			  //期望总数
+			  if(expectStatus ==0){
+			      if(StringUtils.isNotEmpty(back.getTotal())){
+				  expectTotalMap.get(recordId).addAndGet(Long.valueOf(back.getTotal()));
+			      }else{
+				  expectTotalMap.get(recordId).addAndGet(ress);
+			      }
+    			      expectStatus=1;
+			  }
+			  //实际总数
+			  actualTotalMap.get(recordId).addAndGet(ress);
+		    }
+		    
 		    res = true;
 		    break;
 		//未登陆
@@ -222,13 +261,15 @@ public class SchedulerService {
 			BackBean autoBack =OkHttpUtils.getBeanContent(this.url, params);
 			return handlerBackBean(autoBack,params,projectId,recordId);
 		    }else{
+			failParamsMap.get(recordId).append(JSON.toJSONString(params));
 			waitNum++;
 			DataConstant.WAITNUM.set(waitNum);
+			logger.error("Id为:【"+recordId+"】的任务，自动登陆失败，请求的参数为:"+JSON.toJSONString(params));
 		    }
-		    logger.error("Id为:【"+recordId+"】的任务，自动登陆失败，请求的参数为:"+JSON.toJSONString(params));
 		    break;
 		//其他
 		default:
+		    failParamsMap.get(recordId).append(JSON.toJSONString(params));
 		    logger.error("Id为:【"+recordId+"】的任务，请求数据失败，请求的参数为:"+JSON.toJSONString(params)+",失败原因为:"+back.getRtnMsg());
 		    break;
 		}
@@ -255,6 +296,8 @@ public class SchedulerService {
 	    private String recordId;
 	    
 	    private CountDownLatch countDown;
+	    
+	    private int expectStatus = 0;
 	    
 	    public SchedulerTaskRunnable() {
 		// TODO Auto-generated constructor stub
