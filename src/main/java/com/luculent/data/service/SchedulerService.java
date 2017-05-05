@@ -1,5 +1,7 @@
 package com.luculent.data.service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -68,6 +70,7 @@ public class SchedulerService {
     public void paramsHandler(String json){
 	RunParams runParams = this.paramAnalysis(json);
 	String recordId = runParams.getRecordId();
+	LocalDateTime startTime = runParams.getStartTime();
 	List<ConcurrentHashMap<String,String>> params = runParams.getParams();
 	CountDownLatch countDownLatch =null;
 	expectTotalMap.put(recordId, new AtomicLong(0l));
@@ -89,12 +92,16 @@ public class SchedulerService {
 	    //线程完成
 	    RunRecord record = runRecordMapper.selectById(runParams.getRecordId());
 	    //截至时间
-	    record.setExpectTotal(expectTotalMap.get(recordId).get());
-	    record.setActualTotal(actualTotalMap.get(recordId).get());
-	    record.setFailLog(failParamsMap.get(recordId).toString());
-	    
-	    runRecordMapper.updateById(record);
-	    
+	    if(record !=null){
+	    	LocalDateTime endTime = LocalDateTime.now();
+	    	String endTimeStr = endTime.format(DataConstant.formatter);
+	    	record.setCarryTime(Duration.between(startTime, endTime).toMillis());
+	    	record.setEndTime(endTimeStr);
+	    	record.setExpectTotal(expectTotalMap.get(recordId).get());
+	 	    record.setActualTotal(actualTotalMap.get(recordId).get());
+	 	    record.setFailLog(failParamsMap.get(recordId).toString());
+	 	    runRecordMapper.updateById(record);
+	    }
 	    expectTotalMap.remove(recordId);
 	    actualTotalMap.remove(record);
 	    failParamsMap.remove(recordId);
@@ -138,13 +145,13 @@ public class SchedulerService {
 	    List<ConcurrentHashMap<String, String>> paramList = ConventionUtils.toParamsMap(paramMap);
 	    jsonObj.remove("APIID");
 	    String paramStr = jsonObj.toJSONString();
-
-	    RunRecord record = new RunRecord(apiId, paramStr);
+	    LocalDateTime startTime = LocalDateTime.now();
+	    RunRecord record = new RunRecord(apiId, paramStr,startTime.format(DataConstant.formatter));
 	    runRecordMapper.insert(record);
 	    record = runRecordMapper.selectById(record.getId());
-	    logger.info("数据处理开始,纪录Id为【" + record.getId() + "】,开始时间为 :" + record.getScrq() + ",执行参数为:" + paramStr);
+	    logger.info("数据处理开始,纪录Id为【" + record.getId() + "】,开始时间为 :" + record.getStartTime() + ",执行参数为:" + paramStr);
 
-	    RunParams.Builder builder = new RunParams.Builder(sysApi.getProjectId(), sysApi.getUrl(),record.getId());
+	    RunParams.Builder builder = new RunParams.Builder(sysApi.getProjectId(), sysApi.getUrl(),record.getId(),startTime);
 	    if (paramList != null && paramList.size() != 0) {
 		builder.params(paramList);
 	    }
@@ -186,7 +193,7 @@ public class SchedulerService {
 		    for(;;){
 			params.put(this.pageName, String.valueOf(num));
 			BackBean back =OkHttpUtils.getBeanContent(this.url, params);
-			boolean res = handlerBackBean(back,params,projectId,recordId);
+			boolean res = handlerBackBean(back,params);
 			if(!res){
 			    break;
 			}
@@ -195,14 +202,14 @@ public class SchedulerService {
 		    }
 		}else{
 		    BackBean back =OkHttpUtils.getBeanContent(this.url, params);
-		    handlerBackBean(back,params,projectId,recordId);
+		    handlerBackBean(back,params);
 		}
 		countDown.countDown();
 	    }
 	    
 	    /**
 	     * 
-	     *@Description: 处理请求返回值 如果请求为空或自动登陆失败满足WAIT_RUNTASK_NUM值则停止任务
+	     *@Description: 处理请求返回值 如果请求为空或自动登陆失败或报参数不存在则停止任务
 	     *@Author: zhangy
 	     *@Since: 2017年5月3日下午3:46:50
 	     *@param back
@@ -211,20 +218,15 @@ public class SchedulerService {
 	     *@param recordId
 	     *@return
 	     */
-	    private boolean handlerBackBean(BackBean back,ConcurrentHashMap<String,String> params,String projectId,String recordId){
+	    private boolean handlerBackBean(BackBean back,ConcurrentHashMap<String,String> params){
 		
 		boolean res = false;
-		int waitNum = DataConstant.WAITNUM.get();
-		if(DataConstant.WAIT_RUNTASK_NUM == waitNum){
-			logger.error("Id为:【"+recordId+"】的任务，请求数据失败，请求的参数为:"+JSON.toJSONString(params)+",请求已超过最大等待次数，任务终止");
-			return false;
-		}
+		//返回空
 		if(back == null){
+			params.putAll(DataConstant.FAILPARAMS_NETWORK);
 		    failParamsMap.get(recordId).append(JSON.toJSONString(params));
-		    logger.error("Id为:【"+recordId+"】的任务，请求数据失败，请求的参数为:"+JSON.toJSONString(params));
-		    waitNum++;
-		    DataConstant.WAITNUM.set(waitNum);
-		    return true;
+		    logger.error("Id为:【"+recordId+"】的任务，网络连接不稳定，请求的参数为:"+JSON.toJSONString(params));
+		    return false;
 		    
 		}
 		switch (back.getRtnCode()) {
@@ -235,18 +237,18 @@ public class SchedulerService {
 			
 			 // int ress =exportDataService.exportDataBySql(StringUtils.split(back.getSql(), ";"));
 			int ress =StringUtils.split(back.getSql(), ";").length;
-			  logger.debug("Id为:【"+recordId+"】的任务，请求数据成功！，请求的参数为:"+JSON.toJSONString(params)+"执行成功的条数为"+ress+"条");
+			  logger.debug("Id为:【"+this.recordId+"】的任务，请求数据成功！，请求的参数为:"+JSON.toJSONString(params)+"执行成功的条数为"+ress+"条");
 			  //期望总数
 			  if(expectStatus ==0){
 			      if(StringUtils.isNotEmpty(back.getTotal())){
-				  expectTotalMap.get(recordId).addAndGet(Long.valueOf(back.getTotal()));
+				  expectTotalMap.get(this.recordId).addAndGet(Long.valueOf(back.getTotal()));
 			      }else{
-				  expectTotalMap.get(recordId).addAndGet(ress);
+				  expectTotalMap.get(this.recordId).addAndGet(ress);
 			      }
-    			      expectStatus=1;
+    			 expectStatus=1;
 			  }
 			  //实际总数
-			  actualTotalMap.get(recordId).addAndGet(ress);
+			  actualTotalMap.get(this.recordId).addAndGet(ress);
 		    }
 		    
 		    res = true;
@@ -256,21 +258,22 @@ public class SchedulerService {
 		    //
 		    logger.warn("Id为:【"+recordId+"】的任务，请求数据时尚未登陆，正在自动登陆中.....");
 		    
-		    boolean auto =autoLogin(projectId,params,this.url);
+		    boolean auto =autoLogin(this.projectId,params,this.url);
 		    if(auto){
 			BackBean autoBack =OkHttpUtils.getBeanContent(this.url, params);
-			return handlerBackBean(autoBack,params,projectId,recordId);
+			return handlerBackBean(autoBack,params);
 		    }else{
-			failParamsMap.get(recordId).append(JSON.toJSONString(params));
-			waitNum++;
-			DataConstant.WAITNUM.set(waitNum);
-			logger.error("Id为:【"+recordId+"】的任务，自动登陆失败，请求的参数为:"+JSON.toJSONString(params));
+		    params.putAll(DataConstant.FAILPARAMS_LOGIN);
+			failParamsMap.get(this.recordId).append(JSON.toJSONString(params));
+			logger.error("Id为:【"+this.recordId+"】的任务，自动登陆失败，请求的参数为:"+JSON.toJSONString(params));
+			return false;
 		    }
-		    break;
+		    
 		//其他
 		default:
-		    failParamsMap.get(recordId).append(JSON.toJSONString(params));
-		    logger.error("Id为:【"+recordId+"】的任务，请求数据失败，请求的参数为:"+JSON.toJSONString(params)+",失败原因为:"+back.getRtnMsg());
+			params.putAll(DataConstant.FAILPARAMS_NOEXISTS);
+		    failParamsMap.get(this.recordId).append(JSON.toJSONString(params));
+		    logger.error("Id为:【"+this.recordId+"】的任务，"+back.getRtnMsg()+"，请求的参数为:"+JSON.toJSONString(params));
 		    break;
 		}
 		return res;

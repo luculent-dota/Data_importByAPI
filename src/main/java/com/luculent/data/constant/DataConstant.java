@@ -1,5 +1,12 @@
 package com.luculent.data.constant;
 
+import java.time.format.DateTimeFormatter;
+import java.util.Map;
+
+import org.springframework.core.Conventions;
+
+import com.luculent.data.utils.util.ConventionUtils;
+
 /**
  * 系统常量
  */
@@ -19,10 +26,11 @@ public class DataConstant {
 	/** 菜单路径. */
 	public static final String MENU_HREF ="/api/index.htm?apiId=";
 	
+	public static final DateTimeFormatter formatter =DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+	
 	
 	/** 验证码. */
 	public static final String CODE_NAME="验证码";
-	
 	
 	public static final String RES_CODE_SUCCESS="000000";
 	
@@ -53,17 +61,22 @@ public class DataConstant {
 		}
 	};
 	
-	/**出错线程等待.*/
-	public static final int WAIT_RUNTASK_NUM = 10;
-	
 	/**自动登陆重试次数(从1开始 值减1).*/
 	public static final int AUTO_LOGIN_NUM =4;
 	
-	public static final ThreadLocal<Integer> WAITNUM = new ThreadLocal<Integer>() {
-		@Override
-		protected Integer initialValue() {
-			return 0;
-		}
-	};
+	/**
+	 * 参数失败原因组
+	 */
+	
+	public static final String REA010SONKEY="REA010SONKEY";
+	
+	public static final String REA010SON="REA010SON";
+	
+	@SuppressWarnings("unchecked")
+	public static final Map<String,String> FAILPARAMS_NETWORK = ConventionUtils.toMap(REA010SONKEY,FailParamType.NETWORK.name(),REA010SON,FailParamType.NETWORK.getReason());
+	@SuppressWarnings("unchecked")
+	public static final Map<String,String> FAILPARAMS_LOGIN = ConventionUtils.toMap(REA010SONKEY,FailParamType.LOGIN.name(),REA010SON,FailParamType.LOGIN.getReason());
+	@SuppressWarnings("unchecked")
+	public static final Map<String,String> FAILPARAMS_NOEXISTS = ConventionUtils.toMap(REA010SONKEY,FailParamType.NOEXISTS.name(),REA010SON,FailParamType.NOEXISTS.getReason());
 
 }

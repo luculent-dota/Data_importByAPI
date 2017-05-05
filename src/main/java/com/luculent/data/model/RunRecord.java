@@ -1,7 +1,10 @@
 package com.luculent.data.model;
 
+import java.time.LocalDateTime;
+
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.luculent.data.base.BaseModel;
+import com.luculent.data.constant.DataConstant;
 
 /**
  * 
@@ -35,18 +38,25 @@ public class RunRecord extends BaseModel{
     /** 失败的日志. */
     private String failLog;
     
-    /** 生成时间. */
-    private String scrq;
+    /** 开始时间. */
+    private String startTime;
+    
+    /** 结束时间. */
+    private String endTime;
+    
+    /** 总用时. */
+    private Long carryTime;
     
     public RunRecord() {
 	// TODO Auto-generated constructor stub
     }
     
     
-    public RunRecord(String apiId,String runParams) {
+    public RunRecord(String apiId,String runParams,String startTime) {
    	// TODO Auto-generated constructor stub
 	this.apiId = apiId;
 	this.runParams = runParams;
+	this.startTime = startTime;
     }
     
 
@@ -164,24 +174,36 @@ public class RunRecord extends BaseModel{
         this.failLog = failLog;
     }
 
-    /**
-     * Gets the 生成时间.
-     *
-     * @return the 生成时间
-     */
-    public String getScrq() {
-        return scrq;
-    }
 
-    /**
-     * Sets the 生成时间.
-     *
-     * @param scrq
-     *            the new 生成时间
-     */
-    public void setScrq(String scrq) {
-        this.scrq = scrq;
-    }
+	public String getStartTime() {
+		return startTime;
+	}
+
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+
+	public Long getCarryTime() {
+		return carryTime;
+	}
+
+
+	public void setCarryTime(Long carryTime) {
+		this.carryTime = carryTime;
+	}
+
     
     
     

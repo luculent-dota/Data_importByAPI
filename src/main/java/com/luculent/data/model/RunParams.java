@@ -1,5 +1,6 @@
 package com.luculent.data.model;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,6 +32,9 @@ public class RunParams {
     /** recordId. */
     private String recordId;
     
+    /** 任务开始时间. */
+    private LocalDateTime startTime;
+    
     public RunParams() {
 	// TODO Auto-generated constructor stub
     }
@@ -49,6 +53,9 @@ public class RunParams {
 	
 	/** recordId. */
 	private String recordId;
+	
+	/** 开始时间. */
+	private LocalDateTime startTime;
 	    
 	/** 参数列表. */
 	private List<ConcurrentHashMap<String,String>> params =null;
@@ -61,11 +68,12 @@ public class RunParams {
 	    
 	
 	
-	public Builder(String projectId,String url,String recordId) {
+	public Builder(String projectId,String url,String recordId,LocalDateTime startTime) {
 	    // TODO Auto-generated constructor stub
 	    this.projectId = projectId;
 	    this.url = url;
 	    this.recordId = recordId;
+	    this.startTime = startTime;
 	}
 	
 	public Builder params(List<ConcurrentHashMap<String,String>> val){
@@ -91,6 +99,7 @@ public class RunParams {
 	this.url = builder.url;
 	this.projectId = builder.projectId;
 	this.recordId = builder.recordId;
+	this.startTime = builder.startTime;
 	this.params = builder.params;
 	this.needPage = builder.needPage;
 	this.pageName = builder.pageName;
@@ -210,6 +219,18 @@ public class RunParams {
     public void setRecordId(String recordId) {
         this.recordId = recordId;
     }
+
+
+	public LocalDateTime getStartTime() {
+		return startTime;
+	}
+
+
+	public void setStartTime(LocalDateTime startTime) {
+		this.startTime = startTime;
+	}
+
+
     
     
     
