@@ -21,6 +21,7 @@ public class ExportDataService {
 	return jdbcTemplateOut.queryForList(sql, String.class);
     }
 
+    @Transactional(value = "datain")
     public int exportDataBySql(String[] sql) {
 	int[] rowsAffected = jdbcTemplateIn.batchUpdate(sql);
 	int sum =0;

@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -15,7 +17,9 @@ import com.luculent.data.constant.JsonKey;
 import com.luculent.data.model.BackBean;
 
 public class ConventionUtils {
-
+    
+    
+    	private final static Logger logger = LogManager.getLogger("run_long");
 	/**
 	 * 防止类被实例化
 	 */
@@ -62,14 +66,21 @@ public class ConventionUtils {
 		return null;
 	    }
 	    JSONObject obj = JSON.parseObject(json);
-	    JSONObject head = obj.getJSONObject(JsonKey.head.name());
-	    JSONObject body = obj.getJSONObject(JsonKey.body.name());
-	    return new BackBean.Builder(head.getString(JsonKey.rtnCode.name()),head.getString(JsonKey.rtnMsg.name()))
-		.sql(body.getString(JsonKey.sql.name()))
-		.total(body.getString(JsonKey.total.name()))
-		.page(body.getString(JsonKey.page.name()))
-		.list(body.getString(JsonKey.list.name()))
-		.build();
+	    if(obj.containsKey(JsonKey.head.name()) && obj.containsKey(JsonKey.body.name())){
+		JSONObject head = obj.getJSONObject(JsonKey.head.name());
+    		JSONObject body = obj.getJSONObject(JsonKey.body.name());
+    		return new BackBean.Builder(head.getString(JsonKey.rtnCode.name()),head.getString(JsonKey.rtnMsg.name()))
+    			.sql(body.getString(JsonKey.sql.name()))
+    			.total(body.getString(JsonKey.total.name()))
+    			.page(body.getString(JsonKey.page.name()))
+    			.list(body.getString(JsonKey.list.name()))
+    			.build();
+	    }
+	    if(logger.isDebugEnabled()){
+		logger.debug("请求数据错误，响应为"+json);
+	    }
+	    return null;
+	    
 	}
 	
 	/**

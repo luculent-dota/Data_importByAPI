@@ -99,6 +99,13 @@ layui.config({
 	});
 	
 	form.on('submit(nowRun)', function(res) {
+		var disable = $(res.elem).hasClass("layui-btn-disabled");
+		if(!disable){
+			$(res.elem).addClass("layui-btn-disabled");
+		}else{
+			msg.error("任务正在执行，请等待该任务完成...");
+			return false;
+		}
 		$.ajax({
 			  url: contextPath+"/api/real-run.htm",
 			  data: JSON.stringify(res.field),

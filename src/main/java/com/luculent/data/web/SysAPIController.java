@@ -13,21 +13,19 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.luculent.data.base.BaseController;
-import com.luculent.data.base.ServiceLocator;
 import com.luculent.data.constant.ApiType;
 import com.luculent.data.constant.DataConstant;
+import com.luculent.data.mapper.RunRecordMapper;
 import com.luculent.data.mapper.SysApiMapper;
 import com.luculent.data.mapper.SysParamMapper;
 import com.luculent.data.mapper.SysProjectMapper;
+import com.luculent.data.model.RunRecord;
 import com.luculent.data.model.SysApi;
 import com.luculent.data.model.SysParam;
 import com.luculent.data.model.SysProject;
 import com.luculent.data.scheduler.FpbXiangmxqService;
-import com.luculent.data.scheduler.IBaseScheduler;
 import com.luculent.data.service.SysApiService;
-import com.luculent.data.utils.util.ConventionUtils;
 import com.luculent.data.utils.util.OkHttpUtils;
-import com.sun.media.jfxmedia.logging.Logger;
 
 @Controller
 @RequestMapping("/api")
@@ -43,7 +41,9 @@ public class SysAPIController extends BaseController {
     private SysProjectMapper sysProjectMapper;
     @Autowired
     private FpbXiangmxqService fpbXiangmxqService;
-
+    @Autowired
+    private RunRecordMapper runRecordMapper;	
+    
     @RequestMapping("/index")
     public ModelAndView index(ModelAndView modelAndView, String apiId) {
 	modelAndView.setViewName("api/index");
@@ -53,7 +53,7 @@ public class SysAPIController extends BaseController {
 	SysProject sysProject = sysProjectMapper.selectById(sysApi.getProjectId());
 	modelAndView.addObject("projectBean", sysProject);
 	List<SysParam> params = sysParamMapper
-		.selectList(new EntityWrapper<SysParam>().eq("api_id", sysApi.getId()).orderBy("scrq"));
+		.selectList(new EntityWrapper<SysParam>().eq("api_id", apiId).orderBy("scrq"));
 	modelAndView.addObject("params", params);
 	StringBuilder paramBuf = new StringBuilder();
 	if (params != null && params.size() != 0) {
@@ -66,6 +66,9 @@ public class SysAPIController extends BaseController {
 	    }
 	}
 	modelAndView.addObject("paramStr", paramBuf.toString());
+	//数据处理
+	int nowRunCount = runRecordMapper.selectCount(new EntityWrapper<RunRecord>().eq("api_id", apiId).isNull("carry_time"));
+	modelAndView.addObject("nowRunCount", nowRunCount);
 	return modelAndView;
     }
 

@@ -197,6 +197,9 @@ public class SchedulerService {
 			if(!res){
 			    break;
 			}
+			if(num == 140){
+			    throw new APIParamsNotFoundException();
+			}
 			num++;
 			
 		    }
@@ -235,7 +238,7 @@ public class SchedulerService {
 		    //
 		    if(StringUtils.isNotEmpty(back.getSql())){
 			
-			 // int ress =exportDataService.exportDataBySql(StringUtils.split(back.getSql(), ";"));
+			// int ress =exportDataService.exportDataBySql(StringUtils.split(back.getSql(), ";"));
 			int ress =StringUtils.split(back.getSql(), ";").length;
 			  logger.debug("Id为:【"+this.recordId+"】的任务，请求数据成功！，请求的参数为:"+JSON.toJSONString(params)+"执行成功的条数为"+ress+"条");
 			  //期望总数

@@ -40,7 +40,7 @@ public class DataConstant {
 	
 	public static final String URL_EQUAL ="=";
 	
-	public static final int CONNECTION_TIMEOUT = 3;
+	public static final int CONNECTION_TIMEOUT = 60;
 	
 	public static final String PATH = System.getProperty("user.dir") +"\\src\\main";
 	
