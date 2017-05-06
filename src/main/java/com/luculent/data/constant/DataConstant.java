@@ -67,7 +67,8 @@ public class DataConstant {
 	/**
 	 * 参数失败原因组
 	 */
-	
+	public static final String FAILPARAMS_LINK=",";
+	//命名奇怪的原因是防止和参数重复
 	public static final String REA010SONKEY="REA010SONKEY";
 	
 	public static final String REA010SON="REA010SON";

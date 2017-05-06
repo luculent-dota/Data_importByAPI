@@ -1,13 +1,47 @@
 layui.config({
 	base: contextPath+'/static/common/js/',
 	version:new Date().getTime()
-}).use(['element','code','layer','form','msg'], function(){
+}).use(['element','laytpl','code','layer','form','msg'], function(){
 	var  element = layui.element(),
 	$ = layui.jquery,
+	laytpl = layui.laytpl,
 	layer = layui.layer,
 	msg = layui.msg,
 	form = layui.form();
 	layui.code();
+	
+	//历史tab ajax 加载
+	element.on('tab(apitab)', function(data){
+		 if(data.index == 3){
+			 $.ajax({url: contextPath+"/api/run-history.htm",data:{apiId:$("#apiId").val()},type:"post",dataType: "json",
+				  success: function(list){
+					  if(list && list.length !=0){
+						  var data={};
+						  data.list = list;
+						  var getTpl = recordList.innerHTML;
+						  laytpl(getTpl).render(data, function(html){
+							  $("#recordDiv").empty().append(html);
+							  element.init();
+							  $(".retry").click(function(){
+								  var recordId = $(this).attr("id");
+								  msg.confirm("提示：【参数不正确】的参数会自动过滤 <br>是否继续执行？",function(){
+									  $.ajax({
+										  url: contextPath+"/api/params-retry.htm",
+										  data:{apiId:$("#apiId").val(),recordId:recordId},
+										  type:"post",
+										  dataType: "json",
+										  success: function(res){
+											  msg.result(res);
+										  }
+									});
+								  })
+							  })
+						  });
+					  }
+				  }
+			});
+		 }
+	});
 	
 	//参数选择
 	form.on('checkbox(param_check)', function(data){
@@ -118,5 +152,7 @@ layui.config({
 		});
 		return false;
 	});
+	
+
   //…
 });

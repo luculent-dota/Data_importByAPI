@@ -1,31 +1,42 @@
+<style>
+.layui-colla-content p label{
+    font-weight: bold;
+}
+.layui-colla-content p .no_expect{
+	color:#c85600; 
+}
+</style>
+<script>
+function convertTime(time){
+	if(time>1000){
+		return time/1000 +"秒";
+	}else if(time>60000){
+		return time/60000 +"分钟";
+	}
+	return time +"毫秒";
+}
+</script>
+<script id="recordList" type="text/html">
+<div class="layui-collapse" lay-accordion>
+{{#  layui.each(d.list, function(index, item){ }}
+  <div class="layui-colla-item">
+    <h2 class="layui-colla-title"> 
+		<p>执行参数：{{ item.runParams }}&nbsp;&nbsp;期望：{{ item.expectTotal }}条 &nbsp;&nbsp;实际：{{ item.actualTotal }}条&nbsp;&nbsp;执行时间：{{ convertTime(item.carryTime) }} </p>
+	</h2>
+    <div class="layui-colla-content  {{#  if(index == 0){ }} layui-show {{#  } }}">
+      <p><label>开始时间：</label>{{ item.startTime}}&nbsp;&nbsp;<label>结束时间：</label>{{ item.endTime }}</p>
+	  <p><label>运行参数：</label>{{ item.runParams }}</p>
+	  <p><label>意外终止：</label>{{#  if(item.failLog !=''){ }}<label class="no_expect">是</label>&nbsp;&nbsp;<a class="layui-btn layui-btn-mini layui-btn-normal retry" id="{{item.id}}">重试</a>{{#  } }} {{#  if(item.failLog ==''){ }}否{{#  } }}</p>
+	  {{#  if(item.failLog !=''){ }}<p><label>失败参数：</label>{{ item.failLog }}</p>{{#  } }}
+    </div>
+  </div>
+{{#  }); }}
+</div>
+</script>
 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
   <legend>历史纪录</legend>
 </fieldset>
-<div class="layui-collapse" lay-filter="">
-  <div class="layui-colla-item">
-    <h2 class="layui-colla-title">2017/3/25 11:12:20 总计：28576694条</h2>
-    <div class="layui-colla-content">
-      <p>有不少其他答案说是因为JS太差。我下面的答案已经说了，这不是根本性的原因。但除此之外，我还要纠正一些对JS具体问题的误解。JS当初是被作为脚本语言设计的，所以某些问题并不是JS设计得差或者是JS设计者的失误。比如var的作用域问题，并不是“错误”，而是当时绝大部分脚本语言都是这样的，如perl/php/sh等。模块的问题也是，脚本语言几乎都没有模块/命名空间功能。弱类型、for-in之类的问题也是，只不过现在用那些老的脚本语言的人比较少，所以很多人都误以为是JS才有的坑。另外有人说JS是半残语言，满足不了开发需求，1999年就该死。半残这个嘛，就夸张了。JS虽然有很多问题，但是设计总体还是优秀的。——来自知乎@贺师俊</p>
-    </div>
-  </div>
-  <div class="layui-colla-item">
-    <h2 class="layui-colla-title">2016/12/27 11:12:20 总计：258766条</h2>
-    <div class="layui-colla-content">
-      <p>因为不适合。如果希望开发长期的项目或者制作产品类网站，那么就需要实现特定的设计，为了在维护项目中可以方便地按设计师要求快速修改样式，肯定会逐步编写出各种业务组件、工具类，相当于为项目自行开发一套框架。——来自知乎@Kayo</p>
-    </div>
-  </div>
-  <div class="layui-colla-item">
-    <h2 class="layui-colla-title">2016/8/05 11:12:20 总计：288766条</h2>
-    <div class="layui-colla-content">
-      <p>在前端技术快速变革的今天，layui 仍然坚持语义化的组织模式，甚至于模块理念都是采用类AMD组织形式，并非是有意与时代背道而驰。layui 认为以jQuery为核心的开发方式还没有到完全消亡的时候，而早期市面上基于jQuery的UI都普通做得差强人意，所以需要有一个新的UI去重新为这一领域注入活力，并采用一些更科学的架构方式。
-      <br><br>
-      因此准确地说，layui 更多是面向那些追求开发简单的前端工程师们，以及所有层次的服务端程序员。</p>
-    </div>
-  </div>
-  <div class="layui-colla-item">
-    <h2 class="layui-colla-title">2015/2/20 11:12:20 总计：2587600条</h2>
-    <div class="layui-colla-content">
-      <p>man！ 所以这个问题不要再出现了。。。</p>
-    </div>
-  </div>
+
+<div id="recordDiv">
+
 </div>

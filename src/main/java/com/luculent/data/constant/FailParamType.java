@@ -1,7 +1,7 @@
 package com.luculent.data.constant;
 
 public enum FailParamType {
-    NETWORK("网络连接不稳定"),LOGIN("自动登陆失败"),NOEXISTS("参数不存在");
+    NETWORK("网络连接不稳定"),LOGIN("自动登陆失败"),NOEXISTS("参数不正确");
     
     private String reason;
     

@@ -46,9 +46,9 @@ layui.define(['layer'], function(exports) {
 			//确认窗口
 			confirm:function(msg,options){
 				if(typeof options == 'function'){
-					layer.confirm(msg, {icon: 3}, options);
+					return layer.confirm(msg, {icon: 3}, options);
 				}else{
-					layer.confirm(msg, {icon: 3});
+					return layer.confirm(msg, {icon: 3});
 				}
 				
 			},
