@@ -18,7 +18,7 @@ import com.luculent.data.utils.tree.StaticTree;
 import com.luculent.data.utils.tree.TreeNode;
 
 @Service
-@Transactional(value="datain")
+@Transactional
 public class SysMenuService {
 	@Autowired
 	private SysProjectMapper sysProjectMapper;

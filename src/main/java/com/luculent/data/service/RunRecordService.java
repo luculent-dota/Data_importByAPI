@@ -14,7 +14,7 @@ import com.luculent.data.model.RunRecord;
 import com.luculent.data.model.SysApi;
 
 @Service
-@Transactional(value="datain")
+@Transactional
 public class RunRecordService {
     
     private final static Logger logger = LogManager.getLogger(RunRecordService.class);
@@ -24,7 +24,7 @@ public class RunRecordService {
     
     @PostConstruct  
     public void  deviceInit(){  
-	runRecordMapper.delete(new EntityWrapper<RunRecord>().isNull("carry_time"));
+	runRecordMapper.delete(new EntityWrapper<RunRecord>().isNull("end_time"));
 	if(logger.isDebugEnabled()){
 	    logger.debug("任务日志表中的脏数据清除完成");
 	}

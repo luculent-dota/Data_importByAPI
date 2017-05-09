@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.lang.StringUtils;
@@ -33,7 +32,6 @@ import com.luculent.data.exception.APIParamsNotFoundException;
 import com.luculent.data.mapper.RunRecordMapper;
 import com.luculent.data.mapper.SysApiMapper;
 import com.luculent.data.mapper.SysParamMapper;
-import com.luculent.data.mapper.SysProjectMapper;
 import com.luculent.data.model.BackBean;
 import com.luculent.data.model.RunParams;
 import com.luculent.data.model.RunRecord;
@@ -43,6 +41,7 @@ import com.luculent.data.utils.util.ConventionUtils;
 import com.luculent.data.utils.util.OkHttpUtils;
 
 @Service
+@Transactional
 public class SchedulerService {
 
     private final static Logger logger = LogManager.getLogger("run_long");
@@ -54,6 +53,8 @@ public class SchedulerService {
     private SysApiService sysApiService;
     @Autowired
     private BasisKeyService basisKeyService;
+    @Autowired
+    private DataBaseKeyService dataBaseKeyService;
     @Autowired
     private ExportDataService exportDataService;
     @Autowired
@@ -76,7 +77,7 @@ public class SchedulerService {
     /** 任务重试 */
     @Async
     public void retryExecuteByRecordId(RunRecord runRecord) {
-	 paramsHandler(paramAnalysisByRunRecord(runRecord));
+	paramsHandler(paramAnalysisByRunRecord(runRecord));
     }
 
     /**
@@ -117,9 +118,12 @@ public class SchedulerService {
 		record.setEndTime(endTimeStr);
 		record.setExpectTotal(expectTotalMap.get(recordId).get());
 		record.setActualTotal(actualTotalMap.get(recordId).get());
-		String failParamsStr = failParamsMap.get(recordId).toString();
-		failParamsStr = "[" + failParamsStr.substring(0, failParamsStr.length() - 1) + "]";
-		record.setFailLog(failParamsStr);
+		if (failParamsMap.containsKey(recordId) && failParamsMap.get(recordId).toString().length() != 0) {
+		    String failParamsStr = failParamsMap.get(recordId).toString();
+		    failParamsStr = "[" + failParamsStr.substring(0, failParamsStr.length() - 1) + "]";
+		    record.setFailLog(failParamsStr);
+		}
+
 		runRecordMapper.updateById(record);
 	    }
 	    expectTotalMap.remove(recordId);
@@ -132,7 +136,7 @@ public class SchedulerService {
 	}
     }
 
-    @Transactional(value = "datain")
+    //参数处理
     public RunParams paramAnalysisByJSON(String json) {
 	JSONObject jsonObj = JSONObject.parseObject(json);
 	String apiId = jsonObj.getString("APIID");
@@ -152,7 +156,7 @@ public class SchedulerService {
 			    paramMap.put(param.getName(), basisKeyService.getCacheBykey(param.getDataSource()));
 			    // 数据库值
 			} else if (ParamType.DATABASE.name().equals(param.getParamType())) {
-			    paramMap.put(param.getName(), exportDataService.exportColumnByKeys(param.getDataSource()));
+			    paramMap.put(param.getName(), dataBaseKeyService.exportColumnByKeys(param.getDataSource()));
 			}
 
 		    }
@@ -186,7 +190,7 @@ public class SchedulerService {
 	throw new APIParamsNotFoundException(errMsg);
     }
 
-    @Transactional(value = "datain")
+    //重试参数处理
     public RunParams paramAnalysisByRunRecord(RunRecord runRecord) {
 	List<ConcurrentHashMap<String, String>> paramList = new ArrayList<ConcurrentHashMap<String, String>>();
 	JSONArray arr = (JSONArray) JSONArray.parse(runRecord.getFailLog());
@@ -204,15 +208,14 @@ public class SchedulerService {
 	SysApi sysApi = sysApiMapper.selectById(runRecord.getApiId());
 	List<SysParam> params = sysParamMapper.selectList(new EntityWrapper<SysParam>()
 		.eq("api_id", runRecord.getApiId()).eq("param_type", ParamType.PAGE.name()));
+	String paramStr = JSON.toJSONString(paramList);
 	LocalDateTime startTime = LocalDateTime.now();
-	RunRecord record = new RunRecord(runRecord.getApiId(), JSON.toJSONString(paramList),
-		startTime.format(DataConstant.formatter));
-	runRecordMapper.insert(record);
-	record = runRecordMapper.selectById(record.getId());
-	logger.info("数据处理开始,纪录Id为【" + record.getId() + "】,开始时间为 :" + record.getStartTime() + ",执行参数为:"
-		+ JSON.toJSONString(paramList));
+	RunRecord retryRecord = new RunRecord(runRecord.getApiId(), paramStr, startTime.format(DataConstant.formatter));
+	runRecordMapper.insert(retryRecord);
+	retryRecord = runRecordMapper.selectById(retryRecord.getId());
+	logger.info("任务Id为【"+runRecord.getApiId()+"】重试开始,重试任务Id为【" + retryRecord.getId() + "】,开始时间为 :" + retryRecord.getStartTime() + ",执行参数为:" + paramStr);
 
-	RunParams.Builder builder = new RunParams.Builder(sysApi.getProjectId(), sysApi.getUrl(), record.getId(),
+	RunParams.Builder builder = new RunParams.Builder(sysApi.getProjectId(), sysApi.getUrl(), retryRecord.getId(),
 		startTime);
 	if (paramList != null && paramList.size() != 0) {
 	    builder.params(paramList);
@@ -254,9 +257,6 @@ public class SchedulerService {
 		    if (!res) {
 			break;
 		    }
-		    if (num == 140) {
-			throw new APIParamsNotFoundException();
-		    }
 		    num++;
 
 		}
@@ -264,6 +264,9 @@ public class SchedulerService {
 		BackBean back = OkHttpUtils.getBeanContent(this.url, params);
 		handlerBackBean(back, params);
 	    }
+
+	    expectTotalMap.get(this.recordId).addAndGet(expectNum);
+	    actualTotalMap.get(this.recordId).addAndGet(actualNum);
 	    countDown.countDown();
 	}
 
@@ -298,23 +301,20 @@ public class SchedulerService {
 		//
 		if (StringUtils.isNotEmpty(back.getSql())) {
 
-		    // int ress
-		    // =exportDataService.exportDataBySql(StringUtils.split(back.getSql(),
-		    // ";"));
-		    int ress = StringUtils.split(back.getSql(), ";").length;
+		    int ress = exportDataService.exportDataBySql(StringUtils.split(back.getSql(), ";"));
 		    logger.debug("Id为:【" + this.recordId + "】的任务，请求数据成功！，请求的参数为:" + JSON.toJSONString(params)
 			    + "执行成功的条数为" + ress + "条");
 		    // 期望总数
 		    if (expectStatus == 0) {
 			if (StringUtils.isNotEmpty(back.getTotal())) {
-			    expectTotalMap.get(this.recordId).addAndGet(Long.valueOf(back.getTotal()));
+			    expectNum += Long.valueOf(back.getTotal());
 			} else {
-			    expectTotalMap.get(this.recordId).addAndGet(ress);
+			    expectNum += ress;
 			}
 			expectStatus = 1;
 		    }
 		    // 实际总数
-		    actualTotalMap.get(this.recordId).addAndGet(ress);
+		    actualNum += ress;
 		}
 
 		res = true;
@@ -373,7 +373,12 @@ public class SchedulerService {
 
 	private CountDownLatch countDown;
 
-	private int expectStatus = 0;
+	// 期望总数赋值状态
+	private long expectStatus = 0l;
+	// 期望总数
+	private long expectNum = 0l;
+	// 实际总数
+	private long actualNum = 0l;
 
 	public SchedulerTaskRunnable() {
 	    // TODO Auto-generated constructor stub

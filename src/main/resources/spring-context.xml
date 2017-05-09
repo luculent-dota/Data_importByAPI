@@ -1,133 +1,124 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context" 
-       xmlns:util="http://www.springframework.org/schema/util"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xmlns:task="http://www.springframework.org/schema/task"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 	<!-- 引入属性文件 -->
-    <context:property-placeholder location="classpath:config.properties,classpath:oracle.properties"/>
+	<context:property-placeholder
+		location="classpath:config.properties,classpath:oracle.properties" />
 
-    <bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
-        <property name="url" value="${jdbc_url}"/>
-        <property name="username" value="${jdbc_username}"/>
-        <property name="password" value="${jdbc_password}"/>
+	<bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		init-method="init" destroy-method="close">
+		<property name="url" value="${jdbc_url}" />
+		<property name="username" value="${jdbc_username}" />
+		<property name="password" value="${jdbc_password}" />
 		<property name="driverClassName" value="${jdbc_driver}"></property>
-        <!-- 初始化连接大小 -->
-        <property name="initialSize" value="0"/>
-        <!-- 连接池最大使用连接数量 -->
-        <property name="maxActive" value="20"/>
-        <!-- 连接池最小空闲 -->
-        <property name="minIdle" value="0"/>
-        <!-- 获取连接最大等待时间 -->
-        <property name="maxWait" value="60000"/>
+		<!-- 初始化连接大小 -->
+		<property name="initialSize" value="0" />
+		<!-- 连接池最大使用连接数量 -->
+		<property name="maxActive" value="20" />
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="0" />
+		<!-- 获取连接最大等待时间 -->
+		<property name="maxWait" value="60000" />
 
-        <property name="validationQuery" value="${validationQuery}"/>
-        <property name="testOnBorrow" value="false"/>
-        <property name="testOnReturn" value="false"/>
-        <property name="testWhileIdle" value="true"/>
+		<property name="validationQuery" value="${validationQuery}" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+		<property name="testWhileIdle" value="true" />
 
-        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
-        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
-        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
-        <property name="minEvictableIdleTimeMillis" value="25200000"/>
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="25200000" />
 
-        <!-- 打开removeAbandoned功能 -->
-        <property name="removeAbandoned" value="true"/>
-        <!-- 1800秒，也就是30分钟 -->
-        <property name="removeAbandonedTimeout" value="1800"/>
-        <!-- 关闭abanded连接时输出错误日志 -->
-        <property name="logAbandoned" value="true"/>
+		<!-- 打开removeAbandoned功能 -->
+		<property name="removeAbandoned" value="true" />
+		<!-- 1800秒，也就是30分钟 -->
+		<property name="removeAbandonedTimeout" value="1800" />
+		<!-- 关闭abanded连接时输出错误日志 -->
+		<property name="logAbandoned" value="true" />
+		<!-- 监控数据库 -->
+		<property name="filters" value="mergeStat" />
+	</bean>
 
-        <!-- 监控数据库 -->
-        <property name="filters" value="mergeStat"/>
-    </bean>
-    
-    
-    <!-- 自动注入 -->
-    <context:component-scan base-package="com.luculent.data.service"/>
-    <context:component-scan base-package="com.luculent.data.scheduler"/>
-  	<bean class="com.luculent.data.base.ServiceLocator"/>
-  	
-    <!-- 支持异步方法执行 -->
-    <task:annotation-driven /> 
-    <bean id="jdbcTemplateIn" class="org.springframework.jdbc.core.JdbcTemplate">
+
+	<!-- 自动注入 -->
+	<context:component-scan base-package="com.luculent.data.service" />
+	<context:component-scan base-package="com.luculent.data.scheduler" />
+	<bean class="com.luculent.data.base.ServiceLocator" />
+
+	<!-- 支持异步方法执行 -->
+	<task:annotation-driven />
+
+	<!-- 配置事务管理 -->
+	<bean name="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
-    
-    <!-- 配置事务管理 -->
-    <bean name="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource"/>
-        <qualifier value="datain" />  
-    </bean>
-    
-    <tx:annotation-driven transaction-manager="transactionManager" />
+	
+	
+	<bean id="jdbcTemplateIn" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	
+	<tx:annotation-driven transaction-manager="transactionManager" />
 
-    <!-- Spring整合Mybatis，更多查看文档：http://mp.baomidou.com -->
-    <bean id="sqlSessionFactory" class="com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSource"/>
-        <!-- 自动扫描Mapping.xml文件 -->
-        <property name="mapperLocations" value="classpath:mybatis/*/*.xml"/>
-        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"/>
-        <property name="typeAliasesPackage" value="com.luculent.data.model"/>
-        <property name="plugins">
-            <array>
-                <!-- 分页插件配置 -->
-                <bean id="paginationInterceptor" class="com.baomidou.mybatisplus.plugins.PaginationInterceptor">
-                    <property name="dialectType" value="mysql"/>
-                </bean>
-            </array>
-        </property>
-	    <!-- 全局配置注入 -->
-	    <property name="globalConfig" ref="globalConfig" />
+	<!-- Spring整合Mybatis，更多查看文档：http://mp.baomidou.com -->
+	<bean id="sqlSessionFactory"
+		class="com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- 自动扫描Mapping.xml文件 -->
+		<property name="mapperLocations" value="classpath:mybatis/*/*.xml" />
+		<property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
+		<property name="typeAliasesPackage" value="com.luculent.data.model" />
+		<property name="plugins">
+			<array>
+				<!-- 分页插件配置 -->
+				<bean id="paginationInterceptor"
+					class="com.baomidou.mybatisplus.plugins.PaginationInterceptor">
+					<property name="dialectType" value="mysql" />
+				</bean>
+			</array>
+		</property>
+		<!-- 全局配置注入 -->
+		<property name="globalConfig" ref="globalConfig" />
 	</bean>
 	<bean id="globalConfig" class="com.baomidou.mybatisplus.entity.GlobalConfiguration">
-	    <!-- 
-			AUTO->`0`("数据库ID自增")
-		 	INPUT->`1`(用户输入ID")
-			ID_WORKER->`2`("全局唯一ID")
-			UUID->`3`("全局唯一ID")
-		-->
-	    <property name="idType" value="3" />
-		<!--
-			MYSQL->`mysql`
-			ORACLE->`oracle`
-			DB2->`db2`
-			H2->`h2`
-			HSQL->`hsql`
-			SQLITE->`sqlite`
-			POSTGRE->`postgresql`
-			SQLSERVER2005->`sqlserver2005`
-			SQLSERVER->`sqlserver`
-		-->
+		<!-- AUTO->`0`("数据库ID自增") INPUT->`1`(用户输入ID") ID_WORKER->`2`("全局唯一ID") 
+			UUID->`3`("全局唯一ID") -->
+		<property name="idType" value="3" />
+		<!-- MYSQL->`mysql` ORACLE->`oracle` DB2->`db2` H2->`h2` HSQL->`hsql` SQLITE->`sqlite` 
+			POSTGRE->`postgresql` SQLSERVER2005->`sqlserver2005` SQLSERVER->`sqlserver` -->
 		<!-- Oracle需要添加该项 -->
-	    <!-- <property name="dbType" value="oracle" /> -->
-	    <!-- 全局表为下划线命名设置 true -->
-	     <property name="dbColumnUnderline" value="true" /> 
+		<!-- <property name="dbType" value="oracle" /> -->
+		<!-- 全局表为下划线命名设置 true -->
+		<property name="dbColumnUnderline" value="true" />
 	</bean>
 
-    <!-- MyBatis 动态扫描  -->
-    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.luculent.data.mapper"/>
-    </bean>
-    
-    <bean id ="threadPoolTaskExecutor"  class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor" >
-    	<!-- 核心线程数 -->
-   	   <property name ="corePoolSize" value ="${pool.coreSize}" />
-   	   <!-- 线程池维护线程所允许的空闲时间  -->
-   	   <property name ="keepAliveSeconds" value ="${pool.keepalive}" />
-   	   <!-- 线程池维护线程的最大数量  -->
-   	    <property name ="maxPoolSize" value ="${pool.maxSize}" />
-   	    <!-- 线程池所使用的缓冲队列 -->
-    	<property name ="queueCapacity" value ="${pool.queueCapacity}" />
-  	</bean>
+	<!-- MyBatis 动态扫描 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.luculent.data.mapper" />
+	</bean>
+
+	<bean id="threadPoolTaskExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<!-- 核心线程数 -->
+		<property name="corePoolSize" value="${pool.coreSize}" />
+		<!-- 线程池维护线程所允许的空闲时间 -->
+		<property name="keepAliveSeconds" value="${pool.keepalive}" />
+		<!-- 线程池维护线程的最大数量 -->
+		<property name="maxPoolSize" value="${pool.maxSize}" />
+		<!-- 线程池所使用的缓冲队列 -->
+		<property name="queueCapacity" value="${pool.queueCapacity}" />
+	</bean>
 
 
 </beans>       

@@ -1,5 +1,7 @@
 package com.luculent.data.exception;
 
+import java.util.concurrent.CountDownLatch;
+
 /**
  * 
  *@Description:API无参数异常
@@ -21,4 +23,5 @@ public class APIParamsNotFoundException extends BaseRuntimeException{
     public APIParamsNotFoundException(String msg){
 	super(msg);
     }
+    
 }

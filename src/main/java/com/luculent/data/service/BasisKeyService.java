@@ -15,7 +15,7 @@ import com.luculent.data.exception.BasisKeyNotFoundException;
 
 
 @Service
-@Transactional(value="datain")
+@Transactional
 public class BasisKeyService {
     @Autowired
     private RedisTemplate<String, String> redisTempalte;

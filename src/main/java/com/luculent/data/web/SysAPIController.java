@@ -68,7 +68,7 @@ public class SysAPIController extends BaseController {
 	}
 	modelAndView.addObject("paramStr", paramBuf.toString());
 	//数据处理
-	int nowRunCount = runRecordMapper.selectCount(new EntityWrapper<RunRecord>().eq("api_id", apiId).isNull("carry_time"));
+	int nowRunCount = runRecordMapper.selectCount(new EntityWrapper<RunRecord>().eq("api_id", apiId).isNull("end_time"));
 	modelAndView.addObject("nowRunCount", nowRunCount);
 	return modelAndView;
     }
@@ -126,7 +126,7 @@ public class SysAPIController extends BaseController {
     @ResponseBody
     @RequestMapping("/params-retry")
     public Object paramsRetry(String apiId,String recordId) {
-	int nowCount = runRecordMapper.selectCount(new EntityWrapper<RunRecord>().eq("api_id", apiId).isNull("carry_time"));
+	int nowCount = runRecordMapper.selectCount(new EntityWrapper<RunRecord>().eq("api_id", apiId).isNull("end_time"));
 	if(nowCount != 0){
 	    return renderError("该接口下有任务正在执行，稍后在重试吧！");
 	}

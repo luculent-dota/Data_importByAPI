@@ -26,7 +26,7 @@ import com.luculent.data.model.SysProject;
 import com.luculent.data.utils.util.OkHttpUtils;
 
 @Service
-@Transactional(value="datain")
+@Transactional
 public class SysApiService {
 	private final static  Logger logger = LogManager.getLogger("run_long");
 	

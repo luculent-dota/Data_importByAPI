@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.luculent.data.model.RunRecord;
 import com.luculent.data.service.SchedulerService;
@@ -14,17 +15,16 @@ import com.luculent.data.service.SchedulerService;
  *@Author:zhangy
  */
 @Service
-public class FpbXiangmxqService implements IBaseScheduler{
+@Transactional
+public class FpbXiangmxqService {
 	
 	@Autowired
 	private SchedulerService schedulerService;
 	
-	@Override
 	public void test(String json){
 	    schedulerService.rightNowExecuteByJSON(json);
 	}
 	
-	@Override
 	public void test1() {
 	    System.out.println(new Date().getTime());
 	    
