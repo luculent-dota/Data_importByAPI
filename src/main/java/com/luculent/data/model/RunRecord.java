@@ -29,6 +29,9 @@ public class RunRecord extends BaseModel{
     /** 运行时参数. */
     private String runParams;
     
+    /** 预删除的语句. */
+    private String sentence;
+    
     /** 期望条数. */
     private Long expectTotal;
     
@@ -52,10 +55,11 @@ public class RunRecord extends BaseModel{
     }
     
     
-    public RunRecord(String apiId,String runParams,String startTime) {
+    public RunRecord(String apiId,String runParams,String sentence,String startTime) {
    	// TODO Auto-generated constructor stub
 	this.apiId = apiId;
 	this.runParams = runParams;
+	this.sentence = sentence;
 	this.startTime = startTime;
     }
     
@@ -116,6 +120,29 @@ public class RunRecord extends BaseModel{
     public void setRunParams(String runParams) {
         this.runParams = runParams;
     }
+    
+    
+
+    /**
+     * Gets the 预删除的语句.
+     *
+     * @return the 预删除的语句
+     */
+    public String getSentence() {
+        return sentence;
+    }
+
+
+    /**
+     * Sets the 预删除的语句.
+     *
+     * @param sentence
+     *            the new 预删除的语句
+     */
+    public void setSentence(String sentence) {
+        this.sentence = sentence;
+    }
+
 
     /**
      * Gets the 期望条数.
@@ -175,31 +202,64 @@ public class RunRecord extends BaseModel{
     }
 
 
+	/**
+	 * Gets the 开始时间.
+	 *
+	 * @return the 开始时间
+	 */
 	public String getStartTime() {
 		return startTime;
 	}
 
 
+	/**
+	 * Sets the 开始时间.
+	 *
+	 * @param startTime
+	 *            the new 开始时间
+	 */
 	public void setStartTime(String startTime) {
 		this.startTime = startTime;
 	}
 
 
+	/**
+	 * Gets the 结束时间.
+	 *
+	 * @return the 结束时间
+	 */
 	public String getEndTime() {
 		return endTime;
 	}
 
 
+	/**
+	 * Sets the 结束时间.
+	 *
+	 * @param endTime
+	 *            the new 结束时间
+	 */
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
 
 
+	/**
+	 * Gets the 总用时.
+	 *
+	 * @return the 总用时
+	 */
 	public Long getCarryTime() {
 		return carryTime;
 	}
 
 
+	/**
+	 * Sets the 总用时.
+	 *
+	 * @param carryTime
+	 *            the new 总用时
+	 */
 	public void setCarryTime(Long carryTime) {
 		this.carryTime = carryTime;
 	}

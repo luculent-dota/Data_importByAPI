@@ -124,8 +124,8 @@ public class SysAPIController extends BaseController {
     
     
     @ResponseBody
-    @RequestMapping("/params-retry")
-    public Object paramsRetry(String apiId,String recordId) {
+    @RequestMapping("/params-check")
+    public Object paramsCheck(String apiId,String recordId) {
 	int nowCount = runRecordMapper.selectCount(new EntityWrapper<RunRecord>().eq("api_id", apiId).isNull("end_time"));
 	if(nowCount != 0){
 	    return renderError("该接口下有任务正在执行，稍后在重试吧！");
@@ -133,13 +133,19 @@ public class SysAPIController extends BaseController {
 	RunRecord runRecord = runRecordMapper.selectById(recordId);
 	if(StringUtils.isEmpty(runRecord.getFailLog())){
 	    return renderError("该任务下不含失败参数，重试失败！");
-	}else{
-	    if(!StringUtils.contains(runRecord.getFailLog(), FailParamType.NETWORK.name()) && !StringUtils.contains(runRecord.getFailLog(), FailParamType.LOGIN.name())){
-		return renderError("该任务下没有可重试的失败参数，重试失败！");
-	    }
-	    fpbXiangmxqService.retry(runRecord);
+	}else if(!StringUtils.contains(runRecord.getFailLog(), FailParamType.NETWORK.name()) && !StringUtils.contains(runRecord.getFailLog(), FailParamType.LOGIN.name())){
+	    return renderError("该任务下没有可重试的失败参数，重试失败！");
 	}
 	
+	return renderSuccess();
+    }
+    
+    
+    @ResponseBody
+    @RequestMapping("/params-retry")
+    public Object paramsRetry(String recordId,String deleteSql) {
+	RunRecord runRecord = runRecordMapper.selectById(recordId);
+	fpbXiangmxqService.retry(runRecord,deleteSql);
 	return renderSuccess("启动成功");
     }
     

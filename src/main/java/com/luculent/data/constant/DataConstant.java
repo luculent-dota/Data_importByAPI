@@ -54,6 +54,10 @@ public class DataConstant {
 	/**图片扩展名 */
 	public static final String IMG_TYPE =".gif";
 	
+	public static final String SENTENCE="SEN01TENCE";
+	
+	public static final String APIID="APIID";
+	
 	public static final ThreadLocal<Integer> PAGENUM = new ThreadLocal<Integer>() {
 		@Override
 		protected Integer initialValue() {
@@ -64,6 +68,9 @@ public class DataConstant {
 	/**自动登陆重试次数(从1开始 值减1).*/
 	public static final int AUTO_LOGIN_NUM =4;
 	
+	
+	
+	
 	/**
 	 * 参数失败原因组
 	 */
@@ -72,6 +79,7 @@ public class DataConstant {
 	public static final String REA010SONKEY="REA010SONKEY";
 	
 	public static final String REA010SON="REA010SON";
+
 	
 	@SuppressWarnings("unchecked")
 	public static final Map<String,String> FAILPARAMS_NETWORK = ConventionUtils.toMap(REA010SONKEY,FailParamType.NETWORK.name(),REA010SON,FailParamType.NETWORK.getReason());

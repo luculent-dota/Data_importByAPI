@@ -9,6 +9,15 @@
 
 <form class="layui-form" action="">
 	<input type="hidden" id="run-apiId"  name ="APIID"  value="$!{sysApiBean.id}" />
+	<div class="layui-form-item">
+		<div class="layui-inline" >
+			<label class="layui-form-label">预删除语句</label>
+			<div class="layui-input-inline" style="width: 900px;">
+				<input name="SEN01TENCE" autocomplete="off" placeholder="非必填，句尾加英文分号"  class="layui-input" type="text">
+			</div>
+			<a class="layui-btn layui-btn-mini  hint">非必填</a>
+		</div>
+	</div>
 	#if($!params && $!params.size() !=0)
 		#foreach($!param in $!params)
 			#if("PAGE" != $!{param.paramType})

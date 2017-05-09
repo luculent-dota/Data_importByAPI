@@ -7,7 +7,9 @@ layui.define(['layer'], function(exports) {
 			//msg信息 对应 JsonResult msg不为空
 			result:function(data,callback){
 				if(data.success && data.status === "200"){
-					layer.msg(data.msg, {icon: 1});
+					if(data.msg !=""){
+						layer.msg(data.msg, {icon: 1});
+					}
 					if(typeof callback == 'function'){
 						callback;
 					}

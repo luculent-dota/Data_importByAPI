@@ -76,8 +76,8 @@ public class SchedulerService {
 
     /** 任务重试 */
     @Async
-    public void retryExecuteByRecordId(RunRecord runRecord) {
-	paramsHandler(paramAnalysisByRunRecord(runRecord));
+    public void retryExecuteByRecordId(RunRecord runRecord, String deleteSql) {
+	paramsHandler(paramAnalysisByRunRecord(runRecord, deleteSql));
     }
 
     /**
@@ -136,10 +136,10 @@ public class SchedulerService {
 	}
     }
 
-    //参数处理
+    // 参数处理
     public RunParams paramAnalysisByJSON(String json) {
 	JSONObject jsonObj = JSONObject.parseObject(json);
-	String apiId = jsonObj.getString("APIID");
+	String apiId = jsonObj.getString(DataConstant.APIID);
 	SysApi sysApi = sysApiMapper.selectById(apiId);
 	List<SysParam> params = sysParamMapper.selectList(new EntityWrapper<SysParam>().eq("api_id", apiId));
 	if (params != null && params.size() != 0) {
@@ -166,10 +166,24 @@ public class SchedulerService {
 
 	    }
 	    List<ConcurrentHashMap<String, String>> paramList = ConventionUtils.toParamsMap(paramMap);
-	    jsonObj.remove("APIID");
+	    jsonObj.remove(DataConstant.APIID);
+	    //执行预删除语句
+	    String deleteSql = jsonObj.getString(DataConstant.SENTENCE);
+	    if (StringUtils.isNotEmpty(deleteSql)) {
+		int rows = 0;
+		try {
+		    rows = exportDataService.deleteDataBySql(deleteSql);
+		    logger.info("预删除结束，执行语句为：【" + deleteSql + "】,删除数据" + rows + "条");
+		} catch (RuntimeException e) {
+		    logger.info("预删除失败，执行语句为：【" + deleteSql + "】, 出现异常" + e);
+		}
+
+	    }
+	    jsonObj.remove(DataConstant.SENTENCE);
+
 	    String paramStr = jsonObj.toJSONString();
 	    LocalDateTime startTime = LocalDateTime.now();
-	    RunRecord record = new RunRecord(apiId, paramStr, startTime.format(DataConstant.formatter));
+	    RunRecord record = new RunRecord(apiId, paramStr, deleteSql, startTime.format(DataConstant.formatter));
 	    runRecordMapper.insert(record);
 	    record = runRecordMapper.selectById(record.getId());
 	    logger.info("数据处理开始,纪录Id为【" + record.getId() + "】,开始时间为 :" + record.getStartTime() + ",执行参数为:" + paramStr);
@@ -190,8 +204,8 @@ public class SchedulerService {
 	throw new APIParamsNotFoundException(errMsg);
     }
 
-    //重试参数处理
-    public RunParams paramAnalysisByRunRecord(RunRecord runRecord) {
+    // 重试参数处理
+    public RunParams paramAnalysisByRunRecord(RunRecord runRecord, String deleteSql) {
 	List<ConcurrentHashMap<String, String>> paramList = new ArrayList<ConcurrentHashMap<String, String>>();
 	JSONArray arr = (JSONArray) JSONArray.parse(runRecord.getFailLog());
 	for (Object obj : arr) {
@@ -208,12 +222,25 @@ public class SchedulerService {
 	SysApi sysApi = sysApiMapper.selectById(runRecord.getApiId());
 	List<SysParam> params = sysParamMapper.selectList(new EntityWrapper<SysParam>()
 		.eq("api_id", runRecord.getApiId()).eq("param_type", ParamType.PAGE.name()));
+
+	if (StringUtils.isNotEmpty(deleteSql)) {
+	    int rows = 0;
+	    try {
+		rows = exportDataService.deleteDataBySql(deleteSql);
+		logger.info("预删除结束，执行语句为：【" + deleteSql + "】,删除数据" + rows + "条");
+	    } catch (RuntimeException e) {
+		logger.info("预删除失败，执行语句为：【" + deleteSql + "】, 出现异常" + e);
+	    }
+	}
+
 	String paramStr = JSON.toJSONString(paramList);
 	LocalDateTime startTime = LocalDateTime.now();
-	RunRecord retryRecord = new RunRecord(runRecord.getApiId(), paramStr, startTime.format(DataConstant.formatter));
+	RunRecord retryRecord = new RunRecord(runRecord.getApiId(), paramStr, deleteSql,
+		startTime.format(DataConstant.formatter));
 	runRecordMapper.insert(retryRecord);
 	retryRecord = runRecordMapper.selectById(retryRecord.getId());
-	logger.info("任务Id为【"+runRecord.getApiId()+"】重试开始,重试任务Id为【" + retryRecord.getId() + "】,开始时间为 :" + retryRecord.getStartTime() + ",执行参数为:" + paramStr);
+	logger.info("任务Id为【" + runRecord.getApiId() + "】重试开始,重试任务Id为【" + retryRecord.getId() + "】,开始时间为 :"
+		+ retryRecord.getStartTime() + ",执行参数为:" + paramStr);
 
 	RunParams.Builder builder = new RunParams.Builder(sysApi.getProjectId(), sysApi.getUrl(), retryRecord.getId(),
 		startTime);

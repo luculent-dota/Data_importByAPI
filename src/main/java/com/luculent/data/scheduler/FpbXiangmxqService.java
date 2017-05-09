@@ -30,8 +30,8 @@ public class FpbXiangmxqService {
 	    
 	}
 	
-	public void retry(RunRecord runRecord){
-	    schedulerService.retryExecuteByRecordId(runRecord);
+	public void retry(RunRecord runRecord,String deleteSql){
+	    schedulerService.retryExecuteByRecordId(runRecord,deleteSql);
 	}
 
 }

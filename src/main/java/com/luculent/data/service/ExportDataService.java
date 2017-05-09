@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.luculent.data.exception.APIParamsNotFoundException;
 
 @Service
@@ -25,6 +26,13 @@ public class ExportDataService {
 	    sum += rowsAffected[i];
 	}
 	return sum;
+    }
+    
+    public int deleteDataBySql(String sql){
+	if(StringUtils.isNotEmpty(sql)){
+	    return jdbcTemplateIn.update(sql);
+	}
+	return 0;
     }
 
 }

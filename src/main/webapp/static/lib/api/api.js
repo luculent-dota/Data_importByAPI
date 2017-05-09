@@ -26,16 +26,34 @@ layui.config({
 								  var recordId = $(this).attr("id");
 								  msg.confirm("提示：【参数不正确】的参数会自动过滤 <br>是否继续执行？",function(){
 									  $.ajax({
-										  url: contextPath+"/api/params-retry.htm",
+										  url: contextPath+"/api/params-check.htm",
 										  data:{apiId:$("#apiId").val(),recordId:recordId},
 										  type:"post",
 										  dataType: "json",
 										  success: function(res){
-											  msg.result(res);
+											  msg.result(res,function(){
+												  layer.open({
+													  type: 1,
+													  skin: 'layui-layer-rim', //加上边框
+													  area: ['420px', '220px'], //宽高
+													  title:'预删除的语句',
+													  content: $("#sentenceDiv").html(),
+													  btn: ['确定', '跳过'],
+													  yes: function(index, layero){
+													    var sql = $(".layui-layer-content .layui-layer-textarea").val();
+													    paramsRetry(recordId,sql,$,msg);
+													  },
+													  btn2: function(index, layero){
+														  paramsRetry(recordId,'',$,msg);
+													  }
+												  });
+											  });
 										  }
 									});
 								  })
+								  
 							  })
+								
 						  });
 					  }
 				  }
@@ -156,3 +174,14 @@ layui.config({
 
   //…
 });
+function paramsRetry(recordId,sql,$,msg){
+	 $.ajax({
+		  url: contextPath+"/api/params-retry.htm",
+		  data:{recordId:recordId,deleteSql:sql},
+		  type:"post",
+		  dataType: "json",
+		  success: function(res){
+			  msg.result(res);
+		  }
+	 });
+}
