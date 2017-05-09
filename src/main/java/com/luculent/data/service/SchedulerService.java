@@ -41,7 +41,6 @@ import com.luculent.data.utils.util.ConventionUtils;
 import com.luculent.data.utils.util.OkHttpUtils;
 
 @Service
-@Transactional
 public class SchedulerService {
 
     private final static Logger logger = LogManager.getLogger("run_long");
@@ -137,6 +136,7 @@ public class SchedulerService {
     }
 
     // 参数处理
+    @Transactional
     public RunParams paramAnalysisByJSON(String json) {
 	JSONObject jsonObj = JSONObject.parseObject(json);
 	String apiId = jsonObj.getString(DataConstant.APIID);
@@ -171,12 +171,8 @@ public class SchedulerService {
 	    String deleteSql = jsonObj.getString(DataConstant.SENTENCE);
 	    if (StringUtils.isNotEmpty(deleteSql)) {
 		int rows = 0;
-		try {
-		    rows = exportDataService.deleteDataBySql(deleteSql);
+		 rows = exportDataService.deleteDataBySql(deleteSql);
 		    logger.info("预删除结束，执行语句为：【" + deleteSql + "】,删除数据" + rows + "条");
-		} catch (RuntimeException e) {
-		    logger.info("预删除失败，执行语句为：【" + deleteSql + "】, 出现异常" + e);
-		}
 
 	    }
 	    jsonObj.remove(DataConstant.SENTENCE);
@@ -205,6 +201,7 @@ public class SchedulerService {
     }
 
     // 重试参数处理
+    @Transactional
     public RunParams paramAnalysisByRunRecord(RunRecord runRecord, String deleteSql) {
 	List<ConcurrentHashMap<String, String>> paramList = new ArrayList<ConcurrentHashMap<String, String>>();
 	JSONArray arr = (JSONArray) JSONArray.parse(runRecord.getFailLog());
