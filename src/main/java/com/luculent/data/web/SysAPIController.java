@@ -24,7 +24,7 @@ import com.luculent.data.model.RunRecord;
 import com.luculent.data.model.SysApi;
 import com.luculent.data.model.SysParam;
 import com.luculent.data.model.SysProject;
-import com.luculent.data.scheduler.FpbXiangmxqService;
+import com.luculent.data.service.DataHandleService;
 import com.luculent.data.service.SysApiService;
 import com.luculent.data.utils.util.OkHttpUtils;
 
@@ -41,7 +41,7 @@ public class SysAPIController extends BaseController {
     @Autowired
     private SysProjectMapper sysProjectMapper;
     @Autowired
-    private FpbXiangmxqService fpbXiangmxqService;
+    private DataHandleService dataHandleService;
     @Autowired
     private RunRecordMapper runRecordMapper;	
     
@@ -103,16 +103,16 @@ public class SysAPIController extends BaseController {
     @ResponseBody
     @RequestMapping("/real-run")
     public Object realRun(@RequestBody String json) {
-	JSONObject jsonObj = JSONObject.parseObject(json);
-	String apiId = jsonObj.getString("APIID");
-	SysApi sysApi = sysApiMapper.selectById(apiId);
+//	JSONObject jsonObj = JSONObject.parseObject(json);
+//	String apiId = jsonObj.getString("APIID");
+//	SysApi sysApi = sysApiMapper.selectById(apiId);
 //	String schedulerClass = ConventionUtils.firstSpellToLow(sysApi.getSchedulerClass());
 //	if(!ServiceLocator.containsBean(schedulerClass)){
 //	    return renderError("启动失败！任务类未加载,请重启服务器");
 //	}
 //	IBaseScheduler scheduler = (IBaseScheduler) ServiceLocator.getBean(schedulerClass);
-	System.out.println(sysApi.getSchedulerClass());
-	fpbXiangmxqService.test(json);
+//	System.out.println(sysApi.getSchedulerClass());
+	dataHandleService.nowRun(json);
 	return renderSuccess("启动成功");
     }
     
@@ -145,7 +145,7 @@ public class SysAPIController extends BaseController {
     @RequestMapping("/params-retry")
     public Object paramsRetry(String recordId,String deleteSql) {
 	RunRecord runRecord = runRecordMapper.selectById(recordId);
-	fpbXiangmxqService.retry(runRecord,deleteSql);
+	dataHandleService.retryRun(runRecord,deleteSql);
 	return renderSuccess("启动成功");
     }
     

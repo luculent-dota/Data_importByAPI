@@ -1,11 +1,12 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>Data_importByAPI</groupId>
-  <artifactId>Data_importByAPI</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>war</packaging>
-  
-  <properties>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>Data_importByAPI</groupId>
+	<artifactId>Data_importByAPI</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+
+	<properties>
 		<java.encoding>UTF-8</java.encoding>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
@@ -31,9 +32,9 @@
 			<version>6.0.6</version>
 		</dependency>
 		<dependency>
-		  <groupId>cn.easyproject</groupId>
-		  <artifactId>ojdbc6</artifactId>
-		  <version>11.2.0.4</version>
+			<groupId>cn.easyproject</groupId>
+			<artifactId>ojdbc6</artifactId>
+			<version>11.2.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>com.alibaba</groupId>
@@ -43,6 +44,11 @@
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
+			<version>2.2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz-jobs</artifactId>
 			<version>2.2.3</version>
 		</dependency>
 		<dependency>
@@ -62,9 +68,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-		    <groupId>commons-io</groupId>
-		    <artifactId>commons-io</artifactId>
-		    <version>2.5</version>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -87,11 +93,11 @@
 			<artifactId>log4j-core</artifactId>
 			<version>2.7</version>
 		</dependency>
-		<dependency>  
-		    <groupId>org.apache.logging.log4j</groupId>  
-		    <artifactId>log4j-1.2-api</artifactId>  
-		    <version>2.7</version>  
-		</dependency>  
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-1.2-api</artifactId>
+			<version>2.7</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-slf4j-impl</artifactId>
@@ -110,17 +116,17 @@
 			<artifactId>disruptor</artifactId>
 			<version>3.3.6</version>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>net.sourceforge.tess4j</groupId>
-		    <artifactId>tess4j</artifactId>
-		    <version>3.3.1</version>
-		    <exclusions>
-		    	<exclusion>
-		    		<groupId>ch.qos.logback</groupId>
-		    		<artifactId>logback-classic</artifactId>
-		    	</exclusion>
-		    </exclusions>
+			<groupId>net.sourceforge.tess4j</groupId>
+			<artifactId>tess4j</artifactId>
+			<version>3.3.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- Spring -->
@@ -189,9 +195,9 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
-		
+
 		<!-- spring-security -->
-		
+
 		<!-- AOP -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
@@ -201,17 +207,17 @@
 
 		<!-- spring-redis -->
 		<dependency>
-		    <groupId>org.springframework.data</groupId>
-		    <artifactId>spring-data-redis</artifactId>
-		    <version>1.8.3.RELEASE</version>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-redis</artifactId>
+			<version>1.8.3.RELEASE</version>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>redis.clients</groupId>
-		    <artifactId>jedis</artifactId>
-		    <version>2.9.0</version>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>2.9.0</version>
 		</dependency>
-		
+
 		<!-- test -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -219,16 +225,16 @@
 			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>com.squareup.okhttp3</groupId>
-		    <artifactId>okhttp</artifactId>
-		    <version>3.6.0</version>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>3.6.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.belerweb</groupId>
 			<artifactId>pinyin4j</artifactId>
 			<version>2.5.1</version>
 		</dependency>
-		
+
 		<!-- ======================================== -->
 		<!-- test -->
 		<!-- ======================================== -->
@@ -267,12 +273,12 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				  <groupId>org.eclipse.jetty</groupId>
-				  <artifactId>jetty-maven-plugin</artifactId>
-				  <version>9.4.3.v20170317</version>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>9.4.3.v20170317</version>
 			</plugin>
 
-			
+
 		</plugins>
 	</build>
 </project>
