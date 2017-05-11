@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.luculent.data.constant.DataConstant;
 import com.luculent.data.constant.JsonKey;
 import com.luculent.data.model.BackBean;
 
@@ -76,6 +77,7 @@ public class ConventionUtils {
 	return null;
 
     }
+    
 
     /**
      * 

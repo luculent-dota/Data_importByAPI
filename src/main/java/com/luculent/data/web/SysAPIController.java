@@ -10,21 +10,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.luculent.data.base.BaseController;
 import com.luculent.data.constant.ApiType;
 import com.luculent.data.constant.DataConstant;
 import com.luculent.data.constant.FailParamType;
 import com.luculent.data.mapper.RunRecordMapper;
+import com.luculent.data.mapper.SchedulerJobMapper;
 import com.luculent.data.mapper.SysApiMapper;
 import com.luculent.data.mapper.SysParamMapper;
 import com.luculent.data.mapper.SysProjectMapper;
 import com.luculent.data.model.RunRecord;
+import com.luculent.data.model.SchedulerJob;
 import com.luculent.data.model.SysApi;
 import com.luculent.data.model.SysParam;
 import com.luculent.data.model.SysProject;
 import com.luculent.data.service.DataHandleService;
+import com.luculent.data.service.SchedulerJobService;
 import com.luculent.data.service.SysApiService;
 import com.luculent.data.utils.util.OkHttpUtils;
 
@@ -43,7 +45,11 @@ public class SysAPIController extends BaseController {
     @Autowired
     private DataHandleService dataHandleService;
     @Autowired
-    private RunRecordMapper runRecordMapper;	
+    private RunRecordMapper runRecordMapper;
+    @Autowired
+    private SchedulerJobMapper schedulerJobMapper;
+    @Autowired
+    private SchedulerJobService schedulerJobService;
     
     @RequestMapping("/index")
     public ModelAndView index(ModelAndView modelAndView, String apiId) {
@@ -70,6 +76,12 @@ public class SysAPIController extends BaseController {
 	//数据处理
 	int nowRunCount = runRecordMapper.selectCount(new EntityWrapper<RunRecord>().eq("api_id", apiId).isNull("end_time"));
 	modelAndView.addObject("nowRunCount", nowRunCount);
+	//是否存在任务
+	List<SchedulerJob> schedulerJobs = schedulerJobMapper.selectList(new EntityWrapper<SchedulerJob>().eq("api_id", apiId));
+	modelAndView.addObject("existJob", schedulerJobs.size());
+	if(schedulerJobs !=null && schedulerJobs.size() !=0){
+	    modelAndView.addObject("schedulerJob", schedulerJobs.get(0));
+	}
 	return modelAndView;
     }
 
@@ -101,8 +113,8 @@ public class SysAPIController extends BaseController {
     }
 
     @ResponseBody
-    @RequestMapping("/real-run")
-    public Object realRun(@RequestBody String json) {
+    @RequestMapping("/now-run")
+    public Object nowRun(@RequestBody String json) {
 //	JSONObject jsonObj = JSONObject.parseObject(json);
 //	String apiId = jsonObj.getString("APIID");
 //	SysApi sysApi = sysApiMapper.selectById(apiId);
@@ -115,6 +127,19 @@ public class SysAPIController extends BaseController {
 	dataHandleService.nowRun(json);
 	return renderSuccess("启动成功");
     }
+    
+    @RequestMapping("/cron-config")
+    public ModelAndView cronConfig(ModelAndView modelAndView) {
+	modelAndView.setViewName("api/cron");
+	return modelAndView;
+    }
+    
+    @ResponseBody
+    @RequestMapping("/save-job")
+    public Object saveJob(@RequestBody String json) {
+	return schedulerJobService.createJob(json);
+    }
+    
     
     @ResponseBody
     @RequestMapping("/run-history")

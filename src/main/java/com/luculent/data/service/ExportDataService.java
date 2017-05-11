@@ -30,8 +30,9 @@ public class ExportDataService {
     
     public int deleteDataBySql(String sql){
 	if(StringUtils.isNotEmpty(sql)){
-	    return jdbcTemplateIn.batchUpdate(sql)[0];
+	    return jdbcTemplateIn.update(sql);
 	}
+	
 	return 0;
     }
 

@@ -159,7 +159,7 @@ layui.config({
 			return false;
 		}
 		$.ajax({
-			  url: contextPath+"/api/real-run.htm",
+			  url: contextPath+"/api/now-run.htm",
 			  data: JSON.stringify(res.field),
 			  type:"post",
 			  dataType: "json",
@@ -171,6 +171,36 @@ layui.config({
 		return false;
 	});
 	
+	form.on('submit(jobRun)', function(res) {
+		layer.open({
+			title: '配置cron表达式',
+		    area: ['870px', '750px'],
+		    maxmin: true, 
+		    type: 2, 
+		    content: contextPath+"/api/cron-config.htm",
+		    btn: ['保存', '取消'],
+			  yes: function(index, layero){
+				  var body = layer.getChildFrame('body', index);
+				  res.field.CRON01EXPRESSION=body.find('#cron').val()
+				  $.ajax({
+					  url: contextPath+"/api/save-job.htm",
+					  data: JSON.stringify(res.field),
+					  type:"post",
+					  dataType: "json",
+					  contentType:"application/json",
+					  success: function(data){
+						  msg.result(data);
+					  }
+				});
+				  
+			  },
+			  btn2: function(index, layero){
+				  
+			  }
+		    
+		}); 
+		return false;
+	});
 
   //…
 });

@@ -119,6 +119,17 @@
 		<!-- 线程池所使用的缓冲队列 -->
 		<property name="queueCapacity" value="${pool.queueCapacity}" />
 	</bean>
+	
+	<bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+
+        <property name="startupDelay" value="100" />
+		 <property name="configLocation" value="classpath:quartz.properties" />
+		 <property name="applicationContextSchedulerContextKey" value="applicationContext" />
+        <property name="waitForJobsToCompleteOnShutdown" value="true" />
+        <!-- 设置自动启动 -->
+        <!-- <property name="autoStartup" value="true" /> -->
+    </bean>
 
 
 </beans>       

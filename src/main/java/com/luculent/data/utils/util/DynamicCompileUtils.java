@@ -19,7 +19,6 @@ import com.luculent.data.exception.ClassMakeNameException;
  *@Author:zhangy
  *@Since:2017年4月14日上午11:14:27
  */
-@Deprecated
 public class DynamicCompileUtils {
     
     private final static  Logger logger = LogManager.getLogger(DynamicCompileUtils.class);
@@ -39,7 +38,7 @@ public class DynamicCompileUtils {
 	int compilationResult = compiler.run(null, null, null, "-d", classPath, javaPath);
 	return 0==compilationResult?true:false;
     }
-
+    @Deprecated
     public static String createClassByClassName(String projectName,String apiName){
 	String className =TemplateUtils.createClass(projectName,apiName);
 	String classPath = DynamicCompileUtils.class.getClassLoader().getResource("").getFile();
@@ -52,11 +51,22 @@ public class DynamicCompileUtils {
 	
 	logger.info("动态编译"+className+"任务类成功!");
 	BeanDefinition bean = new GenericBeanDefinition();
-	bean.setBeanClassName(DataConstant.SCHEDULER_PACKAGE_PATH+"."+className);
+	bean.setBeanClassName(DataConstant.SCHEDULER_PACKAGE_PATH+className);
 	DefaultListableBeanFactory fty = (DefaultListableBeanFactory) ServiceLocator.context.getAutowireCapableBeanFactory();
 	fty.registerBeanDefinition(ConventionUtils.firstSpellToLow(className), bean);
 	logger.info("动态加入Spring上下文"+className+"任务类成功!");
 	return className;
+    }
+    
+    public static boolean existClass(String fullpath){
+	try {
+	    Class.forName(fullpath);
+	} catch (ClassNotFoundException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	    return false;
+	}
+	return true;
     }
     public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 	createClassByClassName("扶贫办","项目张洋");

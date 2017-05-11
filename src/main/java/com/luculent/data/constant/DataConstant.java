@@ -44,9 +44,9 @@ public class DataConstant {
 	
 	public static final String PATH = System.getProperty("user.dir") +"\\src\\main";
 	
-	public static final String SCHEDULER_PATH = DataConstant.PATH+"\\java\\com\\luculent\\data\\scheduler\\";
+	public static final String SCHEDULER_PATH = PATH+"\\java\\com\\luculent\\data\\scheduler\\";
 	
-	public static final String SCHEDULER_PACKAGE_PATH="com.luculent.data";
+	public static final String SCHEDULER_PACKAGE_PATH="com.luculent.data.scheduler.";
 	/**ocr地址*/
 	public static final String OCR_PATH =PATH+"\\resources\\";
 	/**图片输出地址*/
@@ -68,7 +68,21 @@ public class DataConstant {
 	/**自动登陆重试次数(从1开始 值减1).*/
 	public static final int AUTO_LOGIN_NUM =4;
 	
+	/**触发器组名.*/
+	public static final String TRIGGER_GROUP_NAME="TriggerGroup";
 	
+	/**任务组名.*/
+	public static final String JOB_GROUP_NAME ="JobGroup";
+	
+	
+	public static final int SCHEDULER_PACK_LENGTH = 28;
+	
+	
+	public static final String JOB_SUFFIX="_run";
+	
+	public static final String JOB_TRIGGER_SUFFIX="_trigger";
+	
+	public static final String CRONEXPRESSION="CRON01EXPRESSION";
 	
 	
 	/**
