@@ -115,15 +115,6 @@ public class SysAPIController extends BaseController {
     @ResponseBody
     @RequestMapping("/now-run")
     public Object nowRun(@RequestBody String json) {
-//	JSONObject jsonObj = JSONObject.parseObject(json);
-//	String apiId = jsonObj.getString("APIID");
-//	SysApi sysApi = sysApiMapper.selectById(apiId);
-//	String schedulerClass = ConventionUtils.firstSpellToLow(sysApi.getSchedulerClass());
-//	if(!ServiceLocator.containsBean(schedulerClass)){
-//	    return renderError("启动失败！任务类未加载,请重启服务器");
-//	}
-//	IBaseScheduler scheduler = (IBaseScheduler) ServiceLocator.getBean(schedulerClass);
-//	System.out.println(sysApi.getSchedulerClass());
 	dataHandleService.nowRun(json);
 	return renderSuccess("启动成功");
     }
@@ -139,6 +130,20 @@ public class SysAPIController extends BaseController {
     public Object saveJob(@RequestBody String json) {
 	return schedulerJobService.createJob(json);
     }
+    
+    @ResponseBody
+    @RequestMapping("/change-job-status")
+    public Object saveJob(String jobId,int status) {
+	return schedulerJobService.changeJobStatus(jobId,status)?renderSuccess("修改成功"):renderError("修改失败");
+    }
+    
+    @ResponseBody
+    @RequestMapping("/remove-job")
+    public Object removeJob(String jobId) {
+	return schedulerJobService.removeJob(jobId)?renderSuccess("删除成功"):renderError("删除失败");
+    }
+    
+    
     
     
     @ResponseBody

@@ -2,6 +2,7 @@ package com.luculent.data.utils.util;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.luculent.data.constant.DataConstant;
 import com.luculent.data.exception.ClassMakeNameException;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
@@ -17,7 +18,6 @@ public class PinyinUtils {
 	// TODO Auto-generated constructor stub
     }
     
-    private static final String ClassTYPE="Service";  
     
     public static String classNameByProjectNameWithApiName(String projectName,String apiName){
 	if(StringUtils.isEmpty(projectName) || StringUtils.isEmpty(apiName)){
@@ -31,7 +31,7 @@ public class PinyinUtils {
 	    String str2 = apiName.substring(1);
 	    bl.append(getFirstSpell(str2));
 	}
-	bl.append(ClassTYPE);
+	bl.append(DataConstant.SCHEDULER_JOB_SUFFIX);
 	//System.out.println(ConventionUtils.firstSpellToUp(bl.toString()));
 	return ConventionUtils.firstSpellToUp(bl.toString());
     }

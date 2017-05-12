@@ -102,9 +102,9 @@ public class SysMenuController extends BaseController {
 	    }
 	    sysApiMapper.insert(sysApi);
 	} else {
-//	    if(ApiType.OTHER.getVal() == sysApi.getApiType()){
-//		sysApi.setSchedulerClass(TemplateUtils.createClass(sysProject.getName(), sysApi.getName()));
-//	    }
+	    if(ApiType.OTHER.getVal() == sysApi.getApiType()){
+		sysApi.setSchedulerClass(TemplateUtils.createClass(sysProject.getName(), sysApi.getName()));
+	    }
 	    sysApiMapper.updateById(sysApi);
 	}
 	sysParamMapper.delete(new EntityWrapper<SysParam>().eq("api_id", sysApi.getId()));

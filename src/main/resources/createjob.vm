@@ -17,8 +17,14 @@ import com.luculent.data.model.SchedulerJob;
 import com.luculent.data.service.DataHandleService;
 import com.luculent.data.service.SchedulerJobService;
 
+/**
+ * 
+ *@Description:$!{projectName}-$!{apiName} 定时任务类
+ *@Author:zhangy
+ */
+
 @DisallowConcurrentExecution
-public class FpbXiangmxqJob  implements Job{
+public class $!{className}  implements Job{
     
     private final static Logger logger = LogManager.getLogger("run_long");
 

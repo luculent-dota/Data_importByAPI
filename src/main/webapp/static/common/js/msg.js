@@ -11,7 +11,7 @@ layui.define(['layer'], function(exports) {
 						layer.msg(data.msg, {icon: 1});
 					}
 					if(typeof callback == 'function'){
-						callback;
+						callback();
 					}
 				}else{
 					layer.msg(data.msg, {icon: 2}); 

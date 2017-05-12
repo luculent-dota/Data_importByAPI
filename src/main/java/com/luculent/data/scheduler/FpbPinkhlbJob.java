@@ -17,8 +17,14 @@ import com.luculent.data.model.SchedulerJob;
 import com.luculent.data.service.DataHandleService;
 import com.luculent.data.service.SchedulerJobService;
 
+/**
+ * 
+ *@Description:扶贫办-贫困户列表 定时任务类
+ *@Author:zhangy
+ */
+
 @DisallowConcurrentExecution
-public class FpbXiangmxqJob  implements Job{
+public class FpbPinkhlbJob  implements Job{
     
     private final static Logger logger = LogManager.getLogger("run_long");
 

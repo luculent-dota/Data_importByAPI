@@ -150,6 +150,7 @@ layui.config({
 		});
 	});
 	
+	
 	form.on('submit(nowRun)', function(res) {
 		var disable = $(res.elem).hasClass("layui-btn-disabled");
 		if(!disable){
@@ -175,13 +176,13 @@ layui.config({
 		layer.open({
 			title: '配置cron表达式',
 		    area: ['870px', '750px'],
-		    maxmin: true, 
 		    type: 2, 
 		    content: contextPath+"/api/cron-config.htm",
 		    btn: ['保存', '取消'],
 			  yes: function(index, layero){
 				  var body = layer.getChildFrame('body', index);
-				  res.field.CRON01EXPRESSION=body.find('#cron').val()
+				  res.field.CRON01EXPRESSION=body.find('#cron').val();
+				  layer.close(index);
 				  $.ajax({
 					  url: contextPath+"/api/save-job.htm",
 					  data: JSON.stringify(res.field),
@@ -189,7 +190,15 @@ layui.config({
 					  dataType: "json",
 					  contentType:"application/json",
 					  success: function(data){
-						  msg.result(data);
+						  msg.result(data,function(){
+							  $(".addJob").hide();
+							  console.log(data);
+							  var getTpl = jobTable.innerHTML;
+							  laytpl(getTpl).render(data.obj, function(html){
+								  $("#jobContent").empty().append(html);
+							  });
+							  
+						  });
 					  }
 				});
 				  
@@ -200,6 +209,45 @@ layui.config({
 		    
 		}); 
 		return false;
+	});
+	
+	$("#jobContent").on('click','.cock a',function(){
+		  var that = $(this);
+		  var status = that.attr("key");
+		  var jobId = $("#schedulerJobId").val();
+		  $.ajax({
+			  url: contextPath+"/api/change-job-status.htm",
+			  data:{jobId:jobId,status:status},
+			  type:"post",
+			  dataType: "json",
+			  success: function(data){
+				  msg.result(data,function(){
+					  if(status == 0){
+						  that.attr("key",1);
+						  that.text("停止");
+					  }else{
+						  that.attr("key",0);
+						  that.text("启动");
+					  }
+				  });
+			  }
+		});
+	});
+	
+	$("#jobContent").on('click',".removeJob",function(){
+		  var jobId = $("#schedulerJobId").val();
+		  $.ajax({
+			  url: contextPath+"/api/remove-job.htm",
+			  data:{jobId:jobId},
+			  type:"post",
+			  dataType: "json",
+			  success: function(data){
+				  msg.result(data,function(){
+					  $("#jobContent").empty();
+					  $(".addJob").show();
+				  });
+			  }
+		});
 	});
 
   //…

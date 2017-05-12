@@ -8,4 +8,6 @@ import com.luculent.data.model.SchedulerJob;
 public interface SchedulerJobMapper extends BaseMapper<SchedulerJob>{
 
     public List<SchedulerJob> queryListByClassName(String className);
+    
+    public List<SchedulerJob> queryEnabled();
 }

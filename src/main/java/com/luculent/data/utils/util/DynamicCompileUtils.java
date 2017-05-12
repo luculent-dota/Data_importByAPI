@@ -19,6 +19,7 @@ import com.luculent.data.exception.ClassMakeNameException;
  *@Author:zhangy
  *@Since:2017年4月14日上午11:14:27
  */
+@Deprecated
 public class DynamicCompileUtils {
     
     private final static  Logger logger = LogManager.getLogger(DynamicCompileUtils.class);
@@ -67,9 +68,5 @@ public class DynamicCompileUtils {
 	    return false;
 	}
 	return true;
-    }
-    public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-	createClassByClassName("扶贫办","项目张洋");
-	
     }
 }

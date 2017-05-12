@@ -42,8 +42,14 @@ public class SchedulerJobService {
      * 查询为开启状态的任务
      */
     public List<SchedulerJob> queryEnabled() {
-	return schedulerJobMapper
-		.selectList(new EntityWrapper<SchedulerJob>().eq("job_status", JobStatus.ENABLED.getVal()));
+	List<SchedulerJob> list =  schedulerJobMapper.queryEnabled();
+	if(list !=null && list.size() !=0){
+	    for(SchedulerJob job:list){
+		job.setSchedulerClass(DataConstant.SCHEDULER_PACKAGE_PATH+job.getSchedulerClass());
+	    }
+	}
+	return list;
+		
     }
 
     public SchedulerJob queryJobByClassName(String className) {
@@ -77,6 +83,7 @@ public class SchedulerJobService {
 	    job.setTriggerName(sysApi.getSchedulerClass() + DataConstant.JOB_TRIGGER_SUFFIX);
 	    job.setJobStatus(JobStatus.ENABLED.getVal());
 	    jsonObj.remove(DataConstant.CRONEXPRESSION);
+	    jsonObj.remove(DataConstant.APIID);
 	    job.setRunParams(jsonObj.toJSONString());
 	    schedulerJobMapper.insert(job);
 	    try {
@@ -122,6 +129,24 @@ public class SchedulerJobService {
 	schedulerJobMapper.updateById(job);
 	return true;
 
+    }
+    
+    public boolean modifyJob(String json){
+	JSONObject jsonObj = JSONObject.parseObject(json);
+	String jobId = jsonObj.getString(DataConstant.JOBID);
+	String cron = jsonObj.getString(DataConstant.CRONEXPRESSION);
+	SchedulerJob oldJob = schedulerJobMapper.selectById(jobId);
+	if(!oldJob.getCronExpression().equals(cron)){
+	    oldJob.setCronExpression(cron);
+	}
+	jsonObj.remove(DataConstant.JOBID);
+	jsonObj.remove(DataConstant.CRONEXPRESSION);
+	jsonObj.remove(DataConstant.APIID);
+	oldJob.setRunParams(jsonObj.toJSONString());
+	schedulerJobMapper.updateById(oldJob);
+	return true;
+	
+	
     }
     
     public boolean removeJob(String jobId){

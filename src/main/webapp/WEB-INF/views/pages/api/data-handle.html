@@ -1,81 +1,133 @@
 <style>
-	.hint{
-		margin-top:7px;
-	}
+.hint {
+	margin-top: 7px;
+}
 </style>
+<script id="jobTable" type="text/html">
+{{#  if(d.id !=''){ }}
+<input type="hidden" id="schedulerJobId" name="schedulerJobId" value="{{ d.id }}">
+			<table class="layui-table" lay-even="" lay-skin="row">
+		  <colgroup>
+		    <col width="100">
+		    <col width="70">
+		    <col width="50">
+		    <col width="200">
+		    <col>
+		  </colgroup>
+		  <thead>
+		    <tr>
+		      <th>运行参数</th>
+		      <th>cron表达式</th>
+		      <th>任务状态</th>
+		      <th>操作</th>
+		    </tr> 
+		  </thead>
+		  <tbody>
+		    <tr>
+		      <td>{{ d.runParams }}</td>
+		      <td>{{ d.cronExpression }}</td>
+		      <td class="cock"> <a class="layui-btn layui-btn-mini "  title="点击切换状态" key="0">启动</a></td>
+		      <td><a class="layui-btn layui-btn-mini layui-btn-danger removeJob">删除</a></td>
+		    </tr>
+		  </tbody>
+			</table>  
+{{#  } }} 
+</script>
 <fieldset class="layui-elem-field layui-field-title">
 	<legend>设置参数</legend>
 </fieldset>
 
 <form class="layui-form" action="">
-	<input type="hidden" id="run-apiId"  name ="APIID"  value="$!{sysApiBean.id}" />
+	<input type="hidden" id="run-apiId" name="APIID"
+		value="$!{sysApiBean.id}" />
 	<div class="layui-form-item">
-		<div class="layui-inline" >
+		<div class="layui-inline">
 			<label class="layui-form-label">预删除语句</label>
 			<div class="layui-input-inline" style="width: 900px;">
-				<input name="SEN01TENCE" autocomplete="off" placeholder="非必填，句尾加英文分号"  class="layui-input" type="text">
+				<input name="SEN01TENCE" autocomplete="off"
+					placeholder="非必填，句尾加英文分号" class="layui-input" type="text">
 			</div>
 			<a class="layui-btn layui-btn-mini  hint">非必填</a>
 		</div>
 	</div>
-	#if($!params && $!params.size() !=0)
-		#foreach($!param in $!params)
-			#if("PAGE" != $!{param.paramType})
-			<div class="layui-form-item">
-				<div class="layui-inline" >
-					<label class="layui-form-label">$!{param.detail}</label>
-					<div class="layui-input-inline" style="width: 900px;">
-						<input name="$!{param.name}" autocomplete="off" #if($!{param.required} == 1 && "CONSTANT" != $!{param.paramType} ) placeholder="若为必填且数据来源为基础值或数据库值时此项可不填，后台自动获取" #elseif(($!{param.required} == 1 && "CONSTANT" == $!{param.paramType})||$!{param.required} == 0) placeholder="多个值以英文逗号分割" #end #if("CONSTANT" == $!{param.paramType}) lay-verify="required" #end class="layui-input" type="text">
-					</div>
-					<a class="layui-btn layui-btn-mini #if($!{param.required} == 1)layui-btn-danger #elseif($!{param.required} != 1)layui-btn-primary #end hint">#if($!{param.required} == 1)必填#elseif($!{param.required} != 1)非必填#end</a>
-					<a class="layui-btn layui-btn-mini layui-btn-warm hint">#if("CONSTANT" == $!{param.paramType})定值 #elseif("DATABASE" == $!{param.paramType})数据库#elseif("BASIS" == $!{param.paramType})基础值#end</a>
-				</div>
+	#if($!params && $!params.size() !=0) #foreach($!param in $!params)
+	#if("PAGE" != $!{param.paramType})
+	<div class="layui-form-item">
+		<div class="layui-inline">
+			<label class="layui-form-label">$!{param.detail}</label>
+			<div class="layui-input-inline" style="width: 900px;">
+				<input name="$!{param.name}" autocomplete="off"
+					#if($!{param.required} == 1 && "CONSTANT" !=$!{param.paramType} )
+					placeholder="若为必填且数据来源为基础值或数据库值时此项可不填，后台自动获取"
+					#elseif(($!{param.required} == 1 && "CONSTANT" ==
+					$!{param.paramType})||$!{param.required} == 0)
+					placeholder="多个值以英文逗号分割" #end #if("CONSTANT" ==
+					$!{param.paramType}) lay-verify="required" #end class="layui-input"
+					type="text">
 			</div>
-			#end
-		#end
-	#end
-	<div class="layui-form-item">
-		<div class="layui-input-block">
-			<button class="layui-btn #if($!{nowRunCount} !=0) layui-btn-disabled #end" lay-submit="" lay-filter="nowRun">立即启动</button>
+			<a
+				class="layui-btn layui-btn-mini #if($!{param.required} == 1)layui-btn-danger #elseif($!{param.required} != 1)layui-btn-primary #end hint">#if($!{param.required}
+				== 1)必填#elseif($!{param.required} != 1)非必填#end</a> <a
+				class="layui-btn layui-btn-mini layui-btn-warm hint">#if("CONSTANT"
+				== $!{param.paramType})定值 #elseif("DATABASE" ==
+				$!{param.paramType})数据库#elseif("BASIS" ==
+				$!{param.paramType})基础值#end</a>
 		</div>
 	</div>
-<fieldset class="layui-elem-field layui-field-title">
-	<legend>定时任务</legend>
-</fieldset>
-	#if($!existJob == 0)
+	#end #end #end
 	<div class="layui-form-item">
 		<div class="layui-input-block">
-			<button class="layui-btn layui-btn-normal " lay-submit="" lay-filter="jobRun">添加定时任务</button>
+			<button
+				class="layui-btn #if($!{nowRunCount} !=0) layui-btn-disabled #end"
+				lay-submit="" lay-filter="nowRun">立即启动</button>
 		</div>
 	</div>
-	#end
-	#if($!existJob != 0 && $!schedulerJob)
+	<fieldset class="layui-elem-field layui-field-title">
+		<legend>定时任务</legend>
+	</fieldset>
+	<div class="layui-form-item addJob" #if($!existJob !=0)
+		style="display: none;" #end>
+		<div class="layui-input-block">
+			<button class="layui-btn layui-btn-normal " lay-submit=""
+				lay-filter="jobRun">添加定时任务</button>
+		</div>
+	</div>
+	<div id="jobContent">
+		#if($!existJob != 0 && $!schedulerJob) <input type="hidden"
+			id="schedulerJobId" name="schedulerJobId" value="$!{schedulerJob.id}">
 		<table class="layui-table" lay-even="" lay-skin="row">
-	  <colgroup>
-	    <col width="100">
-	    <col width="70">
-	    <col width="50">
-	    <col width="200">
-	    <col>
-	  </colgroup>
-	  <thead>
-	    <tr>
-	      <th>运行参数</th>
-	      <th>cron表达式</th>
-	      <th>任务状态</th>
-	      <th>操作</th>
-	    </tr> 
-	  </thead>
-	  <tbody>
-	    <tr>
-	      <td>$!{schedulerJob.runParams}</td>
-	      <td>$!{schedulerJob.cronExpression}</td>
-	      <td>#if($!{schedulerJob.jobStatus} ==0) <a class="layui-btn layui-btn-mini">停止</a> #end #if($!{schedulerJob.jobStatus} ==1) <a class="layui-btn layui-btn-mini">启动</a> #end</td>
-	      <td><a class="layui-btn layui-btn-mini layui-btn-normal">修改</a><a class="layui-btn layui-btn-mini layui-btn-danger">删除</a></td>
-	    </tr>
-	  </tbody>
-		</table>  
-	#end
-	
-	
+			<colgroup>
+				<col width="100">
+				<col width="70">
+				<col width="50">
+				<col width="200">
+				<col>
+			</colgroup>
+			<thead>
+				<tr>
+					<th>运行参数</th>
+					<th>cron表达式</th>
+					<th>任务状态</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>$!{schedulerJob.runParams}</td>
+					<td>$!{schedulerJob.cronExpression}</td>
+					<td class="cock">#if($!{schedulerJob.jobStatus} ==0) <a
+						class="layui-btn layui-btn-mini " title="点击切换状态" key="1">停止</a>
+						#end #if($!{schedulerJob.jobStatus} ==1) <a
+						class="layui-btn layui-btn-mini " title="点击切换状态" key="0">启动</a>
+						#end
+					</td>
+					<td><a
+						class="layui-btn layui-btn-mini layui-btn-danger removeJob">删除</a></td>
+				</tr>
+			</tbody>
+		</table>
+		#end
+	</div>
+
+
 </form>

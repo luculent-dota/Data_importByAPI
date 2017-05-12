@@ -123,7 +123,7 @@
 	<bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="dataSource" ref="dataSource" />
 
-        <property name="startupDelay" value="100" />
+        <property name="startupDelay" value="40" />
 		 <property name="configLocation" value="classpath:quartz.properties" />
 		 <property name="applicationContextSchedulerContextKey" value="applicationContext" />
         <property name="waitForJobsToCompleteOnShutdown" value="true" />

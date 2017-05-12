@@ -4,5 +4,8 @@
 <select id="queryListByClassName" resultType="SchedulerJob" parameterType="string">
 SELECT b.id,b.api_id,b.job_name,b.trigger_name,b.cron_expression,b.job_status,b.run_params,b.scrq  FROM `scheduler_job` b JOIN `sys_api` s ON s.id= b.api_id WHERE  scheduler_class=#{schedulerClass}    
 </select>
+<select id="queryEnabled" resultType="SchedulerJob" >
+SELECT b.id,b.api_id,b.job_name,b.trigger_name,b.cron_expression,b.job_status,b.run_params,b.scrq ,a.scheduler_class FROM `scheduler_job` b  LEFT JOIN `sys_api` a ON a.id = b.api_id WHERE b.job_status = 1
+</select>
 
 </mapper>

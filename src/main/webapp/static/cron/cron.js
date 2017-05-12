@@ -1,15 +1,8 @@
-﻿/**
- * 每周期
- */
-function everyTime(dom) {
+﻿function everyTime(dom) {
 	var item = $("input[name=v_" + dom.name + "]");
 	item.val("*");
 	item.change();
 }
-
-/**
- * 不指定
- */
 function unAppoint(dom) {
 	var name = dom.name;
 	var val = "?";
@@ -19,14 +12,8 @@ function unAppoint(dom) {
 	item.val(val);
 	item.change();
 }
-
 function appoint(dom) {
-
 }
-
-/**
- * 周期
- */
 function cycle(dom) {
 	var name = dom.name;
 	var ns = $(dom).parent().find(".numberspinner");
@@ -36,10 +23,6 @@ function cycle(dom) {
 	item.val(start + "-" + end);
 	item.change();
 }
-
-/**
- * 从开始
- */
 function startOn(dom) {
 	var name = dom.name;
 	var ns = $(dom).parent().find(".numberspinner");
@@ -49,14 +32,12 @@ function startOn(dom) {
 	item.val(start + "/" + end);
 	item.change();
 }
-
-function lastDay(dom){
+function lastDay(dom) {
 	var item = $("input[name=v_" + dom.name + "]");
 	item.val("L");
 	item.change();
 }
-
-function weekOfDay(dom){
+function weekOfDay(dom) {
 	var name = dom.name;
 	var ns = $(dom).parent().find(".numberspinner");
 	var start = ns.eq(0).numberspinner("getValue");
@@ -65,15 +46,13 @@ function weekOfDay(dom){
 	item.val(start + "#" + end);
 	item.change();
 }
-
-function lastWeek(dom){
+function lastWeek(dom) {
 	var item = $("input[name=v_" + dom.name + "]");
 	var ns = $(dom).parent().find(".numberspinner");
 	var start = ns.eq(0).numberspinner("getValue");
-	item.val(start+"L");
+	item.val(start + "L");
 	item.change();
 }
-
 function workDay(dom) {
 	var name = dom.name;
 	var ns = $(dom).parent().find(".numberspinner");
@@ -82,14 +61,12 @@ function workDay(dom) {
 	item.val(start + "W");
 	item.change();
 }
-
 $(function() {
 	$(".numberspinner").numberspinner({
-		onChange:function(){
+		onChange : function() {
 			$(this).closest("div.line").children().eq(0).click();
 		}
 	});
-
 	var vals = $("input[name^='v_']");
 	var cron = $("#cron");
 	vals.change(function() {
@@ -97,67 +74,14 @@ $(function() {
 		vals.each(function() {
 			item.push(this.value);
 		});
-	    //修复表达式错误BUG，如果后一项不为* 那么前一项肯定不为为*，要不然就成了每秒执行了
-	    //获取当前选中tab
-		var currentIndex = 0;
-		$(".tabs>li").each(function (i, item) {
-		    if($(item).hasClass("tabs-selected")){
-		        currentIndex =i;
-		        return false;
-		    }
-
-		});
-        //当前选中项之前的如果为*，则都设置成0
-		for (var i = currentIndex; i >= 1; i--) {
-		    if (item[i] != "*" && item[i - 1] == "*") {
-		        item[i - 1] = "0";
-		    }
-		}
-	    //当前选中项之后的如果不为*则都设置成*
-		if (item[currentIndex] == "*") {
-		    for (var i = currentIndex + 1; i < item.length; i++) {
-		        if (i == 5) {
-		            item[i] = "?";
-		        } else {
-		            item[i] = "*";
-		        }
-		    }
-		}
-		cron.val(item.join(" ")).change();
+		cron.val(item.join(" "));
 	});
-
-	cron.change(function () {
-	    //设置最近五次运行时间
-	    $.ajax({
-	        type: 'get',
-	        url: "CalcRunTime.ashx",
-	        dataType: "json",
-	        data: { "CronExpression": $("#cron").val() },
-	        success: function (data) {
-	            if (data && data.length == 5) {
-	                var strHTML = "<ul>";
-	                for (var i = 0; i < data.length; i++) {
-	                    strHTML += "<li>" + data[i] + "</li>";
-	                }
-	                strHTML +="</ul>"
-	                $("#runTime").html(strHTML);
-	            } else {
-	                $("#runTime").html("");
-	            }
-	        }
-	    });
-	});
-	
 	var secondList = $(".secondList").children();
-	$("#sencond_appoint").click(function(){
-	    if (this.checked) {
-	        if ($(secondList).filter(":checked").length == 0) {
-	            $(secondList.eq(0)).attr("checked", true);
-	        }
+	$("#sencond_appoint").click(function() {
+		if (this.checked) {
 			secondList.eq(0).change();
 		}
 	});
-
 	secondList.change(function() {
 		var sencond_appoint = $("#sencond_appoint").prop("checked");
 		if (sencond_appoint) {
@@ -169,8 +93,8 @@ $(function() {
 			});
 			var val = "?";
 			if (vals.length > 0 && vals.length < 59) {
-				val = vals.join(","); 
-			}else if(vals.length == 59){
+				val = vals.join(",");
+			} else if (vals.length == 59) {
 				val = "*";
 			}
 			var item = $("input[name=v_second]");
@@ -178,17 +102,12 @@ $(function() {
 			item.change();
 		}
 	});
-	
 	var minList = $(".minList").children();
-	$("#min_appoint").click(function(){
-	    if (this.checked) {
-	        if ($(minList).filter(":checked").length == 0) {
-	            $(minList.eq(0)).attr("checked", true);
-	        }
+	$("#min_appoint").click(function() {
+		if (this.checked) {
 			minList.eq(0).change();
 		}
 	});
-	
 	minList.change(function() {
 		var min_appoint = $("#min_appoint").prop("checked");
 		if (min_appoint) {
@@ -201,7 +120,7 @@ $(function() {
 			var val = "?";
 			if (vals.length > 0 && vals.length < 59) {
 				val = vals.join(",");
-			}else if(vals.length == 59){
+			} else if (vals.length == 59) {
 				val = "*";
 			}
 			var item = $("input[name=v_min]");
@@ -209,17 +128,12 @@ $(function() {
 			item.change();
 		}
 	});
-	
 	var hourList = $(".hourList").children();
-	$("#hour_appoint").click(function(){
-	    if (this.checked) {
-	        if ($(hourList).filter(":checked").length == 0) {
-	            $(hourList.eq(0)).attr("checked", true);
-	        }
+	$("#hour_appoint").click(function() {
+		if (this.checked) {
 			hourList.eq(0).change();
 		}
 	});
-	
 	hourList.change(function() {
 		var hour_appoint = $("#hour_appoint").prop("checked");
 		if (hour_appoint) {
@@ -232,7 +146,7 @@ $(function() {
 			var val = "?";
 			if (vals.length > 0 && vals.length < 24) {
 				val = vals.join(",");
-			}else if(vals.length == 24){
+			} else if (vals.length == 24) {
 				val = "*";
 			}
 			var item = $("input[name=v_hour]");
@@ -240,17 +154,12 @@ $(function() {
 			item.change();
 		}
 	});
-	
 	var dayList = $(".dayList").children();
-	$("#day_appoint").click(function(){
-	    if (this.checked) {
-	        if ($(dayList).filter(":checked").length == 0) {
-	            $(dayList.eq(0)).attr("checked", true);
-	        }
+	$("#day_appoint").click(function() {
+		if (this.checked) {
 			dayList.eq(0).change();
 		}
 	});
-	
 	dayList.change(function() {
 		var day_appoint = $("#day_appoint").prop("checked");
 		if (day_appoint) {
@@ -263,7 +172,7 @@ $(function() {
 			var val = "?";
 			if (vals.length > 0 && vals.length < 31) {
 				val = vals.join(",");
-			}else if(vals.length == 31){
+			} else if (vals.length == 31) {
 				val = "*";
 			}
 			var item = $("input[name=v_day]");
@@ -271,17 +180,12 @@ $(function() {
 			item.change();
 		}
 	});
-	
 	var mouthList = $(".mouthList").children();
-	$("#mouth_appoint").click(function(){
-	    if (this.checked) {
-	        if ($(mouthList).filter(":checked").length == 0) {
-	            $(mouthList.eq(0)).attr("checked", true);
-	        }
+	$("#mouth_appoint").click(function() {
+		if (this.checked) {
 			mouthList.eq(0).change();
 		}
 	});
-	
 	mouthList.change(function() {
 		var mouth_appoint = $("#mouth_appoint").prop("checked");
 		if (mouth_appoint) {
@@ -294,7 +198,7 @@ $(function() {
 			var val = "?";
 			if (vals.length > 0 && vals.length < 12) {
 				val = vals.join(",");
-			}else if(vals.length == 12){
+			} else if (vals.length == 12) {
 				val = "*";
 			}
 			var item = $("input[name=v_mouth]");
@@ -302,17 +206,12 @@ $(function() {
 			item.change();
 		}
 	});
-	
 	var weekList = $(".weekList").children();
-	$("#week_appoint").click(function(){
-	    if (this.checked) {
-	        if ($(weekList).filter(":checked").length == 0) {
-	            $(weekList.eq(0)).attr("checked", true);
-	        }
+	$("#week_appoint").click(function() {
+		if (this.checked) {
 			weekList.eq(0).change();
 		}
 	});
-	
 	weekList.change(function() {
 		var week_appoint = $("#week_appoint").prop("checked");
 		if (week_appoint) {
@@ -325,7 +224,7 @@ $(function() {
 			var val = "?";
 			if (vals.length > 0 && vals.length < 7) {
 				val = vals.join(",");
-			}else if(vals.length == 7){
+			} else if (vals.length == 7) {
 				val = "*";
 			}
 			var item = $("input[name=v_week]");

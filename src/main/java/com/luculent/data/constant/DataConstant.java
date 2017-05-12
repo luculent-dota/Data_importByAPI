@@ -47,6 +47,10 @@ public class DataConstant {
 	public static final String SCHEDULER_PATH = PATH+"\\java\\com\\luculent\\data\\scheduler\\";
 	
 	public static final String SCHEDULER_PACKAGE_PATH="com.luculent.data.scheduler.";
+	
+	public static final int SCHEDULER_PACK_LENGTH = 28;
+	
+	public static final String SCHEDULER_JOB_SUFFIX="Job";
 	/**ocr地址*/
 	public static final String OCR_PATH =PATH+"\\resources\\";
 	/**图片输出地址*/
@@ -75,14 +79,13 @@ public class DataConstant {
 	public static final String JOB_GROUP_NAME ="JobGroup";
 	
 	
-	public static final int SCHEDULER_PACK_LENGTH = 28;
-	
-	
 	public static final String JOB_SUFFIX="_run";
 	
 	public static final String JOB_TRIGGER_SUFFIX="_trigger";
 	
 	public static final String CRONEXPRESSION="CRON01EXPRESSION";
+	
+	public static final String JOBID = "JOB01ID";
 	
 	
 	/**
