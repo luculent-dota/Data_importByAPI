@@ -32,7 +32,6 @@ public class PinyinUtils {
 	    bl.append(getFirstSpell(str2));
 	}
 	bl.append(DataConstant.SCHEDULER_JOB_SUFFIX);
-	//System.out.println(ConventionUtils.firstSpellToUp(bl.toString()));
 	return ConventionUtils.firstSpellToUp(bl.toString());
     }
     
@@ -81,7 +80,6 @@ public class PinyinUtils {
                 } else  
                     t4 += java.lang.Character.toString(t1[i]);  
             }  
-            // System.out.println(t4);
             return t4;  
         } catch (BadHanyuPinyinOutputFormatCombination e1) {  
             e1.printStackTrace();  

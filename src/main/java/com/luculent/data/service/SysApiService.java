@@ -97,7 +97,6 @@ public class SysApiService {
 		if(codeList !=null && codeList.size() !=0){
 		    boolean temp = false;
 		    for(int i=1;i<DataConstant.AUTO_LOGIN_NUM;i++){
-			System.err.println("aaaaaaaaaaaaaaaa"+i);
 			String code =OkHttpUtils.getCodeResult(codeList.get(0).getUrl());
 			if(StringUtils.isNotEmpty(code)){
 				List<SysApi> loginList =sysApiMapper.selectList(new EntityWrapper<SysApi>().eq("project_id", projectId).eq("api_type", ApiType.LOGIN.getVal()));
