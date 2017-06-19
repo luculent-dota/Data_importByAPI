@@ -5,6 +5,8 @@ import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
+import com.luculent.data.constant.DataConstant;
+
 
 /**
  * shiro密码加密配置
@@ -12,7 +14,6 @@ import org.springframework.util.Assert;
  */
 public class PasswordHash implements InitializingBean {
 	
-	private String salt="luculent";
 	private String algorithmName;
 	private int hashIterations;
 
@@ -35,7 +36,7 @@ public class PasswordHash implements InitializingBean {
 	}
 	
 	public String toHex(Object source) {
-		return new SimpleHash(algorithmName, source, salt, hashIterations).toHex();
+		return new SimpleHash(algorithmName, source, DataConstant.SHIRO_SALT, hashIterations).toHex();
 	}
 	
 	public static void main(String[] args) {

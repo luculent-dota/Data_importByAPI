@@ -11,7 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.support.spring.FastJsonJsonView;
 import com.luculent.data.base.JsonResult;
-import com.luculent.data.base.Result;
 import com.luculent.data.utils.util.WebUtils;
 
 @Component

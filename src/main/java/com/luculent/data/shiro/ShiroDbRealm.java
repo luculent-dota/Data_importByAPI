@@ -15,6 +15,7 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.struts.chain.commands.servlet.CreateAction;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.luculent.data.constant.DataConstant;
 import com.luculent.data.service.SysApiService;
 import com.luculent.data.service.SysProjectService;
 
@@ -52,7 +53,7 @@ public class ShiroDbRealm extends AuthorizingRealm{
 		//其实user是可以存储更多信息的
 		ShiroUser shiroUser = new ShiroUser(USERNAME,sysProjectService.queryAllProjectId(),sysApiService.queryAllApiIdWithProjectId());
 		//添加认证缓存
-		return new SimpleAuthenticationInfo(shiroUser,PASSWORD.toCharArray(),ShiroByteSource.of("luculent"),getName());
+		return new SimpleAuthenticationInfo(shiroUser,PASSWORD.toCharArray(),ShiroByteSource.of(DataConstant.SHIRO_SALT),getName());
 	}
 	
 	@Override

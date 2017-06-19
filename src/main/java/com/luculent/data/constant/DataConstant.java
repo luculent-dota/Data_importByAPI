@@ -19,6 +19,9 @@ public class DataConstant {
 		// TODO Auto-generated constructor stub
 		throw new AssertionError();
 	}
+	
+	/** 认证加盐. */
+	public static final String SHIRO_SALT="luculent";
 
 	/** 菜单树根节点. */
 	public static final String VirtualBaseTree ="VirtualBaseTree";
