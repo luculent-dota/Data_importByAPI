@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.luculent.data.mapper.SysApiMapper" >
-<select id="queryProjectWithApiName" resultType="SysApi">
-SELECT a.id,CONCAT(CONCAT(p.name,'-'),a.name) NAME,a.project_id FROM `sys_api` a LEFT JOIN `sys_project` p ON a.`project_id` = p.id ORDER BY a.`project_id`, a.sort      
+<select id="queryProjectWithApiName" resultType="SysApi"  parameterType="string" >
+SELECT a.id,CONCAT(CONCAT(p.name,'-'),a.name) NAME,a.project_id FROM `sys_api` a LEFT JOIN `sys_project` p ON a.`project_id` = p.id
+WHERE a.id IN
+<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+ ORDER BY a.`project_id`, a.sort      
 </select>
-
+<select id="queryAllApiIdWithProjectId" resultType="string">
+select CONCAT(CONCAT(p.id,'-'),p.project_id) from `sys_api` p
+</select>
 </mapper>

@@ -1,7 +1,9 @@
 package com.luculent.data.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -46,9 +48,17 @@ public class SysApiService {
 	 * @param projectId
 	 * @return
 	 */
-	public Object getMenuJSON(String projectId){
+	public Object getMenuJSON(String projectId,Set<String> apiProjectIds){
 		SysProject sysProject  = sysProjectMapper.selectById(projectId);
-		List<SysApi> apiList =  sysApiMapper.selectList(new EntityWrapper<SysApi>().eq("project_id", projectId).orderBy("sort,scrq", true));
+		Set<String> apiSet = new HashSet<String>();
+		if(apiProjectIds !=null && apiProjectIds.size() !=0){
+			for(String apiProjectId:apiProjectIds){
+				if(apiProjectId.indexOf(projectId)!=-1){
+					apiSet.add(apiProjectId.substring(0, 32));
+				}
+			}
+		}
+		List<SysApi> apiList =  sysApiMapper.selectList(new EntityWrapper<SysApi>().in("id", apiSet).orderBy("sort,scrq", true));
 		List<SysMenuChild> children = new ArrayList<SysMenuChild>();
 		
 		if(apiList !=null && apiList.size()!=0){
@@ -128,7 +138,9 @@ public class SysApiService {
 	}
 	
 	
-	
+	public Set<String> queryAllApiIdWithProjectId(){
+		return new HashSet<String>(sysApiMapper.queryAllApiIdWithProjectId());
+	}
 	
 	
 

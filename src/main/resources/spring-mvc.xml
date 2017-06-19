@@ -12,9 +12,13 @@
 	<description>Spring MVC Configuration</description>
 
 	<context:component-scan base-package="com.luculent.data.web"/>
+	<bean id="exceptionResolver" class="com.luculent.data.exception.ExceptionResolver" />
 	<!-- FastJson注入 -->
     <mvc:annotation-driven>
         <mvc:message-converters register-defaults="true">
+        	<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8"/>
+            </bean>
             <!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
             <!-- FastJson -->
             <bean id="fastJsonHttpMessageConverter"

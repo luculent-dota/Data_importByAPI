@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+<meta charset="utf-8">
+<title>接口管理</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" href="#springUrl('/static/layui/css/layui.css')" media="all" />
+<link rel="stylesheet" href="#springUrl('/static/common/css/login.css')" />
+<script type="text/javascript" src="#springUrl('/static/layui/layui.js')"></script>
+<script>
+	    var contextPath="${request.contextPath}";
+	    layui.config({
+	    	base: contextPath+'/static/common/js/',
+	    	version:new Date().getTime()
+	    }).use(['msg'], function(){
+	    	var $ = layui.jquery,
+	    	msg = layui.msg;
+	    	$.ajaxSetup({  
+	            type: "POST",  
+	            error: function(jqXHR, textStatus, errorThrown){
+	            	console.log(jqXHR);
+	            	console.log(textStatus);
+	            	console.log(errorThrown);
+	                switch (jqXHR.status){  
+	                    case(500):  
+	                        msg.error("服务器系统内部错误");  
+	                        break;  
+	                    case(401):  
+	                    	msg.error("未登录");  
+	                        break;  
+	                    case(403):  
+	                    	msg.error("无权限执行此操作");  
+	                        break;
+	                    case(404):  
+	                    	msg.error("路径没有找到");  
+	                        break;  
+	                    case(408):  
+	                    	msg.error("请求超时");  
+	                        break;  
+	                    default:  
+	                    	msg.error("未知错误");  
+	                }  
+	            }  
+	        });  	    	  
+	    });  
+	    
+	    </script>
+</head>
+
+<body class="beg-login-bg">
+	<div class="beg-login-box">
+		<header>
+			<h1>后台登录</h1>
+		</header>
+		<div class="beg-login-main">
+			<form  class="layui-form" method="post">
+				<div class="layui-form-item">
+					<label class="beg-login-icon"> <i class="layui-icon">&#xe612;</i>
+					</label> <input type="text" name="username" lay-verify="username" autocomplete="off" placeholder="这里输入登录名" class="layui-input">
+				</div>
+				<div class="layui-form-item">
+					<label class="beg-login-icon"> <i class="layui-icon">&#xe642;</i>
+					</label> <input type="password" name="password" lay-verify="password" autocomplete="off" placeholder="这里输入密码" class="layui-input">
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-input-inline" style="width: 165px;">
+					<label class="beg-login-icon"> <i class="layui-icon">&#xe642;</i>
+					</label>
+					<input type="text" name="captcha" lay-verify="captcha" autocomplete="off" placeholder="这里输入验证码" class="layui-input">
+					</div> 
+					<img id="captcha" alt="验证码" src="${request.contextPath}/captcha.jpg" data-src="${request.contextPath}/captcha.jpg?t=" style="vertical-align:middle;border-radius:4px;width:94.5px;height:35px;cursor:pointer;">
+				</div>
+				<div class="layui-form-item">
+					<div class="beg-pull-left beg-login-remember">
+						<label>记住帐号？</label> <input type="checkbox" name="rememberMe" 	value="1" lay-skin="switch" checked title="记住帐号">
+					</div>
+					<div class="beg-pull-right">
+						<button class="layui-btn layui-btn-primary" lay-submit 	lay-filter="login">
+							<i class="layui-icon">&#xe650;</i> 登录
+						</button>
+					</div>
+					<div class="beg-clear"></div>
+				</div>
+			</form>
+		</div>
+		<footer>
+		</footer>
+		<script type="text/javascript" src="#springUrl('/static/lib/login.js')"></script>
+	</div>
+	
+#parse('/layout/footer.html')

@@ -46,7 +46,7 @@ layui.config({
 		form = layui.form(),
 		msg = layui.msg,
 		utils = layui.utils;
-		initMenuTree(form,laytpl,utils);
+		initMenuTree(form,laytpl,utils,msg);
 		
 		form.on('submit(go1)', function(res) {
 			$.ajax({

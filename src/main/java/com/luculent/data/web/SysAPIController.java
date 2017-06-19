@@ -88,7 +88,7 @@ public class SysAPIController extends BaseController {
     @ResponseBody
     @RequestMapping("/menu-json")
     public Object getMenuJSON(String projectId) {
-	return sysApiService.getMenuJSON(projectId);
+	return sysApiService.getMenuJSON(projectId,getShiroUser().getApiProjectIds());
     }
 
     @ResponseBody

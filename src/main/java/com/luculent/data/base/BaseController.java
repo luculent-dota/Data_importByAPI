@@ -1,6 +1,20 @@
 package com.luculent.data.base;
 
+import org.apache.shiro.SecurityUtils;
+
+import com.luculent.data.shiro.ShiroUser;
+
+
 public class BaseController {
+	
+	
+	/**
+     * 获取当前登录用户对象
+     * @return {ShiroUser}
+     */  
+	protected ShiroUser getShiroUser() {
+        return (ShiroUser) SecurityUtils.getSubject().getPrincipal();
+    }
     /**
      * 渲染失败数据
      *

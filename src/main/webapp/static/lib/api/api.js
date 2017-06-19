@@ -109,7 +109,7 @@ layui.config({
 				  msg.close(layIndex);
 					  if(apitype == 2){
 						  if(data.length ===32){
-							  $("#test-img").attr("src","/temp/"+data+".gif");
+							  $("#test-img").attr("src",contextPath+"/temp/"+data+".gif");
 						  }else{
 							  $(".runtext").text(data);
 						  }

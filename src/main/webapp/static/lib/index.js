@@ -2,11 +2,12 @@ var tab;
 layui.config({
 	base: contextPath+'/static/common/js/',
 	version:new Date().getTime()
-}).use(['element','form','layer', 'navbar', 'tab'], function() {
+}).use(['element','form','layer','msg', 'navbar', 'tab'], function() {
 	var element = layui.element(),
 		$ = layui.jquery,
 		form = layui.form(),
 		layer = layui.layer,
+		msg = layui.msg,
 		navbar = layui.navbar();
 		tab = layui.tab({
 			elem: '.admin-nav-card', //设置选项卡容器
@@ -136,6 +137,16 @@ layui.config({
 			tab.tabAdd(data.field);
 		});
 		$("#admin-navbar-side dl dd").eq(0).click();
+	});
+	
+	$("#logout").on('click',function(){
+		msg.confirm('确定要退出吗？',function(){
+			$.post(contextPath+"/logout", function(result) {
+                if(result.success && result.status === "200"){
+                    window.location.href=contextPath;
+                }
+            }, 'json');
+		})
 	});
 		
 });

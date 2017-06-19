@@ -7,5 +7,7 @@ import com.luculent.data.model.SysApi;
 
 public interface SysApiMapper extends BaseMapper<SysApi>{
 
-	public List<SysApi> queryProjectWithApiName();
+	public List<SysApi> queryProjectWithApiName(String[] apiIds);
+	
+	public List<String> queryAllApiIdWithProjectId();
 }

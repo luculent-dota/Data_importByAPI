@@ -10,8 +10,13 @@
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 	<!-- 引入属性文件 -->
-	<context:property-placeholder
-		location="classpath:config.properties,classpath:oracle.properties" />
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:config/*.properties</value>
+            </list>
+        </property>
+    </bean>
 
 	<bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
 		init-method="init" destroy-method="close">
@@ -52,6 +57,7 @@
 	<!-- 自动注入 -->
 	<context:component-scan base-package="com.luculent.data.service" />
 	<context:component-scan base-package="com.luculent.data.scheduler" />
+	<context:component-scan base-package="com.luculent.data.shiro" />
 	<bean class="com.luculent.data.base.ServiceLocator" />
 
 	<!-- 支持异步方法执行 -->
@@ -130,6 +136,9 @@
         <!-- 设置自动启动 -->
         <!-- <property name="autoStartup" value="true" /> -->
     </bean>
-
+	
+	<import resource="classpath:spring/spring-cache.xml"/>
+	<import resource="classpath:spring/spring-out.xml"/>
+	<import resource="classpath:spring/spring-shiro.xml"/>
 
 </beans>       

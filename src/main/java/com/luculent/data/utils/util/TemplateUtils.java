@@ -39,7 +39,7 @@ public class TemplateUtils {
 	ve.setProperty(Velocity.OUTPUT_ENCODING, "UTF-8");     
 
 	ve.init();
-	Template t = ve.getTemplate("createjob.vm");
+	Template t = ve.getTemplate("templates/createjob.vm");
 	VelocityContext ctx = new VelocityContext();
 	
 	ctx.put("projectName", projectName);
