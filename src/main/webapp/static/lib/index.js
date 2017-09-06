@@ -143,7 +143,7 @@ layui.config({
 		msg.confirm('确定要退出吗？',function(){
 			$.post(contextPath+"/logout", function(result) {
                 if(result.success && result.status === "200"){
-                    window.location.href=contextPath;
+                    window.location.href=contextPath+"/login";
                 }
             }, 'json');
 		})
